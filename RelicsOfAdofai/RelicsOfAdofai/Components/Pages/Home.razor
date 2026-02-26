@@ -1,0 +1,105 @@
+﻿@page "/"
+<PageTitle>Relics of Adofai</PageTitle>
+
+@*@rant: this shithole should not exist.*@
+<head>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			min-height: 100vh;
+			background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1)), url("bg.png");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+
+			display: flex;
+			flex-direction: column;
+		}
+
+		h1 {
+			justify-self: center;
+			align-self: center;
+
+			background-color: #012a4a88;
+			color: white;
+			font-weight: bold;
+			padding: 3ch 10ch;
+			width: fit-content;
+			height: fit-content;
+			margin-top: 25vh;
+			border-radius: 1ch;
+		}
+
+		.settingbox {
+			justify-self: center;
+			align-self: center;
+
+			background-color: #014f8688;
+			color: white;
+			padding: 2ch;
+			width: fit-content;
+			height: fit-content;
+			margin-top: 2vh;
+			border-radius: 1ch;
+
+			display: flex;
+			flex-direction: column;
+		}
+
+		.settingrow {
+			margin: 1ch 0ch;
+			padding: 0ch 5ch;
+			height: fit-content;
+
+			display: flex;
+			flex-direction: row;
+		}
+		.settingrow > p {
+			margin-right: 5ch;
+		}
+		.settingrow > input {
+			height: fit-content;
+			align-self: center;
+			padding: 0.5ch;
+		}
+
+		.settingbox > button {
+			width: fit-content;
+			align-self: center;
+			padding: 1ch 3ch;
+			margin-top: 6ch;
+		}
+
+		.credit {
+			position: absolute;
+			bottom: 0;
+			align-self: center;
+			text-align: center;
+			color: white;
+			margin-bottom: 0.5ch;
+		}
+		.credit > p {
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+<h1>Relics of Adofai</h1>
+<div class="settingbox">
+	<div class="settingrow">
+		<p>随机数种子</p>
+		<input />
+	</div>
+
+	<button>Remake</button>
+</div>
+
+@*@cleanup: put this into a constant variable place*@
+<div class="credit">
+	<p>Created by SeanLB & quartrond. Built on Feb 27, 2026.</p>
+	<p>Please do not take this seriously. Data are real, but the simulation is fake.</p>
+</div>
+</body>
+
