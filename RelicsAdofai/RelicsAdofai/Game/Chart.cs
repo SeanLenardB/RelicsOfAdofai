@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RelicsOfAdofai.Game
+namespace RelicsAdofai.Game
 {
     public class Chart
     {
