@@ -3,11 +3,11 @@ html {
 }
 /* FUCK web development and everything */
 button, input, select, textarea {
+    color: white;
     font-family: Quantico, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 input {
-    color: white;
     background-color: transparent;
     border-color: transparent;
     border-bottom: 2px solid gray;
@@ -19,7 +19,6 @@ input {
     }
 
 button {
-    color: white;
     background-color: transparent;
     border-radius: 5px;
     border: 2px solid gray;
@@ -77,6 +76,7 @@ h1:focus {
 body {
     margin: 0;
     padding: 0;
+    color: white;
     min-height: 100vh;
     background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1)), url("bg.png");
     background-size: cover;
@@ -86,11 +86,10 @@ body {
     flex-direction: column;
 }
 
-h1 {
+.title {
     justify-self: center;
     align-self: center;
     background-color: #012a4a88;
-    color: white;
     font-weight: bold;
     padding: 3ch 10ch;
     width: fit-content;
@@ -103,7 +102,6 @@ h1 {
     justify-self: center;
     align-self: center;
     background-color: #014f8688;
-    color: white;
     padding: 2ch;
     width: fit-content;
     height: fit-content;
@@ -114,8 +112,8 @@ h1 {
 }
 
 .settingrow {
-    margin: 1ch 0ch;
-    padding: 0ch 5ch;
+    margin: 0.5ch 0ch;
+    padding: 0ch 3ch;
     height: fit-content;
     display: flex;
     flex-direction: row;
@@ -145,10 +143,34 @@ h1 {
     bottom: 0;
     align-self: center;
     text-align: center;
-    color: white;
     margin-bottom: 0.5ch;
+    font-size: 10px;
 }
 
     .credit > p {
         margin: 0;
     }
+
+.game {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+.game-topstatusbar {
+    background-color: #012a4a88;
+    border-color: #012a4a;
+    padding: .5ch 4ch;
+    width: 100vw;
+    border-radius: 1ch;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+}
+.game-topstatusbar-title {
+    font-weight: bold;
+}
+.game-topstatusbar-playername {
+    margin-left: 4ch;
+}

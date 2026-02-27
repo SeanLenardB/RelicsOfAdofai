@@ -5,7 +5,7 @@
 
 @if (this.Context is null)
 {
-<h1>Relics of Adofai</h1>
+<h1 class="title">Relics of Adofai</h1>
 <div class="settingbox">
 	<div class="settingrow">
 		<p>随机数种子</p>
@@ -13,7 +13,7 @@
 	</div>
 	<div class="settingrow">
 		<p>玩家名</p>
-		<input />
+		<input @bind-value="this.PlayerName"/>
 	</div>
 
 	<button type="button" @onclick="this.StartGame">Remake</button>
@@ -21,7 +21,7 @@
 }
 else
 {
-<p>Game is here</p>
+	<Game Context="this.Context"></Game>
 }
 
 @*@cleanup: put this into a constant variable place*@
@@ -32,9 +32,12 @@ else
 
 @code {
 	public int Seed { get; set; } = -1;
+	public string PlayerName { get; set; } = "";
+
 	public GameContext? Context;
 	public void StartGame()
 	{
 		this.Context = new(this.Seed);
+		this.Context.PlayerName = this.PlayerName;
 	}
 }
