@@ -36,3 +36,82 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,1)), url("bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    justify-self: center;
+    align-self: center;
+    background-color: #012a4a88;
+    color: white;
+    font-weight: bold;
+    padding: 3ch 10ch;
+    width: fit-content;
+    height: fit-content;
+    margin-top: 25vh;
+    border-radius: 1ch;
+}
+
+.settingbox {
+    justify-self: center;
+    align-self: center;
+    background-color: #014f8688;
+    color: white;
+    padding: 2ch;
+    width: fit-content;
+    height: fit-content;
+    margin-top: 2vh;
+    border-radius: 1ch;
+    display: flex;
+    flex-direction: column;
+}
+
+.settingrow {
+    margin: 1ch 0ch;
+    padding: 0ch 5ch;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+}
+
+    .settingrow > p {
+        width: 15ch;
+        text-align: right;
+        margin-right: 5ch;
+    }
+
+    .settingrow > input {
+        height: fit-content;
+        align-self: center;
+        padding: 0.5ch;
+    }
+
+.settingbox > button {
+    width: fit-content;
+    align-self: center;
+    padding: 1ch 3ch;
+    margin-top: 6ch;
+}
+
+.credit {
+    position: absolute;
+    bottom: 0;
+    align-self: center;
+    text-align: center;
+    color: white;
+    margin-bottom: 0.5ch;
+}
+
+    .credit > p {
+        margin: 0;
+    }

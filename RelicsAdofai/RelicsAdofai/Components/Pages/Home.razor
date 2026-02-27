@@ -1,0 +1,39 @@
+﻿@page "/"
+
+<PageTitle>Relics of Adofai</PageTitle>
+
+@if (this.Context is null)
+{
+<h1>Relics of Adofai</h1>
+<div class="settingbox">
+	<div class="settingrow">
+		<p>随机数种子</p>
+		<input @bind-value="this.Seed" type="number" />
+	</div>
+	<div class="settingrow">
+		<p>玩家名</p>
+		<input />
+	</div>
+
+	<button type="button" @onclick="this.StartGame">Remake</button>
+</div>
+}
+else
+{
+<p>Game is here</p>
+}
+
+@*@cleanup: put this into a constant variable place*@
+<div class="credit">
+	<p>Created by SeanLB & quartrond. Built on Feb 27, 2026.</p>
+	<p>Please do not take this seriously. Data are real, but the simulation is fake.</p>
+</div>
+
+@code {
+	public int Seed { get; set; } = -1;
+	public GameContext? Context;
+	public void StartGame()
+	{
+		this.Context = new(this.Seed);
+	}
+}

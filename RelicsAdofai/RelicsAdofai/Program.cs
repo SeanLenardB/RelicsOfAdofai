@@ -1,4 +1,4 @@
-using RelicsOfAdofai.Components;
+using RelicsAdofai.Components;
 
 internal class Program
 {
@@ -8,6 +8,7 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents()
             .AddInteractiveWebAssemblyComponents();
 
         var app = builder.Build();
@@ -30,8 +31,9 @@ internal class Program
 
         app.MapStaticAssets();
         app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode()
             .AddInteractiveWebAssemblyRenderMode()
-            .AddAdditionalAssemblies(typeof(RelicsOfAdofai.Client._Imports).Assembly);
+            .AddAdditionalAssemblies(typeof(RelicsAdofai.Client._Imports).Assembly);
 
         app.Run();
     }

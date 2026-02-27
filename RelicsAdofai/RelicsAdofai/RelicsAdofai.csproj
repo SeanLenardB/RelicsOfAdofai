@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RelicsOfAdofai.Client\RelicsOfAdofai.Client.csproj" />
+    <ProjectReference Include="..\RelicsAdofai.Client\RelicsAdofai.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.3" />
   </ItemGroup>
 
