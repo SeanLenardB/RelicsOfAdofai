@@ -15,10 +15,12 @@ namespace RelicsAdofai.Game
         public string PlayerName = "";
         public int FollowerCount = 0;
         public double Skill = 0.0;
-        public int Energy = 0;
+        public int Day = 1;
+        public double Hour = 8.5;
 
         public Random Random;
         public List<ChoiceEvent> ChoiceEvents = [];
+        public List<Chart> Charts = [];
 
 
 
@@ -27,14 +29,67 @@ namespace RelicsAdofai.Game
             
         }
 
+        public void GenerateCharts()
+        {
+            // @todo: make this happen better
+            this.Charts.Add(new()
+            {
+                Artist = "QR2 Dev Team",
+                Song = "QR2",
+                RequiredSkill = 114
+            });
+            this.Charts.Add(new()
+            {
+                Artist = "QR2 Dev Team",
+                Song = "QR2 [Nerfed]",
+                RequiredSkill = 14
+            });
+            this.Charts.Add(new()
+            {
+                Artist = "Sean Lenard B.",
+                Song = "The Final Descent of Quartrond",
+                RequiredSkill = 51.4
+            });
+            this.Charts.Add(new() 
+            {
+                Artist = "Sean Lenard B. vs Martix Lenard",
+                Song = "QR2",
+                RequiredSkill = 1.14
+            });
+            this.Charts.Add(new()
+            {
+                Artist = "Sean Lenard B.",
+                Song = "The Final Descent of Quartrond",
+                RequiredSkill = 5.14
+            });
+            this.Charts.Add(new()
+            {
+                Artist = "Sean Lenard B.",
+                Song = "Valley of Aer",
+                RequiredSkill = 1.919
+            });
+            this.Charts.Add(new()
+            {
+                Artist = "takehirotei",
+                Song = "Chronoexplorers",
+                RequiredSkill = 81
+            });
+
+            for (int i = 0; i < 10; i++)
+            {
+                this.Charts.Add(new()
+                {
+                    Artist = "Random Artists",
+                    Song = $"Test song suite No. {this.Random.Next(10)}",
+                    RequiredSkill = Random.NextDouble() * 114.514
+                });
+            }
+        }
+
         public GameContext(int seed)
         {
             this.Seed = seed; this.Random = new(seed);
-        }
-        public GameContext()
-        {
-            this.Seed = new Random().Next();
-            this.Random = new(this.Seed);
+            this.GenerateCharts();  // @cleanup: remove this, this is just for testing
         }
     }
 }

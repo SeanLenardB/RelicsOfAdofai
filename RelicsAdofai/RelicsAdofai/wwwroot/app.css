@@ -160,17 +160,82 @@ body {
 
 .game-topstatusbar {
     background-color: #012a4a88;
-    border-color: #012a4a;
-    padding: .5ch 4ch;
-    width: 100vw;
-    border-radius: 1ch;
+    border-color: #ffffff88;
+    border-width: 0px;
+    border-bottom-width: 2px;
+    border-style: solid;
+    padding: 0ch 4ch;
     display: flex;
     flex-direction: row;
-    align-content: center;
 }
 .game-topstatusbar-title {
     font-weight: bold;
+    font-size: 24px;
 }
 .game-topstatusbar-playername {
-    margin-left: 4ch;
+    margin-left: 8ch;
+    align-self: center;
+}
+.game-topstatusbar-stat {
+    margin-left: 3ch;
+    align-self: center;
+}
+.game-topstatusbar-stat-margin-small {
+    margin-left: 1.2ch;
+}
+.game-topstatusbar-stat-margin-large {
+    margin-left: 3.2ch;
+}
+.game-topstatusbar-dayinfo {
+    margin-right: 2ch;
+    margin-left: auto;  /*This is css bullshit*/
+    align-self: center;
+}
+
+.game-firstrow {
+    display: flex;
+    flex-direction: row;
+}
+.game-charts {
+    background-color: #5a189a88;
+    border-color: #ffffff88;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    padding: 2ch;
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+
+    /*@hack: this should not be hardcoded but fuck css*/
+    height: 80vh;
+    overflow: auto;
+}
+.game-charts-singlechartitem {
+    background-color: #ffffff33;
+    border-radius: 2px;
+    margin: 1ch;
+    padding: 1ch 2ch;
+}
+.game-charts-singlechartitem-song {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0px;
+}
+.game-charts-singlechartitem-artist {
+    font-size: 10px;
+    margin-top: 0ch;
+    margin-bottom: 1.5ch;
+}
+.game-charts-singlechartitem-skilltext {
+}
+.game-charts-singlechartitem-skillvalue { }
+
+.color-skill {
+    color: #c77dff;
+    font-weight: bold;
+}
+.color-follower {
+    color: #80ed99;
+    font-weight: bold;
 }

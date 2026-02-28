@@ -2,6 +2,34 @@
 <div class="game-topstatusbar">
 	<p class="game-topstatusbar-title">Relics of Adofai</p>
 	<p class="game-topstatusbar-playername">@this.Context.PlayerName</p>
+	<div class="game-topstatusbar-stat">
+		<span>技能点</span>
+		<span class="game-topstatusbar-stat-margin-small color-skill">@this.Context.Skill</span>
+		<span class="game-topstatusbar-stat-margin-large">粉丝数</span>
+		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount</span>
+	</div>
+	<p class="game-topstatusbar-dayinfo">
+		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
+		@(Math.Floor(this.Context.Hour).ToString("00")):@(Math.Floor((this.Context.Hour % 1.0) * 60).ToString("00"))
+	</p>
+</div>
+
+<div style="margin: 4ch;">
+<div class="game-firstrow">
+<div class="game-charts">
+@foreach (var chart in this.Context.Charts)
+{
+<div class="game-charts-singlechartitem">
+	<p class="game-charts-singlechartitem-song">@chart.Song</p>
+	<p class="game-charts-singlechartitem-artist">@chart.Artist</p>
+	@* This can be changed to a rating, and hide the required skill, which both reflects the wackiness of ratings,
+	but also the challenge to actually estimate the skill required to beat the level.*@	
+	<span class="game-charts-singlechartitem-skilltext">谱面难度: </span>
+	<span class="game-charts-singlechartitem-skillvalue color-skill">@chart.RequiredSkill</span>
+</div>
+}
+</div>
+</div>
 </div>
 </div>
 
