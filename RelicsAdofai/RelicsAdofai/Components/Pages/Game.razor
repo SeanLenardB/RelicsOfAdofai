@@ -12,23 +12,39 @@
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
 		@(Math.Floor(this.Context.Hour).ToString("00")):@(Math.Floor((this.Context.Hour % 1.0) * 60).ToString("00"))
 	</p>
+	<button class="game-topstatusbar-finishday" type="button" @onclick="this.FinishDay">结束今天</button>
 </div>
 
 <div style="margin: 4ch;">
-<div class="game-firstrow">
-<div class="game-charts">
-@foreach (var chart in this.Context.Charts)
-{
-<div class="game-charts-singlechartitem">
-	<p class="game-charts-singlechartitem-song">@chart.Song</p>
-	<p class="game-charts-singlechartitem-artist">@chart.Artist</p>
-	@* This can be changed to a rating, and hide the required skill, which both reflects the wackiness of ratings,
-	but also the challenge to actually estimate the skill required to beat the level.*@	
-	<span class="game-charts-singlechartitem-skilltext">谱面难度: </span>
-	<span class="game-charts-singlechartitem-skillvalue color-skill">@chart.RequiredSkill</span>
-</div>
-}
-</div>
+<div class="game-content">
+    <div class="game-charts">
+    @foreach (var chart in this.Context.Charts)
+    {
+    <div class="game-charts-singlechartitem">
+        <p style="font-weight: bold; font-size: 18px; margin: 0px;">@chart.Song</p>
+        <p style="font-size: 10px; margin-top: 0ch; margin-bottom: 1.5ch;">@chart.Artist</p>
+        @* This can be changed to a rating, and hide the required skill, which both reflects the wackiness of ratings,
+        but also the challenge to actually estimate the skill required to beat the level.*@	
+        <span>谱面难度: </span>
+        <span class="color-skill">@chart.RequiredSkill</span>
+    </div>
+    }
+    </div>
+
+	<div class="game-events">
+    @foreach (var choiceEvent in this.Context.ChoiceEvents)
+    {
+    <div class="game-events-singleeventitem">
+        <p>@choiceEvent.Description</p>
+    </div>
+    }
+    @foreach (var infoEvent in this.Context.InfoEvents)
+    {
+    <div class="game-events-singleeventitem">
+        <p>@infoEvent.Information</p>
+    </div>
+    }
+    </div>
 </div>
 </div>
 </div>
@@ -36,4 +52,9 @@
 @code {
 	[Parameter]
 	public required GameContext Context { get; set; }
+
+	public void FinishDay()
+	{
+		this.Context.FinishDay();
+	}
 }

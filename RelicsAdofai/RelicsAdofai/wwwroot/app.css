@@ -1,4 +1,4 @@
-html {
+﻿html {
     font-family: Quantico, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 /* FUCK web development and everything */
@@ -187,12 +187,18 @@ body {
     margin-left: 3.2ch;
 }
 .game-topstatusbar-dayinfo {
-    margin-right: 2ch;
     margin-left: auto;  /*This is css bullshit*/
+    margin-right: 2ch;
     align-self: center;
 }
+.game-topstatusbar-finishday {
+    margin-right: 1ch;
+    align-self: center;
+    height: fit-content;
+    padding: 1ch 2ch;
+}
 
-.game-firstrow {
+.game-content {
     display: flex;
     flex-direction: row;
 }
@@ -208,7 +214,7 @@ body {
     width: 35%;
 
     /*@hack: this should not be hardcoded but fuck css*/
-    height: 80vh;
+    height: 75vh;
     overflow: auto;
 }
 .game-charts-singlechartitem {
@@ -217,19 +223,29 @@ body {
     margin: 1ch;
     padding: 1ch 2ch;
 }
-.game-charts-singlechartitem-song {
-    font-weight: bold;
-    font-size: 18px;
-    margin: 0px;
+
+.game-events {
+    background-color: #2d6a4f88;
+    border-color: #ffffff88;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    padding: 2ch;
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin-left: 3ch;
+
+    /*@hack: this should not be hardcoded but fuck css*/
+    height: 75vh;
+    overflow: auto;
 }
-.game-charts-singlechartitem-artist {
-    font-size: 10px;
-    margin-top: 0ch;
-    margin-bottom: 1.5ch;
+.game-events-singleeventitem {
+    background-color: #ffffff33;
+    border-radius: 2px;
+    margin: 1ch;
+    padding: 1ch 2ch;
 }
-.game-charts-singlechartitem-skilltext {
-}
-.game-charts-singlechartitem-skillvalue { }
 
 .color-skill {
     color: #c77dff;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RelicsAdofai.Game
+﻿namespace RelicsAdofai.Game.Events
 {
     public class ChoiceEvent
     {
