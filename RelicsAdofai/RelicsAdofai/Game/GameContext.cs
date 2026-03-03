@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using RelicsAdofai.Game.Events;
 
@@ -21,15 +22,14 @@ namespace RelicsAdofai.Game
 
         public Random Random;
         public List<ChoiceEvent> ChoiceEvents = [];
-        public List<InfoEvent> InfoEvents = [];
         public List<Chart> Charts = [];
+
+        public Tuple<int, Func<ChoiceEvent>>[] ChoiceEventWeightConfiguration = [];
 
 
 
         public void GenerateEvents()
         {
-            this.InfoEvents.Add(new() { Information = "Debug Test 1" });
-            this.InfoEvents.Add(new() { Information = "测试事件" });
         }
 
         public void GenerateCharts()

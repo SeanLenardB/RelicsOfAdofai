@@ -4,16 +4,12 @@
     {
         public string Description = "";
         public List<Choice> Choices = [];
-
-        public void AskPlayer()
-        {
-
-        }
     }
 
     public class Choice
     {
+        public Predicate<GameContext> IsChoiceAvailable = _ => true;
         public string Text = "";
-        public Action Action = () => { };
+        public Action<GameContext> Consequence = _ => { };
     }
 }
