@@ -1,4 +1,4 @@
-﻿namespace RelicsAdofai.Game.Events
+﻿namespace RelicsAdofai.Game
 {
     public class ChoiceEvent
     {

@@ -3,10 +3,12 @@
 	<p class="game-topstatusbar-title">Relics of Adofai</p>
 	<p class="game-topstatusbar-playername">@this.Context.PlayerName</p>
 	<div class="game-topstatusbar-stat">
-		<span>技能点</span>
+		<span>技能</span>
 		<span class="game-topstatusbar-stat-margin-small color-skill">@this.Context.Skill</span>
-		<span class="game-topstatusbar-stat-margin-large">粉丝数</span>
+		<span class="game-topstatusbar-stat-margin-large">名声</span>
 		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount</span>
+        <span class="game-topstatusbar-stat-margin-large">资金</span>
+        <span class="game-topstatusbar-stat-margin-small color-money">@this.Context.Money</span>
 	</div>
 	<p class="game-topstatusbar-dayinfo">
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
@@ -36,12 +38,6 @@
     {
     <div class="game-events-singleeventitem">
         <p>@choiceEvent.Description</p>
-    </div>
-    }
-    @foreach (var infoEvent in this.Context.InfoEvents)
-    {
-    <div class="game-events-singleeventitem">
-        <p>@infoEvent.Information</p>
     </div>
     }
     </div>
