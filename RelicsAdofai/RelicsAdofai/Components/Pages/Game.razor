@@ -25,8 +25,10 @@
     {
     <div class="game-charts-singlechartitem">
         <p style="font-weight: bold; font-size: 18px; margin: 0px;">@chart.Song</p>
-        <p style="font-size: 10px; margin-top: 0ch; margin-bottom: 0.2ch;">@chart.Artist</p>
-        <p style="font-size: 10px; margin-top: 0ch; margin-bottom: 1.5ch;">@chart.Creator</p>
+        <div style="margin-bottom: 1ch; display: flex; flex-direction: row;">
+            <span style="font-size: 10px;">@chart.Artist</span>
+            <span style="font-size: 10px; margin-left: auto;">@chart.Creator</span>
+        </div>
         @*@todo: change this to rating, and hide the required skill, which both reflects the wackiness of ratings,
         but also the challenge to actually estimate the skill required to beat the level.*@	
         <span>谱面难度: </span>
