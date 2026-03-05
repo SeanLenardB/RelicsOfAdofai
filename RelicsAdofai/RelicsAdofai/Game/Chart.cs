@@ -8,6 +8,7 @@ namespace RelicsAdofai.Game
     {
         public string Artist = "";
         public string Song = "";
+        public string Creator = "";
 
         public double RequiredSkill = 0.0;
     }
