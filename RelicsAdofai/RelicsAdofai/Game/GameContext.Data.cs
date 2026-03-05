@@ -70,10 +70,6 @@
                 for (int j = i + 1; j < singleCreatorCount; j++)
                 {
                     this.Creators.Add($"{this.Creators[i]} & {this.Creators[j]}");
-                    for (int k = j + 1; k < singleCreatorCount; k++)
-                    {
-                        this.Creators.Add($"{this.Creators[i]} & {this.Creators[j]} & {this.Creators[k]}");
-                    }
                 }
             }
 
