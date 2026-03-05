@@ -35,6 +35,10 @@ namespace RelicsAdofai.Game
         public List<ChoiceEvent> ChoiceEvents = [];
         public List<Chart> Charts = [];
 
+        // @note: this should be placed in an instantiator.
+        // This should not be a constant; events can be unlocked through progression.
+        // That's also why we are repeatedly calculating total weight and not hardcode it.
+        // @cleanup: this is too ugly, need cleanup but not that desperate.
         public Tuple<int, Func<ChoiceEvent>>[] ChoiceEventWeightConfiguration =
         [
             new(1, () => new())
@@ -44,6 +48,20 @@ namespace RelicsAdofai.Game
 
         public void GenerateEvents()
         {
+            int totalWeight = this.ChoiceEventWeightConfiguration.Sum(c => c.Item1);
+            // @cleanup: this (event count) should not be hardcoded and should be configurable.
+            int eventCount = this.Random.Next(8);
+            for (int i = 0; i < eventCount; i++)
+            {
+                int randomWeight = this.Random.Next(totalWeight);
+                foreach (var eventPair in this.ChoiceEventWeightConfiguration)
+                {
+                    randomWeight -= eventPair.Item1;
+                    if (randomWeight >= 0) continue;
+
+                    this.ChoiceEvents.Add(eventPair.Item2());
+                }
+            }
         }
 
         public void GenerateCharts()
