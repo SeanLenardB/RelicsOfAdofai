@@ -5,19 +5,13 @@ using System.Text;
 
 namespace RelicsAdofai.Game
 {
-    public class GameContext
+    public partial class GameContext
     {
         public GameContext(int seed)
         {
             this.Seed = seed; this.Random = new(seed);
-            // @cleanup: remove this, this is just for testing
-            this.GenerateCharts();
-            this.GenerateEvents();
 
-            this.ChoiceEventWeightConfiguration =
-            [
-                new(1, () => new())
-            ];
+            this.ImportDefaultData();
         }
 
         public int Version = 1;
@@ -26,6 +20,7 @@ namespace RelicsAdofai.Game
         public int Seed = 0;
         public int DailyEventCount = 0;
         public int DailyEnergyRecharge = 5;
+        public double MultiplierPerRating = 1.41;
 
         // Gamestat
         public string PlayerName = "";
@@ -39,18 +34,20 @@ namespace RelicsAdofai.Game
         public Random Random;
         public List<ChoiceEvent> ChoiceEvents = [];
         public List<Chart> Charts = [];
-        public Tuple<int, Func<ChoiceEvent>>[] ChoiceEventWeightConfiguration;
+        public List<Tuple<int, Func<ChoiceEvent>>> ChoiceEventWeights = [];
+        public List<Tuple<string, string>> ArtistsAndSongs = [];
+        public List<string> Creators = [];
 
 
 
         public void GenerateEvents()
         {
-            int totalWeight = this.ChoiceEventWeightConfiguration.Sum(c => c.Item1);
+            int totalWeight = this.ChoiceEventWeights.Sum(c => c.Item1);
             int eventCount = 2 + this.Random.Next(4);  // @cleanup: should not be hardcoded and should be configurable.
             for (int i = 0; i < eventCount; i++)
             {
                 int randomWeight = this.Random.Next(totalWeight);
-                foreach (var eventPair in this.ChoiceEventWeightConfiguration)
+                foreach (var eventPair in this.ChoiceEventWeights)
                 {
                     randomWeight -= eventPair.Item1;
                     if (randomWeight >= 0) continue;
@@ -62,24 +59,36 @@ namespace RelicsAdofai.Game
 
         public void GenerateCharts()
         {
-            // @todo: make this happen better
-            for (int i = 0; i < 10; i++)
+            int chartCount = 12 + this.Random.Next(8);  // @cleanup: should not be hardcoded and should be configurable.
+            for (int i = 0; i < chartCount; i++)
             {
+                (var artist, var song) = this.ArtistsAndSongs[this.Random.Next(this.ArtistsAndSongs.Count)];
+                var creator = this.Creators[this.Random.Next(this.Creators.Count)];
+
+                // @note: this might not be necessary and might end up being changed.
+                // right now we don't have a good estimation of how the game will end like
+                // so we will play safe and generate charts that have the similar difficulty
+                // of the player's skill.
+                double requiredSkill = this.Random.NextDouble() * this.Skill * Math.Pow(this.MultiplierPerRating, 10);
+
                 this.Charts.Add(new()
                 {
-                    Artist = "Random Artists",
-                    Song = $"Test song suite No. {this.Random.Next(10)}",
-                    RequiredSkill = this.Random.NextDouble() * 114.514
+                    Artist = artist,
+                    Song = song,
+                    Creator = creator,
+                    RequiredSkill = requiredSkill,
                 });
             }
         }
+        
+        // @todo: players can get more familiar with different charts
+        // and the familiarity can help them clear charts easier with a lower skill level.
 
         // The current skill system is based on a logarithmatic scale.
         // That is, the skill number of P2 = 2 * P1, P3 = 2 * P2, etc.
         // However this is a simplification and ideal situation of the ratings.
         // In reality, the logarithmatic scalar might not be a constant, that is,
         // if P2 = 2 * P1, then U2 = 8 * U1 or so.
-        // For now, we just assume that the scaling factor is a constant value of 2.
         public AttemptResult Attempt(Chart chart)
         {
             // This is a rough estimation of how playing adofai is. By no means is this an accurate model.
@@ -88,15 +97,15 @@ namespace RelicsAdofai.Game
             // And it's a guaranteed failure.
             // If I end up adding SANITY as an element of the game, I will change this.
             // Because playing easy charts regains your sanity.
-            if (chart.RequiredSkill > this.Skill * Math.Pow(2, 8)) return new() { HasCleared = false };
+            if (chart.RequiredSkill > this.Skill * Math.Pow(this.MultiplierPerRating, 8)) return new() { HasCleared = false };
 
             // If the player is too good then it's a guaranteed pure perfect.
             // But this easy chart will not hone the player's skill because it's too easy.
-            if (chart.RequiredSkill * Math.Pow(2, 8) < this.Skill) return new() { HasCleared = true, Accuracy = 100.0 };
+            if (chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 8) < this.Skill) return new() { HasCleared = true, Accuracy = 100.0 };
 
             
 
-            double clearChance = this.Skill / chart.RequiredSkill * Math.Pow(2, 8);
+            double clearChance = this.Skill / chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 8);
             if (this.Random.NextDouble() > clearChance) { return new() { HasCleared = false }; }
 
             // @hack: we will reuse the clear chance and estimate the clear accuracy with it.
