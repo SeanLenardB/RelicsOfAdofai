@@ -14,7 +14,7 @@
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
 		@(Math.Floor(this.Context.Hour).ToString("00")):@(Math.Floor((this.Context.Hour % 1.0) * 60).ToString("00"))
 	</p>
-	<button class="game-topstatusbar-finishday" type="button" @onclick="this.FinishDay">结束今天</button>
+	<button class="game-topstatusbar-finishday" type="button" @onclick="this.Context.FinishDay">结束今天</button>
 </div>
 
 <div style="margin: 4ch;">
@@ -60,11 +60,6 @@
 @code {
 	[Parameter]
 	public required GameContext Context { get; set; }
-
-	public void FinishDay()
-	{
-		this.Context.FinishDay();
-	}
 
 	public enum ChartSortStrategy
 	{
