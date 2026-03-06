@@ -10,8 +10,9 @@ namespace RelicsAdofai.Game
         public GameContext(int seed)
         {
             this.Seed = seed; this.Random = new(seed);
-
             this.ImportDefaultData();
+
+            this.GenerateCharts();  // @nocheckin
         }
 
         public int Version = 1;
@@ -25,7 +26,7 @@ namespace RelicsAdofai.Game
         // Gamestat
         public string PlayerName = "";
         public int FollowerCount = 0;
-        public double Skill = 0.0;
+        public double Skill = 1.0;
         public double Money = 0.0;
         public int Day = 1;
         public double Hour = 8.0;
@@ -138,7 +139,6 @@ namespace RelicsAdofai.Game
             0.02, 0.02, 0.02, 0.02, 0.02,        // 99.90
             0.02, 0.02, 0.02, 0.02, 0.02,        // 100.00
         ];
-
 
         public void FinishDay()
         {
