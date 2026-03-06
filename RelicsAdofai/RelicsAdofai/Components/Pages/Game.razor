@@ -14,7 +14,7 @@
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
 		@(Math.Floor(this.Context.Hour).ToString("00")):@(Math.Floor((this.Context.Hour % 1.0) * 60).ToString("00"))
 	</p>
-	<button class="game-topstatusbar-finishday" type="button" @onclick="this.Context.FinishDay">结束今天</button>
+	<button class="game-topstatusbar-finishday" type="button" @onclick="this.Context.FinishDay">收工睡觉</button>
 </div>
 
 <div style="margin: 4ch;">
@@ -49,8 +49,9 @@
     @foreach (var choiceEvent in this.Context.ChoiceEvents)
     {
     <div class="game-events-singleeventitem">
-        <p>@choiceEvent.Description</p>
-    </div>
+		<p style="font-weight: bold; font-size: 24px;">@choiceEvent.Title</p>
+        <p>@(new MarkupString(choiceEvent.Description.Replace("\n", "<br>")))</p>
+	</div>
     }
     </div>
 </div>
@@ -77,5 +78,14 @@
 			ChartSortStrategy.DifficultyDescending => this.Context.Charts.OrderByDescending(c => c.RequiredSkill),
 			_ => this.Context.Charts,
 		};
+	}
+
+	protected override void OnInitialized()
+	{
+		// @hack: The constructor will run first before the fields are set.
+		// So, to properly get the player name and other stuff, we put init here.
+		// This should not be here, though ...
+		this.Context.ImportStartupEvents();
+		base.OnInitialized();
 	}
 }

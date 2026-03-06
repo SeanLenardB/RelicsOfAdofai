@@ -148,6 +148,7 @@ namespace RelicsAdofai.Game
         {
             this.Day++;
             this.Hour = 8.0;
+            this.GenerateEvents();
         }
 
         public string TranslatePgu(Chart chart)
