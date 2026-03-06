@@ -19,16 +19,20 @@
 
 <div style="margin: 4ch;">
 <div class="game-content">
-    @*@todo: Filters on the chart because things will get out of hand very, very quickly (within tens of in-game days)*@
     <div class="game-charts">
-    @foreach (var chart in this.Context.Charts)
+	<select @bind="@this.SortStrategy" style="margin-left: 1ch; width: fit-content; padding-right: 4ch;">
+        <option value="@ChartSortStrategy.Default">默认</option>
+        <option value="@ChartSortStrategy.DifficultyAscending">技术难度 升序</option>
+        <option value="@ChartSortStrategy.DifficultyDescending">技术难度 降序</option>
+	</select>
+    @foreach (var chart in this.GetSortedCharts())
     {
     <div class="game-charts-singlechartitem">
-        <p style="font-weight: bold; font-size: 18px; margin: 0px;">@chart.Song</p>
-        <div style="margin-bottom: 1ch; display: flex; flex-direction: row;">
+        <div style="display: flex; flex-direction: row; margin-bottom: 0px;">
             <span style="font-size: 10px;">@chart.Artist</span>
             <span style="font-size: 10px; margin-left: auto;">@chart.Creator</span>
         </div>
+        <p style="font-weight: bold; font-size: 18px; margin-bottom: 1ch; margin-top: 0px;">@chart.Song</p>
         @*@todo: change this to rating, and hide the required skill, which both reflects the wackiness of ratings,
         but also the challenge to actually estimate the skill required to beat the level.*@	
         <span>谱面难度: </span>
@@ -56,5 +60,23 @@
 	public void FinishDay()
 	{
 		this.Context.FinishDay();
+	}
+
+	public enum ChartSortStrategy
+	{
+		Default,
+		DifficultyAscending,
+		DifficultyDescending,
+	}
+	public ChartSortStrategy SortStrategy = ChartSortStrategy.DifficultyAscending;
+	public IEnumerable<Chart> GetSortedCharts()
+	{
+		return this.SortStrategy switch
+		{
+			ChartSortStrategy.Default => this.Context.Charts,
+			ChartSortStrategy.DifficultyAscending => this.Context.Charts.OrderBy(c => c.RequiredSkill),
+			ChartSortStrategy.DifficultyDescending => this.Context.Charts.OrderByDescending(c => c.RequiredSkill),
+			_ => this.Context.Charts,
+		};
 	}
 }
