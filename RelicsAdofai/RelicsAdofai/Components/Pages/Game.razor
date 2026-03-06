@@ -3,8 +3,8 @@
 	<p class="game-topstatusbar-title">Relics of Adofai</p>
 	<p class="game-topstatusbar-playername">@this.Context.PlayerName</p>
 	<div class="game-topstatusbar-stat">
-		<span>技能</span>
-		<span class="game-topstatusbar-stat-margin-small color-skill">@Math.Round(this.Context.Skill, 1)</span>
+		<span>技术</span>
+		<span class="game-topstatusbar-stat-margin-small color-skill">@this.Context.Skill.ToString("0.00")</span>
 		<span class="game-topstatusbar-stat-margin-large">名声</span>
 		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount</span>
         <span class="game-topstatusbar-stat-margin-large">资金</span>
@@ -35,8 +35,9 @@
         <p style="font-weight: bold; font-size: 18px; margin-bottom: 1ch; margin-top: 0px;">@chart.Song</p>
         @*@todo: change this to rating, and hide the required skill, which both reflects the wackiness of ratings,
         but also the challenge to actually estimate the skill required to beat the level.*@	
-        <span>谱面难度: </span>
-        <span class="color-skill">@Math.Round(chart.RequiredSkill, 1)</span>
+        <span>技术难度: </span>
+		<span>@this.Context.TranslatePgu(chart)</span>
+        <span class="color-skill">@chart.RequiredSkill.ToString("0.00")</span>
     </div>
     }
     </div>

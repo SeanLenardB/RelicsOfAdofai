@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 
@@ -12,7 +13,10 @@ namespace RelicsAdofai.Game
             this.Seed = seed; this.Random = new(seed);
             this.ImportDefaultData();
 
-            this.GenerateCharts();  // @nocheckin
+            // @hack: currently the charts will not increase over the game time
+            // we might change it to be dynamic throughout the game,
+            // but for now, we will generate a fix amount of charts for players to play.
+            this.GenerateCharts();
         }
 
         public int Version = 1;
@@ -50,6 +54,7 @@ namespace RelicsAdofai.Game
                 int randomWeight = this.Random.Next(totalWeight);
                 foreach (var eventPair in this.ChoiceEventWeights)
                 {
+
                     randomWeight -= eventPair.Item1;
                     if (randomWeight >= 0) continue;
 
@@ -60,8 +65,7 @@ namespace RelicsAdofai.Game
 
         public void GenerateCharts()
         {
-            int chartCount = 12 + this.Random.Next(8);  // @cleanup: should not be hardcoded and should be configurable.
-            for (int i = 0; i < chartCount; i++)
+            for (int i = 0; i < 400; i++)
             {
                 (var artist, var song) = this.ArtistsAndSongs[this.Random.Next(this.ArtistsAndSongs.Count)];
                 var creator = this.Creators[this.Random.Next(this.Creators.Count)];
@@ -70,7 +74,7 @@ namespace RelicsAdofai.Game
                 // right now we don't have a good estimation of how the game will end like
                 // so we will play safe and generate charts that have the similar difficulty
                 // of the player's skill.
-                double requiredSkill = this.Random.NextDouble() * this.Skill * Math.Pow(this.MultiplierPerRating, 10);
+                double requiredSkill = this.Skill * Math.Pow(this.MultiplierPerRating, this.Random.NextDouble() * 60);
 
                 this.Charts.Add(new()
                 {
@@ -146,5 +150,12 @@ namespace RelicsAdofai.Game
             this.Hour = 8.0;
         }
 
+        public string TranslatePgu(Chart chart)
+        {
+            // If the difficulty is 1.41, then its log is 1, that means a P2.
+            int logRequiredSkill = (int)Math.Log(chart.RequiredSkill, this.MultiplierPerRating);
+            Debug.Assert(logRequiredSkill >= 0 && logRequiredSkill < 60, "There is something wrong with the difficulty generator!");
+            return ((logRequiredSkill / 20) switch { 0 => "P", 1 => "G", 2 => "U", _ => "E" }) + ((logRequiredSkill % 20) + 1).ToString();
+        }
     }
 }
