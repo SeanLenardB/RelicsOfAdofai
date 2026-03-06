@@ -31,12 +31,18 @@
             this.ArtistsAndSongs.Add(new("Crysanthemum", "GOODBYE (BPM) 2024"));
             this.ArtistsAndSongs.Add(new("Crysanthemum", "GOODBYE (BPM) 2025"));
             this.ArtistsAndSongs.Add(new("Crysanthemum", "GOODBYE (BPM) 2026"));
+            this.ArtistsAndSongs.Add(new("Crysanthemum", "Trillion QQ"));
+            this.ArtistsAndSongs.Add(new("Crysanthemum", "[wc]"));
 
             this.ArtistsAndSongs.Add(new("Fnares", "NAND NAND NAND"));
             this.ArtistsAndSongs.Add(new("Fnares", "mono_leg"));
             this.ArtistsAndSongs.Add(new("Fnares", "RADIO, UMBRALOGOS"));
             this.ArtistsAndSongs.Add(new("Fnares", "Photographed As Purple And Pristine"));
             this.ArtistsAndSongs.Add(new("Fnares", "They Desire To Walk"));
+            this.ArtistsAndSongs.Add(new("Fnares", "WALL"));
+            this.ArtistsAndSongs.Add(new("Fnares", "goto EXIT"));
+            this.ArtistsAndSongs.Add(new("Fnares", "settings"));
+            this.ArtistsAndSongs.Add(new("Fnares", "cast"));
 
             this.ArtistsAndSongs.Add(new("Infinite Series", "Beneath the Boundary"));
             this.ArtistsAndSongs.Add(new("Infinite Series", "Laws of the Ordered Bisection"));
