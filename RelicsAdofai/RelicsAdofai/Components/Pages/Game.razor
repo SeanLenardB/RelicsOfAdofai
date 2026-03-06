@@ -35,9 +35,12 @@
         <p style="font-weight: bold; font-size: 18px; margin-bottom: 1ch; margin-top: 0px;">@chart.Song</p>
         @*@todo: change this to rating, and hide the required skill, which both reflects the wackiness of ratings,
         but also the challenge to actually estimate the skill required to beat the level.*@	
-        <span>技术难度: </span>
-		<span>@this.Context.TranslatePgu(chart)</span>
-        <span class="color-skill">@chart.RequiredSkill.ToString("0.00")</span>
+		<div style="display: flex; flex-direction: row;">
+			<img src="@("pgu/" + this.Context.TranslatePgu(chart) + ".png")"
+				 alt="@this.Context.TranslatePgu(chart)"
+				 style="height: 36px; margin: 0px;"/>
+			<span class="color-skill" style="margin-left: auto; align-self: end;">@chart.RequiredSkill.ToString("0.00")</span>
+		</div>
     </div>
     }
     </div>
