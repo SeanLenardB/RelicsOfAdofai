@@ -34,7 +34,7 @@
             };
         }
 
-        public ChoiceEvent WithTimeLimit(int days, Action<GameContext> overtimeConsequence)
+        public ChoiceEvent WithDayLimit(int days, Action<GameContext> overtimeConsequence)
         {
             this.RemainingDays = days;
             this.OvertimeConsequence = overtimeConsequence;
@@ -45,6 +45,30 @@
         {
             this.OnDayEnd = onDayEnd;
             return this;
+        }
+        public ChoiceEvent WithOnDayEnd(Action<GameContext, ChoiceEvent> onDayEnd)
+        {
+            // @cleanup: the reason this exists is that we need to have a way to
+            // remove a choice event on day end. This is a very dirty way to do it
+            // but, hey! it works!
+            this.OnDayEnd = context => onDayEnd(context, this);
+            return this;
+        }
+
+        public static ChoiceEvent MeetCriteria(int days, string title, string description,
+            Action<GameContext> succeedConsequence, Action<GameContext> failConsequence,
+            Predicate<GameContext> criteria)
+        {
+            return new ChoiceEvent()
+            {
+                Title = title,
+                Description = description,
+                Choices = 
+                [
+                    new() { Text = "完成", Consequence = succeedConsequence, IsChoiceAvailable = criteria },
+                    new() { Text = "放弃", Consequence = failConsequence }
+                ]
+            }.WithDayLimit(days, failConsequence);
         }
     }
 
