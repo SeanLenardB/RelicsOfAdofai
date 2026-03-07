@@ -229,7 +229,8 @@ namespace RelicsAdofai.Game
                         if (context.Random.NextDouble() > 0.2) return;
                         context.FollowerCount *= 1.02;
                     },
-                    _ => { }
+                    _ => { },
+                    context => context.Money > 10
                     ).WithDayLimit(1, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(2, () =>
@@ -248,7 +249,8 @@ namespace RelicsAdofai.Game
                         if (context.Random.NextDouble() > 0.5) return;
                         context.FollowerCount *= 1.02;
                     },
-                    _ => { }
+                    _ => { },
+                    context => context.Money > 20
                     ).WithDayLimit(1, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(2, () =>
@@ -267,7 +269,8 @@ namespace RelicsAdofai.Game
                         if (context.Random.NextDouble() > 0.5) return;
                         context.FollowerCount *= 1.05;
                     },
-                    _ => { }
+                    _ => { },
+                    context => context.Money > 50
                     ).WithDayLimit(1, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(1, () =>
@@ -284,7 +287,8 @@ namespace RelicsAdofai.Game
                         context.Skill *= 1.1;
                         context.FollowerCount *= 1.05;
                     },
-                    _ => { }
+                    _ => { },
+                    context => context.Money > 100
                     ).WithDayLimit(1, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(1, () =>
@@ -299,7 +303,8 @@ namespace RelicsAdofai.Game
                         context.Skill *= 1.1;
                         context.FollowerCount *= 1.1;
                     },
-                    _ => { }
+                    _ => { },
+                    context => context.Money > 198
                     ).WithDayLimit(1, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(1, () =>
@@ -386,7 +391,8 @@ namespace RelicsAdofai.Game
                         if (context.Random.NextDouble() > 0.2) return;
                         context.FollowerCount *= 1.02;
                     },
-                    _ => { }
+                    _ => { },
+                    context => context.Money > 300
                     );
             }));
             this.ChoiceEventWeights.Add(new(1, () =>
@@ -399,7 +405,8 @@ namespace RelicsAdofai.Game
                         if (context.Random.NextDouble() > 0.5) return;
                         context.FollowerCount *= 1.05;
                     },
-                    _ => { }
+                    _ => { },
+                    context => context.Money > 300
                     );
             }));
         }
