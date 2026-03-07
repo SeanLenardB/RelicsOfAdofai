@@ -33,6 +33,20 @@
                 ]
             };
         }
+        public static ChoiceEvent YesNo(string title, string description, 
+            Action<GameContext> yesConsequence, Action<GameContext> noConsequence, Predicate<GameContext> yesCriteria)
+        {
+            return new()
+            {
+                Title = title,
+                Description = description,
+                Choices = 
+                [
+                    new() { Text = "Yes", Consequence = yesConsequence, IsChoiceAvailable = yesCriteria },
+                    new() { Text = "No", Consequence = noConsequence }
+                ]
+            };
+        }
 
         public ChoiceEvent WithDayLimit(int days, Action<GameContext> overtimeConsequence)
         {
