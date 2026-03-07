@@ -277,6 +277,15 @@ namespace RelicsAdofai.Game
                 this.ChartFamiliarities[chart] = newFamiliarity;
             }
 
+            if (this.Day % 7 == 0)
+            {
+                double videoIncome = Math.Log(this.FollowerCount) * 10;
+                this.ChoiceEvents.Add(ChoiceEvent.Info(
+                    "视频创作收入",
+                    $"上周你的视频共产生收入<span class=\"color-money\">{videoIncome:0.00}</span>",
+                    context => context.Money += videoIncome
+                    ));
+            }
             this.GenerateEvents();
         }
 

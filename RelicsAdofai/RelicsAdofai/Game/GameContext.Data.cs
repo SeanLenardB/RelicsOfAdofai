@@ -468,16 +468,18 @@ namespace RelicsAdofai.Game
                     """,
                     context =>
                     {
-                        context.Skill = 1;
-                        context.Money = 72.7;
+                        context.Skill += 1;
+                        context.Money += 72.7;
+                        context.FollowerCount += 1;
                         context.Hour += 6;
                     })
                 .WithDayLimit(
                     0,
                     context =>
                     {
-                        context.Skill = 1;
-                        context.Money = 11.4;
+                        context.Skill += 1;
+                        context.Money += 11.4;
+                        context.FollowerCount += 1;
                     }
                 ));
         }
