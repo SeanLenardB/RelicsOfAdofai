@@ -20,11 +20,15 @@
 
 <div style="display: flex; flex-direction: row; margin: 4ch; height: 80vh;">
     <div class="game-charts">
-	<select @bind="@this.SortStrategy" style="margin-left: 1ch; width: fit-content; padding-right: 4ch;">
-        <option value="@ChartSortStrategy.Default">默认</option>
-        <option value="@ChartSortStrategy.DifficultyAscending">技术难度 升序</option>
-        <option value="@ChartSortStrategy.DifficultyDescending">技术难度 降序</option>
-	</select>
+	<div style="display: flex; flex-direction: row;">
+		<select @bind="@this.SortStrategy" style="margin-left: 1ch; width: fit-content; padding-right: 4ch;">
+			<option value="@ChartSortStrategy.Default">默认</option>
+			<option value="@ChartSortStrategy.DifficultyAscending">技术难度 升序</option>
+			<option value="@ChartSortStrategy.DifficultyDescending">技术难度 降序</option>
+		</select>
+		<span style="margin-left: auto; margin-right: 1ch;">搜索</span>
+		<input style="margin-right: 2ch;" @bind-value="this.ChartSearchInput"/>
+	</div>
     @foreach (var chart in this.GetSortedCharts())
     {
     <div class="game-charts-singlechartitem">
@@ -90,9 +94,12 @@
     <div class="game-events-singleeventitem">
 		<div style="display: flex; flex-direction: row">
 		<p style="font-weight: bold; font-size: 24px; margin-top: 0ch;">@choiceEvent.Title</p>
-		<p style="margin-left: auto; align-self: start; margin-top: 0ch;">
-			@(choiceEvent.RemainingDays == 0 ? "今天结束" : $"剩余{choiceEvent.RemainingDays}天")
-		</p>
+		@if (choiceEvent.RemainingDays < int.MaxValue)
+		{
+			<p style="margin-left: auto; align-self: start; margin-top: 0ch;">
+				@(choiceEvent.RemainingDays == 0 ? "今天结束" : $"剩余{choiceEvent.RemainingDays}天")
+			</p>
+		}
 		</div>
         <p>@(new MarkupString(choiceEvent.Description.Replace("\n", "<br>")))</p>
 		<div style="margin-top: 0.5ch; display: flex; flex-direction: row;">
@@ -138,12 +145,17 @@
 	{
 		return this.SortStrategy switch
 		{
-			ChartSortStrategy.Default => this.Context.Charts,
-			ChartSortStrategy.DifficultyAscending => this.Context.Charts.OrderBy(c => c.RequiredSkill),
-			ChartSortStrategy.DifficultyDescending => this.Context.Charts.OrderByDescending(c => c.RequiredSkill),
+			ChartSortStrategy.Default => 
+				this.Context.Charts.Where(c => c.ToString().ToLower().Contains(this.ChartSearchInput.ToLower())),
+			ChartSortStrategy.DifficultyAscending => 
+				this.Context.Charts.Where(c => c.ToString().ToLower().Contains(this.ChartSearchInput.ToLower())).OrderBy(c => c.RequiredSkill),
+			ChartSortStrategy.DifficultyDescending => 
+				this.Context.Charts.Where(c => c.ToString().ToLower().Contains(this.ChartSearchInput.ToLower())).OrderByDescending(c => c.RequiredSkill),
 			_ => this.Context.Charts,
 		};
 	}
+
+	public string ChartSearchInput = "";
 
 	protected override void OnInitialized()
 	{
