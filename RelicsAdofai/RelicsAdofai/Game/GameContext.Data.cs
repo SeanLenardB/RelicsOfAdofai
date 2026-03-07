@@ -110,7 +110,7 @@ namespace RelicsAdofai.Game
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
                     $"谱面#{bountyIndex}悬赏",
-                    $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart} ({this.TranslatePgu(bountyChart)})的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
                     context => { context.Money += bountyMoney; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var _)
@@ -126,7 +126,7 @@ namespace RelicsAdofai.Game
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
                     $"谱面#{bountyIndex}悬赏",
-                    $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart}，且精准度高于{bountyAccuracy}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart} ({this.TranslatePgu(bountyChart)})，且精准度高于{bountyAccuracy}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.01; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy >= bountyAccuracy
@@ -141,7 +141,7 @@ namespace RelicsAdofai.Game
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
                     $"谱面#{bountyIndex}悬赏",
-                    $"{bountyChart.Creator}愿意给{bountyDays}天内完美无瑕{bountyChart}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.02; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy > 99.99
@@ -166,7 +166,7 @@ namespace RelicsAdofai.Game
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
                     $"谱面#{bountyIndex}悬赏",
-                    $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart}的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
                     $"目前看下来，这张谱面" + tabubIsMineString,
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.1; },
                     _ => { },
@@ -177,7 +177,7 @@ namespace RelicsAdofai.Game
 
                     context.ChoiceEvents.Remove(e);
                     context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                        $"已砍下谱面{bountyChart}的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
+                        $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
                 }).WithDayLimit(bountyDays, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(1, () =>
@@ -199,7 +199,7 @@ namespace RelicsAdofai.Game
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
                     $"谱面#{bountyIndex}悬赏",
-                    $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart}的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
                     $"目前看下来，这张谱面" + tabubIsMineString,
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.2; },
                     _ => { },
@@ -210,7 +210,7 @@ namespace RelicsAdofai.Game
 
                     context.ChoiceEvents.Remove(e);
                     context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                        $"已砍下谱面{bountyChart}的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
+                        $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
                 }).WithDayLimit(bountyDays, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(2, () =>
