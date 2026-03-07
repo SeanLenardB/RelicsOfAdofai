@@ -18,7 +18,7 @@
 	<button class="game-topstatusbar-finishday" type="button" @onclick="this.Context.FinishDay">收工睡觉</button>
 </div>
 
-<div style="display: flex; flex-direction: row; margin: 4ch;">
+<div style="display: flex; flex-direction: row; margin: 4ch; height: 80vh;">
     <div class="game-charts">
 	<select @bind="@this.SortStrategy" style="margin-left: 1ch; width: fit-content; padding-right: 4ch;">
         <option value="@ChartSortStrategy.Default">默认</option>
@@ -41,7 +41,44 @@
 				 style="height: 36px; margin: 0px;"/>
 			<span class="color-skill" style="margin-left: auto; align-self: end;">@chart.RequiredSkill.ToString("0.00")</span>
 		</div>
-    </div>
+		<div style="display: flex; flex-direction: row; margin-top: 1ch;">
+			<button
+				type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
+				@onclick="_ => this.Context.PracticeChart(chart)">练习谱面</button>
+			@if (this.Context.ChartAccuracies.ContainsKey(chart))
+			{
+				<button
+					type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
+					@onclick="_ => this.Context.AttemptChart(chart)">刷准度</button>
+			}
+			else
+			{
+				<button
+					type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
+					@onclick="_ => this.Context.AttemptChart(chart)">尝试击破</button>
+			}
+
+			<div style="display: flex; flex-direction: column; margin-left: auto;">
+				<p style="margin: 0px; text-align: right; font-size: 10px; color: gray">
+					(+@((this.Context.ChartFamiliarities.GetValueOrDefault(chart)).ToString("0.00%")))</p>
+			@if (this.Context.ChartAccuracies.ContainsKey(chart))
+			{
+				@if (this.Context.ChartAccuracies[chart] > 99.99)
+				{
+					<p style="font-weight: bold; margin: 0px; text-align: right; color: gold;">
+						100.00%</p>
+				}
+				else
+				{
+					<p style="font-weight: bold; margin: 0px; text-align: right; color: lightgoldenrodyellow">
+						@((this.Context.ChartAccuracies[chart]).ToString("0.00"))%</p>
+					@*@note: do not put the percentile inside the string format. C# will helpfully times 100 for you.*@
+				}
+			}
+			else { <p style="margin: 0px; text-align: right;">未击破</p> }
+			</div>
+		</div>
+	</div>
     }
     </div>
 
@@ -61,7 +98,7 @@
 		@foreach (var choice in choiceEvent.Choices)
 		{
 			<button disabled="@(!choice.IsChoiceAvailable(this.Context))"
-			        @onclick="_ => this.TakeChoice(choiceEvent, choice)"
+			        @onclick="_ => this.Context.TakeChoice(choiceEvent, choice)"
 				    style="padding: 0.5ch 1.5ch; margin-right: 0.5ch;" type="button">
 				@choice.Text
 			</button>
@@ -71,7 +108,15 @@
     }
     </div>
 	<div class="game-log">
-		@(new MarkupString(this.Context.Log.ToString()))
+	@*  @hack: if the log is in normal order we need to keep scrolling the box.
+		Although there is a very scuffed way to do that (inject JsRuntime)
+		that will be very shit and not very useful.
+		
+		Therefore, we present the log in the REVERSE order.*@
+	@for (int i = 0; i < this.Context.Log.Count; i++)
+	{
+		@(new MarkupString(this.Context.Log[^(i + 1)]))
+	}
 	</div>
 	</div>
 </div>
@@ -106,12 +151,5 @@
 		// This should not be here, though ...
 		this.Context.ImportStartupEvents();
 		base.OnInitialized();
-	}
-
-	public void TakeChoice(ChoiceEvent choiceEvent, Choice choice)
-	{
-		choice.Consequence(this.Context);
-		bool removeSuccess = this.Context.ChoiceEvents.Remove(choiceEvent);
-		Debug.Assert(removeSuccess, "Cannot remove a choice event!");
 	}
 }

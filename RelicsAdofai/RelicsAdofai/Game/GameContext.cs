@@ -29,14 +29,14 @@ namespace RelicsAdofai.Game
 
         // Gamestat
         public string PlayerName = "";
-        public StringBuilder Log = new();
+        public List<string> Log = [];
 
         // Gamestat, event-listened
         public int FollowerCount
         {
             get;
             set {
-                this.Log.Append($"<p>名声: <span class=\"color-follower\">{field}</span> >>> <span class=\"color-follower\">{value}</span></p>");
+                this.Log.Add($"<p>名声: <span class=\"color-follower\">{field}</span> >>> <span class=\"color-follower\">{value}</span></p>");
                 field = value;
             }
         } = 0;
@@ -44,7 +44,7 @@ namespace RelicsAdofai.Game
             get;
             set
             {
-                this.Log.Append($"<p>技术: <span class=\"color-skill\">{field:0.00}</span> >>> <span class=\"color-skill\">{value:0.00}</span></p>");
+                this.Log.Add($"<p>技术: <span class=\"color-skill\">{field:0.00}</span> >>> <span class=\"color-skill\">{value:0.00}</span></p>");
                 field = value;
             }
         } = 0.0;
@@ -52,18 +52,35 @@ namespace RelicsAdofai.Game
             get;
             set
             {
-                this.Log.Append($"<p>资金: <span class=\"color-money\">{field:0.00}</span> >>> <span class=\"color-money\">{value:0.00}</span></p>");
+                this.Log.Add($"<p>资金: <span class=\"color-money\">{field:0.00}</span> >>> <span class=\"color-money\">{value:0.00}</span></p>");
                 field = value;
             }
         } = 0.0;
         // @note: this is not listened, although it might be useful to listen to this.
         public int Day = 1;
-        public double Hour { get; set { this.Log.Append($"<p>时间经过{(value - field <= 0 ? value - field + 24 : value - field)}小时</p>"); field = value; } } = 8.0;
+        public double Hour
+        {
+            get; set
+            {
+                if (value > 23.0)
+                {
+                    this.FinishDay();
+                    this.Log.Add($"<p><strong>超过23:00，已强制结束第{Day - 1}天</strong></p>");
+                }
+                else
+                {
+                    this.Log.Add($"<p>时间经过{(value - field <= 0 ? value - field + 24 : value - field):0.0}小时</p>");
+                    field = value;
+                }
+            }
+        } = 8.0;
 
         // Internal
         public Random Random;
         public List<ChoiceEvent> ChoiceEvents = [];
         public List<Chart> Charts = [];
+        public Dictionary<Chart, double> ChartFamiliarities = [];
+        public Dictionary<Chart, double> ChartAccuracies = [];
         public List<Tuple<int, Func<ChoiceEvent>>> ChoiceEventWeights = [];
         public List<Tuple<string, string>> ArtistsAndSongs = [];
         public List<string> Creators = [];
@@ -119,47 +136,72 @@ namespace RelicsAdofai.Game
         // However this is a simplification and ideal situation of the ratings.
         // In reality, the logarithmatic scalar might not be a constant, that is,
         // if P2 = 2 * P1, then U2 = 8 * U1 or so.
-        public AttemptResult Attempt(Chart chart)
+        public void AttemptChart(Chart chart)
         {
+            this.Hour += 0.2;
             // This is a rough estimation of how playing adofai is. By no means is this an accurate model.
 
             // @note: Players attempting charts that are too hard will not gain anything from the chart (no skill gain).
             // And it's a guaranteed failure.
             // If I end up adding SANITY as an element of the game, I will change this.
             // Because playing easy charts regains your sanity.
-            if (chart.RequiredSkill > this.Skill * Math.Pow(this.MultiplierPerRating, 8)) return new() { HasCleared = false };
+            if (chart.RequiredSkill > this.Skill * Math.Pow(this.MultiplierPerRating, 8))
+            {
+                this.Log.Add($"<p>尝试谱面{chart}失败，判定万紫千红</p>");
+                return;
+            }
 
             // If the player is too good then it's a guaranteed pure perfect.
             // But this easy chart will not hone the player's skill because it's too easy.
-            if (chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 8) < this.Skill) return new() { HasCleared = true, Accuracy = 100.0 };
+            if (chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 8) < this.Skill)
+            {
+                this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: gold\">100.00%</span>（啊！完美无瑕！）</p>");
+                this.ChartAccuracies[chart] = 100;
+                return;
+            }
 
             
 
-            double clearChance = this.Skill / chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 8);
-            if (this.Random.NextDouble() > clearChance) { return new() { HasCleared = false }; }
+            double clearChance = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 8);
+            double familiarity = this.ChartFamiliarities.GetValueOrDefault(chart);
+            clearChance = (clearChance + familiarity) / (1 + familiarity);
+            if (this.Random.NextDouble() > clearChance)
+            {
+                this.Log.Add($"<p>尝试谱面{chart}失败，死在{Math.Floor(clearChance * 100)}%</p>");
+                return;
+            }
 
             // @hack: we will reuse the clear chance and estimate the clear accuracy with it.
             // From 96.00, we roll random steps to obtain the preeliminary accuracy.
             // Then, we will introduce a random deduction by the step value.
-            AttemptResult result = new() { HasCleared = true };
+            double accuracy = 96.0;
             int stepIndex = 0;
             bool canStep = true;
             while (canStep)
             {
                 if (this.Random.NextDouble() > clearChance) { canStep = false; }
-                result.Accuracy += this.AccuracySteps[stepIndex];
+                accuracy += this.AccuracySteps[stepIndex];
                 stepIndex++;
                 if (stepIndex >= this.AccuracySteps.Length) { break; }
             }
             stepIndex--;
-            result.Accuracy -= this.AccuracySteps[stepIndex] * this.Random.NextDouble();
+            accuracy -= this.AccuracySteps[stepIndex] * this.Random.NextDouble();
+            bool isPurePerfect = accuracy > 99.99;
 
-            return result;
+            if (isPurePerfect)
+                this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: gold\">100.00%</span>（啊！完美无瑕！）</p>");
+            else
+                this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: lightgoldenrodyellow\">{accuracy:0.00}%</span></p>");
+
+            if (this.ChartAccuracies.TryGetValue(chart, out var previousAccuracy) && previousAccuracy > accuracy) return;
+            this.ChartAccuracies[chart] = isPurePerfect ? 100 : accuracy;  // prevent precision loss
+            this.Skill += (accuracy - previousAccuracy) / 100 * chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 1);
+
         }
         public double[] AccuracySteps = 
         [
             0.40, 0.40,                          // 96.80
-            0.30, 0.30, 0.30,                    // 98.00
+            0.30, 0.30, 0.30, 0.30,              // 98.00
             0.20, 0.20, 0.20,                    // 98.60
             0.10, 0.10, 0.10, 0.10,              // 99.00 
             0.05, 0.05, 0.05, 0.05, 0.05, 0.05,  // 99.30
@@ -168,9 +210,27 @@ namespace RelicsAdofai.Game
             0.02, 0.02, 0.02, 0.02, 0.02,        // 99.90
             0.02, 0.02, 0.02, 0.02, 0.02,        // 100.00
         ];
+        public void PracticeChart(Chart chart)
+        {
+            this.Hour += 0.5;
+
+            double previousFamiliarity = this.ChartFamiliarities.GetValueOrDefault(chart);
+            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 4);  // @note: nerfed from 8 to 4
+            if (interpolation > 1.0) interpolation = 1.0;
+
+            double newFamiliarity = (previousFamiliarity + interpolation) / 2.0;
+            this.ChartFamiliarities[chart] = newFamiliarity;
+
+            this.Log.Add($"<p>练习谱面{chart}，" +
+                $"熟练度: <span style=\"color: gray\">{previousFamiliarity:0.00%}</span> " +
+                $">>> <span style=\"color: gray\">{newFamiliarity:0.00%}</span></p>");
+
+            this.Skill += (newFamiliarity - previousFamiliarity) * chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 0.5);
+        }
 
         public void FinishDay()
         {
+            this.Log.Clear();  // @note: might not be very ideal
             this.Day++;
             this.Hour = 8.0;
 
@@ -179,12 +239,25 @@ namespace RelicsAdofai.Game
             {
                 if (choiceEvent.RemainingDays >= 0) continue;
 
-                this.Log.Append($"事件“{choiceEvent.Title}”已结束");
+                this.Log.Add($"事件“{choiceEvent.Title}”已结束");
                 choiceEvent.OvertimeConsequence(this);
             }
             this.ChoiceEvents.RemoveAll(e => e.RemainingDays < 0);
 
             this.ChoiceEvents.ForEach(e => e.OnDayEnd(this));
+
+            foreach (var chart in this.ChartFamiliarities.Keys)
+            {
+                double previousFamiliarity = this.ChartFamiliarities[chart];
+                if (previousFamiliarity >= 0.9) continue;
+
+                double newFamiliarity = Math.Pow(previousFamiliarity, 1.5);
+                this.Log.Add($"<p>谱面{chart}的熟练度下降: " +
+                    $"<span style=\"color: gray;\">{previousFamiliarity:0.00%}</span> >>> " +
+                    $"<span style=\"color: gray;\">{newFamiliarity:0.00%}</span></p>");
+                this.ChartFamiliarities[chart] = newFamiliarity;
+            }
+
             this.GenerateEvents();
         }
 
@@ -194,6 +267,15 @@ namespace RelicsAdofai.Game
             int logRequiredSkill = (int)Math.Log(chart.RequiredSkill, this.MultiplierPerRating);
             Debug.Assert(logRequiredSkill >= 0 && logRequiredSkill < 60, "There is something wrong with the difficulty generator!");
             return ((logRequiredSkill / 20) switch { 0 => "P", 1 => "G", 2 => "U", _ => "E" }) + ((logRequiredSkill % 20) + 1).ToString();
+        }
+
+        public void TakeChoice(ChoiceEvent choiceEvent, Choice choice)
+        {
+            bool removeSuccess = this.ChoiceEvents.Remove(choiceEvent);
+            Debug.Assert(removeSuccess, "Cannot remove a choice event!");
+
+            this.Log.Add($"事件“{choiceEvent.Title}”选择“{choice.Text}”");
+            choice.Consequence(this);
         }
     }
 }

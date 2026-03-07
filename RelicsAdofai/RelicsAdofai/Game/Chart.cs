@@ -11,5 +11,7 @@ namespace RelicsAdofai.Game
         public string Creator = "";
 
         public double RequiredSkill = 0.0;
+
+        public override string ToString() { return $"{Artist} - {Song} [{Creator}]"; }
     }
 }

@@ -229,8 +229,6 @@ body {
     flex-direction: column;
     width: 50%;
 
-    /*@hack: this should not be hardcoded but fuck css*/
-    height: 80vh;
     overflow: auto;
 }
 .game-charts-singlechartitem {
@@ -272,7 +270,6 @@ body {
     flex-direction: column;
     margin-top: 3ch;
 
-    /*@hack: this should not be hardcoded but fuck css*/
     height: 30%;
     width: auto;
     overflow: auto;
