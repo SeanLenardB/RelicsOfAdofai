@@ -277,6 +277,9 @@ body {
     width: auto;
     overflow: auto;
 }
+.game-log > p {
+    margin: 0px;
+}
 
 .color-skill {
     color: #c77dff;

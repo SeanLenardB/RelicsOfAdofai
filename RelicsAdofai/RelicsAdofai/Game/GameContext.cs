@@ -29,11 +29,36 @@ namespace RelicsAdofai.Game
 
         // Gamestat
         public string PlayerName = "";
-        public int FollowerCount = 0;
-        public double Skill = 0.0;
-        public double Money = 0.0;
+        public StringBuilder Log = new();
+
+        // Gamestat, event-listened
+        public int FollowerCount
+        {
+            get;
+            set {
+                this.Log.Append($"<p>名声: <span class=\"color-follower\">{field}</span> >>> <span class=\"color-follower\">{value}</span></p>");
+                field = value;
+            }
+        } = 0;
+        public double Skill {
+            get;
+            set
+            {
+                this.Log.Append($"<p>技术: <span class=\"color-skill\">{field}</span> >>> <span class=\"color-skill\">{value}</span></p>");
+                field = value;
+            }
+        } = 0.0;
+        public double Money {
+            get;
+            set
+            {
+                this.Log.Append($"<p>资金: <span class=\"color-money\">{field}</span> >>> <span class=\"color-money\">{value}</span></p>");
+                field = value;
+            }
+        } = 0.0;
+        // @note: this is not listened, although it might be useful to listen to this.
         public int Day = 1;
-        public double Hour = 8.0;
+        public double Hour { get; set { this.Log.Append($"<p>时间经过{(value - field == 0 ? 24 : value - field)}小时</p>"); field = value; } } = 8.0;
 
         // Internal
         public Random Random;
