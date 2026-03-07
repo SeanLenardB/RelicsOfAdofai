@@ -175,7 +175,7 @@ namespace RelicsAdofai.Game
                 {
                     if (context.Random.NextDouble() > tabubIsMineProbability) return;
 
-                    context.ChoiceEvents.Remove(e);
+                    e.RemainingDays = -1;
                     context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
                         $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
                 }).WithDayLimit(bountyDays, _ => { });
@@ -208,7 +208,7 @@ namespace RelicsAdofai.Game
                 {
                     if (context.Random.NextDouble() > tabubIsMineProbability) return;
 
-                    context.ChoiceEvents.Remove(e);
+                    e.RemainingDays = -1;
                     context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
                         $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
                 }).WithDayLimit(bountyDays, _ => { });

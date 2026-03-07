@@ -249,9 +249,16 @@ namespace RelicsAdofai.Game
                 this.Log.Add($"事件“{choiceEvent.Title}”已结束");
                 choiceEvent.OvertimeConsequence(this);
             }
+            // @cleanup: This OnDayEnd loop is before the RemoveAll because there are events
+            // where they have a chance to be discarded at the end of a day.
+            //
+            // As we can't modify the ChoiceEvents list in OnDayEnd itself
+            // (which causes enumeration failure as the array got reallocated in memory)
+            // we now manually assign the remaining days of those events to -1,
+            // so, during the remove event phase they will get removed.
+            this.ChoiceEvents.ForEach(e => e.OnDayEnd(this));
             this.ChoiceEvents.RemoveAll(e => e.RemainingDays < 0);
 
-            this.ChoiceEvents.ForEach(e => e.OnDayEnd(this));
 
             foreach (var chart in this.ChartFamiliarities.Keys)
             {
