@@ -30,6 +30,11 @@ button {
         outline: none;
         border: 2px solid white;
     }
+    button:disabled {
+        background-color: #00000033;
+        outline: none;
+        border: 2px solid black;
+    }
 
 /* @rant: Whoever makes this select dropdown should shove this middle finger up their ass
     because there is literally no reliable way to change how the dropdown menu works.
