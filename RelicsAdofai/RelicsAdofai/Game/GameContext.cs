@@ -30,7 +30,7 @@ namespace RelicsAdofai.Game
         // Gamestat
         public string PlayerName = "";
         public int FollowerCount = 0;
-        public double Skill = 1.0;
+        public double Skill = 0.0;
         public double Money = 0.0;
         public int Day = 1;
         public double Hour = 8.0;
