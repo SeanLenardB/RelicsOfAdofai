@@ -5,6 +5,9 @@
         public string Title = "";
         public string Description = "";
         public List<Choice> Choices = [];
+        public int RemainingDays = int.MaxValue;
+        public Action<GameContext> OvertimeConsequence = _ => { };
+        public Action<GameContext> OnDayEnd = _ => { };
 
         public static ChoiceEvent Info(string title, string description, Action<GameContext> consequence)
         {
@@ -29,6 +32,19 @@
                     new() { Text = "No", Consequence = noConsequence }
                 ]
             };
+        }
+
+        public ChoiceEvent WithTimeLimit(int days, Action<GameContext> overtimeConsequence)
+        {
+            this.RemainingDays = days;
+            this.OvertimeConsequence = overtimeConsequence;
+            return this;
+        }
+
+        public ChoiceEvent WithOnDayEnd(Action<GameContext> onDayEnd)
+        {
+            this.OnDayEnd = onDayEnd;
+            return this;
         }
     }
 

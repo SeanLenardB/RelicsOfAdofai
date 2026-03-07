@@ -173,6 +173,18 @@ namespace RelicsAdofai.Game
         {
             this.Day++;
             this.Hour = 8.0;
+
+            this.ChoiceEvents.ForEach(e => e.RemainingDays--);
+            foreach (var choiceEvent in this.ChoiceEvents)
+            {
+                if (choiceEvent.RemainingDays >= 0) continue;
+
+                this.Log.Append($"事件“{choiceEvent.Title}”已结束");
+                choiceEvent.OvertimeConsequence(this);
+            }
+            this.ChoiceEvents.RemoveAll(e => e.RemainingDays < 0);
+
+            this.ChoiceEvents.ForEach(e => e.OnDayEnd(this));
             this.GenerateEvents();
         }
 
