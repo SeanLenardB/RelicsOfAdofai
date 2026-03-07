@@ -78,6 +78,14 @@
                     this.Creators.Add($"{this.Creators[i]} & {this.Creators[j]}");
                 }
             }
+            // @todo: add more players when we get to "Networking DLC".
+            this.OtherPlayers.Add("Reppij");
+            this.OtherPlayers.Add("Teaj_");
+            this.OtherPlayers.Add("Vate_Jalery");
+            this.OtherPlayers.Add("Dodging ball");
+            this.OtherPlayers.Add("FireCave");
+            this.OtherPlayers.Add("ikun_");
+            this.OtherPlayers.Add("HuiZai_");
         }
 
         public void ImportStartupEvents()

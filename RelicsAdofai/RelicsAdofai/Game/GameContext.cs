@@ -32,14 +32,14 @@ namespace RelicsAdofai.Game
         public List<string> Log = [];
 
         // Gamestat, event-listened
-        public int FollowerCount
+        public double FollowerCount
         {
             get;
             set {
                 this.Log.Add($"<p>名声: <span class=\"color-follower\">{field}</span> >>> <span class=\"color-follower\">{value}</span></p>");
                 field = value;
             }
-        } = 0;
+        } = 0.0;
         public double Skill {
             get;
             set
@@ -84,6 +84,7 @@ namespace RelicsAdofai.Game
         public List<Tuple<int, Func<ChoiceEvent>>> ChoiceEventWeights = [];
         public List<Tuple<string, string>> ArtistsAndSongs = [];
         public List<string> Creators = [];
+        public List<string> OtherPlayers = [];
 
 
 
@@ -120,6 +121,7 @@ namespace RelicsAdofai.Game
 
                 this.Charts.Add(new()
                 {
+                    Id = i + 1,
                     Artist = artist,
                     Song = song,
                     Creator = creator,
