@@ -101,10 +101,12 @@
                 尽管结束一天的时间是非常自由的，但是请尽量在23:00前睡觉。缺少睡眠可能会有一些不好的后果。
                 
                 点击下面的“OK”就可以完成这个事件。这一世，祝你好运！
-                
-                - SeanLenardB & quartrond
                 """,
-                context => context.Skill = 0.1));
+                context =>
+                {
+                    context.Skill = 0.1;
+                    context.Money = 72.7;
+                }));
         }
     }
 }
