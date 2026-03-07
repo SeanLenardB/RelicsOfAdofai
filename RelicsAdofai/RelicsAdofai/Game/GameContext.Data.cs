@@ -1,4 +1,6 @@
-﻿namespace RelicsAdofai.Game
+﻿using System.Diagnostics.Eventing.Reader;
+
+namespace RelicsAdofai.Game
 {
     public partial class GameContext
     {
@@ -54,6 +56,13 @@
             this.ArtistsAndSongs.Add(new("Mulp", "J"));
             this.ArtistsAndSongs.Add(new("Mulp", "M"));
 
+            this.ArtistsAndSongs.Add(new("Dilucin_", "Risen Orchestra"));
+            this.ArtistsAndSongs.Add(new("Dilucin_", "Dilithium"));
+            this.ArtistsAndSongs.Add(new("Dilucin_", "Darmstadium"));
+            this.ArtistsAndSongs.Add(new("Dilucin_", "Tritanium"));
+            this.ArtistsAndSongs.Add(new("Dilucin_", "Found Requiem"));
+            this.ArtistsAndSongs.Add(new("Dilucin_", "Memories of Echoes"));
+
 
 
             this.Creators.Add("Sucrose_No_Lactose");
@@ -78,6 +87,9 @@
                     this.Creators.Add($"{this.Creators[i]} & {this.Creators[j]}");
                 }
             }
+
+
+
             // @todo: add more players when we get to "Networking DLC".
             this.OtherPlayers.Add("Reppij");
             this.OtherPlayers.Add("Teaj_");
@@ -86,6 +98,310 @@
             this.OtherPlayers.Add("FireCave");
             this.OtherPlayers.Add("ikun_");
             this.OtherPlayers.Add("HuiZai_");
+
+
+
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                int bountyIndex = this.Random.Next(this.Charts.Count);
+                var bountyChart = this.Charts[bountyIndex];
+                int bountyDays = this.Random.Next(7);
+                double bountyMoney = (this.Random.NextDouble() * 40) + 10;
+                return ChoiceEvent.MeetCriteria(
+                    bountyDays,
+                    $"谱面#{bountyIndex}悬赏",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
+                    context => { context.Money += bountyMoney; },
+                    _ => { },
+                    context => context.ChartAccuracies.TryGetValue(bountyChart, out var _)
+                ).WithDayLimit(bountyDays, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                int bountyIndex = this.Random.Next(this.Charts.Count);
+                var bountyChart = this.Charts[bountyIndex];
+                int bountyDays = this.Random.Next(7);
+                double bountyMoney = (this.Random.NextDouble() * 50) + 50;
+                double bountyAccuracy = this.Random.NextDouble() + 99;
+                return ChoiceEvent.MeetCriteria(
+                    bountyDays,
+                    $"谱面#{bountyIndex}悬赏",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart}，且精准度高于{bountyAccuracy}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.01; },
+                    _ => { },
+                    context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy >= bountyAccuracy
+                ).WithDayLimit(bountyDays, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                int bountyIndex = this.Random.Next(this.Charts.Count);
+                var bountyChart = this.Charts[bountyIndex];
+                int bountyDays = this.Random.Next(7);
+                double bountyMoney = (this.Random.NextDouble() * 80) + 80;
+                return ChoiceEvent.MeetCriteria(
+                    bountyDays,
+                    $"谱面#{bountyIndex}悬赏",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内完美无瑕{bountyChart}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.02; },
+                    _ => { },
+                    context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy > 99.99
+                ).WithDayLimit(bountyDays, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                int bountyIndex = this.Random.Next(this.Charts.Count);
+                var bountyChart = this.Charts[bountyIndex];
+                int bountyDays = this.Random.Next(7);
+                double bountyMoney = (this.Random.NextDouble() * 100) + 100;
+
+                double tabubIsMineProbability = this.Random.NextDouble() * 100;
+                string tabubIsMineString;
+                if (tabubIsMineProbability < 0.1) tabubIsMineString = "几乎没有人在打";
+                else if (tabubIsMineProbability < 0.3) tabubIsMineString = "有一些人可能会尝试";
+                else if (tabubIsMineProbability < 0.5) tabubIsMineString = "偶尔有一两个人在练习";
+                else if (tabubIsMineProbability < 0.7) tabubIsMineString = "有不少人在打";
+                else if (tabubIsMineProbability < 0.9) tabubIsMineString = "现在有很多人在抢";
+                else tabubIsMineString = "很快就会被拿下";
+
+                return ChoiceEvent.MeetCriteria(
+                    bountyDays,
+                    $"谱面#{bountyIndex}悬赏",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart}的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                    $"目前看下来，这张谱面" + tabubIsMineString,
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.1; },
+                    _ => { },
+                    context => context.ChartAccuracies.TryGetValue(bountyChart, out var _)
+                ).WithOnDayEnd((context, e) =>
+                {
+                    if (context.Random.NextDouble() > tabubIsMineProbability) return;
+
+                    context.ChoiceEvents.Remove(e);
+                    context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
+                        $"已砍下谱面{bountyChart}的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
+                }).WithDayLimit(bountyDays, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                int bountyIndex = this.Random.Next(this.Charts.Count);
+                var bountyChart = this.Charts[bountyIndex];
+                int bountyDays = this.Random.Next(7);
+                double bountyMoney = (this.Random.NextDouble() * 100) + 100;
+
+                double tabubIsMineProbability = this.Random.NextDouble() * 100;
+                string tabubIsMineString;
+                if (tabubIsMineProbability < 0.1) tabubIsMineString = "几乎没有人在打";
+                else if (tabubIsMineProbability < 0.3) tabubIsMineString = "有一些人可能会尝试";
+                else if (tabubIsMineProbability < 0.5) tabubIsMineString = "偶尔有一两个人在练习";
+                else if (tabubIsMineProbability < 0.7) tabubIsMineString = "有不少人在打";
+                else if (tabubIsMineProbability < 0.9) tabubIsMineString = "现在有很多人在抢";
+                else tabubIsMineString = "很快就会被拿下";
+
+                return ChoiceEvent.MeetCriteria(
+                    bountyDays,
+                    $"谱面#{bountyIndex}悬赏",
+                    $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart}的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                    $"目前看下来，这张谱面" + tabubIsMineString,
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.2; },
+                    _ => { },
+                    context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy > 99.99
+                ).WithOnDayEnd((context, e) =>
+                {
+                    if (context.Random.NextDouble() > tabubIsMineProbability) return;
+
+                    context.ChoiceEvents.Remove(e);
+                    context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
+                        $"已砍下谱面{bountyChart}的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
+                }).WithDayLimit(bountyDays, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                return ChoiceEvent.YesNo(
+                    $"给{streamer}发SC",
+                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">10</span>的礼物？",
+                    context =>
+                    {
+                        if (context.Random.NextDouble() > 0.2) return;
+
+                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
+                        context.Skill *= 1.02;
+
+                        if (context.Random.NextDouble() > 0.2) return;
+                        context.FollowerCount *= 1.02;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                return ChoiceEvent.YesNo(
+                    $"给{streamer}发SC",
+                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">20</span>的礼物？",
+                    context =>
+                    {
+                        if (context.Random.NextDouble() > 0.2) return;
+
+                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
+                        context.Skill *= 1.05;
+
+                        if (context.Random.NextDouble() > 0.5) return;
+                        context.FollowerCount *= 1.02;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                return ChoiceEvent.YesNo(
+                    $"给{streamer}发SC",
+                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">50</span>的礼物？",
+                    context =>
+                    {
+                        if (context.Random.NextDouble() > 0.4) return;
+
+                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
+                        context.Skill *= 1.1;
+
+                        if (context.Random.NextDouble() > 0.5) return;
+                        context.FollowerCount *= 1.05;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                return ChoiceEvent.YesNo(
+                    $"给{streamer}发SC",
+                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">100</span>的礼物？",
+                    context =>
+                    {
+                        if (context.Random.NextDouble() > 0.8) return;
+
+                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
+                        context.Skill *= 1.1;
+                        context.FollowerCount *= 1.05;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                return ChoiceEvent.YesNo(
+                    $"给{streamer}上舰",
+                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">198</span>的舰长？（不续舰不会毁号）",
+                    context =>
+                    {
+                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
+                        context.Skill *= 1.1;
+                        context.FollowerCount *= 1.1;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                return ChoiceEvent.YesNo(
+                    $"打一会儿Gtg",
+                    $"是否要打4小时Gtg休息一下？",
+                    context =>
+                    {
+                        for (int i = 0; i < 20; i++)  // @note: the 10 here is derived from 2h / 0.2h/chart.
+                            context.PracticeChart(context.Charts[context.Random.Next(context.Charts.Count)]);
+                        context.Skill *= 1.03;
+
+                        if (context.Random.NextDouble() > 0.8) return;
+                        context.FollowerCount *= 1.03;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                return ChoiceEvent.YesNo(
+                    $"打一会儿Gtg",
+                    $"是否要打2小时Gtg休息一下？",
+                    context =>
+                    {
+                        for (int i = 0; i < 10; i++)  // @note: the 10 here is derived from 2h / 0.2h/chart.
+                            context.PracticeChart(context.Charts[context.Random.Next(context.Charts.Count)]);
+                        context.Skill *= 1.01;
+
+                        if (context.Random.NextDouble() > 0.8) return;
+                        context.FollowerCount *= 1.01;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                return ChoiceEvent.YesNo(
+                    $"打一会儿Gtg",
+                    $"是否要打1小时Gtg休息一下？",
+                    context =>
+                    {
+                        for (int i = 0; i < 5; i++)  // @note: ditto.
+                            context.PracticeChart(context.Charts[context.Random.Next(context.Charts.Count)]);
+                        context.Skill *= 1.003;
+
+                        if (context.Random.NextDouble() > 0.5) return;
+                        context.FollowerCount *= 1.01;
+                    },
+                    _ => { }
+                    ).WithDayLimit(1, _ => { });
+            }));
+            this.ChoiceEventWeights.Add(new(2, () =>
+            {
+                double moneyAmount = (this.Random.NextDouble() * 15) + 5;
+                return ChoiceEvent.Info(
+                    $"充电通知",
+                    $"你的一位粉丝给你充电{moneyAmount:0.00}元",
+                    context => context.Money += moneyAmount);
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                double moneyAmount = this.Random.NextDouble() * 50;
+                return ChoiceEvent.Info(
+                    $"充电通知",
+                    $"你的一位粉丝给你充电{moneyAmount:0.00}元",
+                    context =>
+                    {
+                        context.Money += moneyAmount;
+                        context.FollowerCount *= 1.01;
+                    });
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                return ChoiceEvent.YesNo(
+                    $"升级键盘",
+                    $"有一些Adofai玩家换了一种新的键盘，看上去还挺顺手，要不要也买一把？",
+                    context =>
+                    {
+                        if (context.Random.NextDouble() > 0.3) return;
+                        context.Skill *= 1.05;
+
+                        if (context.Random.NextDouble() > 0.2) return;
+                        context.FollowerCount *= 1.02;
+                    },
+                    _ => { }
+                    );
+            }));
+            this.ChoiceEventWeights.Add(new(1, () =>
+            {
+                return ChoiceEvent.YesNo(
+                    $"升级摄像头",
+                    $"你的摄像头有一点旧了，要不要升级一下摄像头，增加机位或是提高画质？",
+                    context =>
+                    {
+                        if (context.Random.NextDouble() > 0.5) return;
+                        context.FollowerCount *= 1.05;
+                    },
+                    _ => { }
+                    );
+            }));
         }
 
         public void ImportStartupEvents()
@@ -107,9 +423,8 @@
 
                     在左侧紫色谱面区域内，你可以自由选择谱面练习段落或挑战击破。练谱和打谱都需要时间。
                     每一天从8:00开始（界面右上角），行动会消耗一定的时间。
-                    
                     有一些事件有时效性，这些事件的右上角会显示剩余天数（例如本事件）。
-                    尽管结束一天的时间是非常自由的，但是在23:00后将强制结束一天。
+                    请注意时间，在23:00后将强制结束一天。
                     
                     你有一个选择：如果现在完成这个事件，你会获得更多的资金，但是会消耗比较多的时间。
                     或者，你可以今天不处理这个事件。到第二天时，这个事件会自动结束，你获得的资金会更少，但是完全不会消耗你宝贵的时间。
@@ -123,12 +438,12 @@
                         context.Money = 72.7;
                         context.Hour += 6;
                     })
-                .WithTimeLimit(
+                .WithDayLimit(
                     0,
                     context =>
                     {
                         context.Skill = 1;
-                        context.Money = 11.45;
+                        context.Money = 11.4;
                     }
                 ));
         }
