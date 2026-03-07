@@ -159,6 +159,11 @@ namespace RelicsAdofai.Game
             {
                 this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: gold\">100.00%</span>（啊！完美无瑕！）</p>");
                 this.ChartAccuracies[chart] = 100;
+                this.ChoiceEvents.Add(ChoiceEvent.YesNo(
+                    "发布击破视频",
+                    $"是否发布{chart}的击破视频？",
+                    context => { context.FollowerCount += Math.Sqrt(chart.RequiredSkill); context.Hour += 0.5; },
+                    _ => { }));
                 return;
             }
 
@@ -202,7 +207,7 @@ namespace RelicsAdofai.Game
             this.ChoiceEvents.Add(ChoiceEvent.YesNo(
                 "发布击破视频",
                 $"是否发布{chart}的击破视频？",
-                context => context.FollowerCount += Math.Sqrt(chart.RequiredSkill * Math.Pow(accuracy / 100, 4)),
+                context => { context.FollowerCount += Math.Sqrt(chart.RequiredSkill * Math.Pow(accuracy / 100, 4)); context.Hour += 0.5; },
                 _ => { }));
         }
         public double[] AccuracySteps = 
@@ -246,7 +251,7 @@ namespace RelicsAdofai.Game
             {
                 if (choiceEvent.RemainingDays >= 0) continue;
 
-                this.Log.Add($"事件“{choiceEvent.Title}”已结束");
+                this.Log.Add($"<p>事件“{choiceEvent.Title}”已结束</p>");
                 choiceEvent.OvertimeConsequence(this);
             }
             // @cleanup: This OnDayEnd loop is before the RemoveAll because there are events
