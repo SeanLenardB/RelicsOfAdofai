@@ -287,6 +287,9 @@ namespace RelicsAdofai.Game
                     context => context.Money += videoIncome
                     ));
             }
+
+            this.UpdateProgression();
+
             this.GenerateEvents();
         }
 

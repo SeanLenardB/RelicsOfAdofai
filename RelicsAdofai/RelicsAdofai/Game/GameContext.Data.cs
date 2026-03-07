@@ -358,26 +358,6 @@ namespace RelicsAdofai.Game
                     _ => { }
                     ).WithDayLimit(1, _ => { });
             }));
-            this.ChoiceEventWeights.Add(new(2, () =>
-            {
-                double moneyAmount = (this.Random.NextDouble() * 15) + 5;
-                return ChoiceEvent.Info(
-                    $"充电通知",
-                    $"你的一位粉丝给你充电{moneyAmount:0.00}元",
-                    context => context.Money += moneyAmount);
-            }));
-            this.ChoiceEventWeights.Add(new(1, () =>
-            {
-                double moneyAmount = this.Random.NextDouble() * 50;
-                return ChoiceEvent.Info(
-                    $"充电通知",
-                    $"你的一位粉丝给你充电{moneyAmount:0.00}元",
-                    context =>
-                    {
-                        context.Money += moneyAmount;
-                        context.FollowerCount *= 1.01;
-                    });
-            }));
             this.ChoiceEventWeights.Add(new(1, () =>
             {
                 double money = (this.Random.NextDouble() * 300) + 200;
