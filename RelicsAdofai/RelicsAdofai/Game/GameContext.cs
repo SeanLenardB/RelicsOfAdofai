@@ -101,7 +101,7 @@ namespace RelicsAdofai.Game
                     randomWeight -= eventPair.Item1;
                     if (randomWeight >= 0) continue;
 
-                    this.ChoiceEvents.Add(eventPair.Item2());
+                    this.ChoiceEvents.Add(eventPair.Item2()); break;
                 }
             }
         }
