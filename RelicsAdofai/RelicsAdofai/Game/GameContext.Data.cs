@@ -177,7 +177,7 @@ namespace RelicsAdofai.Game
 
                     e.RemainingDays = -1;
                     context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                        $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
+                        $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
                 }).WithDayLimit(bountyDays, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(1, () =>
@@ -210,7 +210,7 @@ namespace RelicsAdofai.Game
 
                     e.RemainingDays = -1;
                     context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                        $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney}</span></p>");
+                        $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
                 }).WithDayLimit(bountyDays, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(2, () =>
