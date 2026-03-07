@@ -109,7 +109,7 @@ namespace RelicsAdofai.Game
                 double bountyMoney = (this.Random.NextDouble() * 40) + 10;
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
-                    $"谱面#{bountyIndex}悬赏",
+                    $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart} ({this.TranslatePgu(bountyChart)})的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
                     context => { context.Money += bountyMoney; },
                     _ => { },
@@ -125,7 +125,7 @@ namespace RelicsAdofai.Game
                 double bountyAccuracy = this.Random.NextDouble() + 99;
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
-                    $"谱面#{bountyIndex}悬赏",
+                    $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart} ({this.TranslatePgu(bountyChart)})，且精准度高于{bountyAccuracy}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.01; },
                     _ => { },
@@ -140,7 +140,7 @@ namespace RelicsAdofai.Game
                 double bountyMoney = (this.Random.NextDouble() * 80) + 80;
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
-                    $"谱面#{bountyIndex}悬赏",
+                    $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.02; },
                     _ => { },
@@ -165,7 +165,7 @@ namespace RelicsAdofai.Game
 
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
-                    $"谱面#{bountyIndex}悬赏",
+                    $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
                     $"目前看下来，这张谱面" + tabubIsMineString,
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.1; },
@@ -198,7 +198,7 @@ namespace RelicsAdofai.Game
 
                 return ChoiceEvent.MeetCriteria(
                     bountyDays,
-                    $"谱面#{bountyIndex}悬赏",
+                    $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
                     $"目前看下来，这张谱面" + tabubIsMineString,
                     context => { context.Money += bountyMoney; context.FollowerCount *= 1.2; },
