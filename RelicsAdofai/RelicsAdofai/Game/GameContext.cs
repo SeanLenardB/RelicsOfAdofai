@@ -74,7 +74,7 @@ namespace RelicsAdofai.Game
                 // right now we don't have a good estimation of how the game will end like
                 // so we will play safe and generate charts that have the similar difficulty
                 // of the player's skill.
-                double requiredSkill = this.Skill * Math.Pow(this.MultiplierPerRating, this.Random.NextDouble() * 60);
+                double requiredSkill = Math.Pow(this.MultiplierPerRating, this.Random.NextDouble() * 60);
 
                 this.Charts.Add(new()
                 {
