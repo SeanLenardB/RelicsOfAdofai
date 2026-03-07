@@ -199,6 +199,11 @@ namespace RelicsAdofai.Game
             this.ChartAccuracies[chart] = isPurePerfect ? 100 : accuracy;  // prevent precision loss
             this.Skill += (accuracy - previousAccuracy) / 100 * chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 1);
 
+            this.ChoiceEvents.Add(ChoiceEvent.YesNo(
+                "发布击破视频",
+                $"是否发布{chart}的击破视频？",
+                context => context.FollowerCount += Math.Sqrt(chart.RequiredSkill * Math.Pow(accuracy / 100, 4)),
+                _ => { }));
         }
         public double[] AccuracySteps = 
         [
