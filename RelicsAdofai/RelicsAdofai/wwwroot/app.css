@@ -199,10 +199,10 @@ body {
     align-self: center;
 }
 .game-topstatusbar-stat-margin-small {
-    margin-left: 1.2ch;
+    margin-left: .4ch;
 }
 .game-topstatusbar-stat-margin-large {
-    margin-left: 3.2ch;
+    margin-left: 5ch;
 }
 .game-topstatusbar-dayinfo {
     margin-left: auto;  /*This is css bullshit*/
@@ -217,8 +217,6 @@ body {
 }
 
 .game-content {
-    display: flex;
-    flex-direction: row;
 }
 .game-charts {
     background-color: #5a189a88;
@@ -229,10 +227,10 @@ body {
     padding: 2ch;
     display: flex;
     flex-direction: column;
-    width: 35%;
+    width: 60%;
 
     /*@hack: this should not be hardcoded but fuck css*/
-    height: 75vh;
+    height: 80vh;
     overflow: auto;
 }
 .game-charts-singlechartitem {
@@ -251,11 +249,9 @@ body {
     padding: 2ch;
     display: flex;
     flex-direction: column;
-    width: 60%;
-    margin-left: 3ch;
 
-    /*@hack: this should not be hardcoded but fuck css*/
-    height: 75vh;
+    height: 70%;
+    width: auto;
     overflow: auto;
 }
 .game-events-singleeventitem {
@@ -263,6 +259,23 @@ body {
     border-radius: 2px;
     margin: 1ch;
     padding: 1ch 2ch;
+}
+
+.game-log {
+    background-color: #00568788;
+    border-color: #ffffff88;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    padding: 2ch;
+    display: flex;
+    flex-direction: column;
+    margin-top: 3ch;
+
+    /*@hack: this should not be hardcoded but fuck css*/
+    height: 30%;
+    width: auto;
+    overflow: auto;
 }
 
 .color-skill {

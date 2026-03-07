@@ -1,4 +1,5 @@
-﻿<div class="game">
+﻿@using System.Diagnostics
+<div class="game">
 <div class="game-topstatusbar">
 	<p class="game-topstatusbar-title">Relics of Adofai</p>
 	<p class="game-topstatusbar-playername">@this.Context.PlayerName</p>
@@ -8,7 +9,7 @@
 		<span class="game-topstatusbar-stat-margin-large">名声</span>
 		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount</span>
         <span class="game-topstatusbar-stat-margin-large">资金</span>
-        <span class="game-topstatusbar-stat-margin-small color-money">@this.Context.Money</span>
+        <span class="game-topstatusbar-stat-margin-small color-money">@this.Context.Money.ToString("0.00")</span>
 	</div>
 	<p class="game-topstatusbar-dayinfo">
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
@@ -17,8 +18,7 @@
 	<button class="game-topstatusbar-finishday" type="button" @onclick="this.Context.FinishDay">收工睡觉</button>
 </div>
 
-<div style="margin: 4ch;">
-<div class="game-content">
+<div style="display: flex; flex-direction: row; margin: 4ch;">
     <div class="game-charts">
 	<select @bind="@this.SortStrategy" style="margin-left: 1ch; width: fit-content; padding-right: 4ch;">
         <option value="@ChartSortStrategy.Default">默认</option>
@@ -45,16 +45,30 @@
     }
     </div>
 
+	<div style="display: flex; flex-direction: column; width: 100%; margin-left: 3ch;">
 	<div class="game-events">
     @foreach (var choiceEvent in this.Context.ChoiceEvents)
     {
     <div class="game-events-singleeventitem">
-		<p style="font-weight: bold; font-size: 24px;">@choiceEvent.Title</p>
+		<p style="font-weight: bold; font-size: 24px; margin-top: 0ch;">@choiceEvent.Title</p>
         <p>@(new MarkupString(choiceEvent.Description.Replace("\n", "<br>")))</p>
+		<div style="margin-top: 0.5ch; display: flex; flex-direction: row;">
+		@foreach (var choice in choiceEvent.Choices)
+		{
+			<button disabled="@(!choice.IsChoiceAvailable(this.Context))"
+			        @onclick="_ => this.TakeChoice(choiceEvent, choice)"
+				    style="padding: 0.5ch 1.5ch; margin-right: 0.5ch;" type="button">
+				@choice.Text
+			</button>
+		}
+		</div>
 	</div>
     }
     </div>
-</div>
+	<div class="game-log">
+
+	</div>
+	</div>
 </div>
 </div>
 
@@ -87,5 +101,12 @@
 		// This should not be here, though ...
 		this.Context.ImportStartupEvents();
 		base.OnInitialized();
+	}
+
+	public void TakeChoice(ChoiceEvent choiceEvent, Choice choice)
+	{
+		choice.Consequence(this.Context);
+		bool removeSuccess = this.Context.ChoiceEvents.Remove(choiceEvent);
+		Debug.Assert(removeSuccess, "Cannot remove a choice event!");
 	}
 }
