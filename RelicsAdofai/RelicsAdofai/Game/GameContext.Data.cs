@@ -221,6 +221,7 @@ namespace RelicsAdofai.Game
                     $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">10</span>的礼物？",
                     context =>
                     {
+                        context.Money -= 10;
                         if (context.Random.NextDouble() > 0.2) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -241,6 +242,7 @@ namespace RelicsAdofai.Game
                     $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">20</span>的礼物？",
                     context =>
                     {
+                        context.Money -= 20;
                         if (context.Random.NextDouble() > 0.2) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -261,6 +263,7 @@ namespace RelicsAdofai.Game
                     $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">50</span>的礼物？",
                     context =>
                     {
+                        context.Money -= 50;
                         if (context.Random.NextDouble() > 0.4) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -281,6 +284,7 @@ namespace RelicsAdofai.Game
                     $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">100</span>的礼物？",
                     context =>
                     {
+                        context.Money -= 100;
                         if (context.Random.NextDouble() > 0.8) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -299,6 +303,7 @@ namespace RelicsAdofai.Game
                     $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">198</span>的舰长？（不续舰不会毁号）",
                     context =>
                     {
+                        context.Money -= 198;
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
                         context.Skill *= 1.1;
                         context.FollowerCount *= 1.1;
@@ -366,6 +371,8 @@ namespace RelicsAdofai.Game
                     $"有一些Adofai玩家换了一种新的键盘，看上去还挺顺手，要不要也买一把？消耗资金<span class=\"color-money\">{money:0.00}</span>",
                     context =>
                     {
+                        context.Money -= money;
+
                         if (context.Random.NextDouble() > 0.3) return;
                         context.Skill *= 1.05;
 
@@ -382,7 +389,7 @@ namespace RelicsAdofai.Game
                 return ChoiceEvent.YesNo(
                     $"升级键盘",
                     $"有一些Adofai玩家换了一种新的键盘，看上去还挺顺手，要不要也买一把？消耗资金<span class=\"color-money\">{money:0.00}</span>",
-                    context => { context.Skill *= 1.05; },
+                    context => { context.Money -= money; context.Skill *= 1.05; },
                     _ => { },
                     context => context.Money > money
                     );
@@ -395,6 +402,7 @@ namespace RelicsAdofai.Game
                     $"你的摄像头有一点旧了，要不要升级一下摄像头，增加机位或是提高画质？消耗资金<span class=\"color-money\">{money:0.00}</span>",
                     context =>
                     {
+                        context.Money -= money;
                         if (context.Random.NextDouble() > 0.5) return;
                         context.FollowerCount *= 1.03;
                     },
@@ -410,6 +418,7 @@ namespace RelicsAdofai.Game
                     $"你的摄像头有一点旧了，要不要升级一下摄像头，增加机位或是提高画质？消耗资金<span class=\"color-money\">{money:0.00}</span>",
                     context =>
                     {
+                        context.Money -= money;
                         context.FollowerCount *= 1.05;
                     },
                     _ => { },
