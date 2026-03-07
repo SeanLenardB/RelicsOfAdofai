@@ -7,7 +7,7 @@
 		<span>技术</span>
 		<span class="game-topstatusbar-stat-margin-small color-skill">@this.Context.Skill.ToString("0.00")</span>
 		<span class="game-topstatusbar-stat-margin-large">名声</span>
-		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount</span>
+		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount.ToString("0.00")</span>
         <span class="game-topstatusbar-stat-margin-large">资金</span>
         <span class="game-topstatusbar-stat-margin-small color-money">@this.Context.Money.ToString("0.00")</span>
 	</div>
@@ -36,6 +36,7 @@
         @*@todo: change this to rating, and hide the required skill, which both reflects the wackiness of ratings,
         but also the challenge to actually estimate the skill required to beat the level.*@	
 		<div style="display: flex; flex-direction: row;">
+			<span style="align-self: end; width: 5ch;">#@(chart.Id).</span>
 			<img src="@("pgu/" + this.Context.TranslatePgu(chart) + ".png")"
 				 alt="@this.Context.TranslatePgu(chart)"
 				 style="height: 36px; margin: 0px;"/>
