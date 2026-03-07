@@ -227,7 +227,7 @@ body {
     padding: 2ch;
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 50%;
 
     /*@hack: this should not be hardcoded but fuck css*/
     height: 80vh;
