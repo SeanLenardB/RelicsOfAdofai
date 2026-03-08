@@ -207,7 +207,7 @@ namespace RelicsAdofai.Game
             this.ChoiceEvents.Add(ChoiceEvent.YesNo(
                 "发布击破视频",
                 $"<p>是否发布{chart}" +
-                $"({(isPurePerfect ? "<span style=\"color: gold\">100.00%</span>" : "<span style=\"color: lightgoldenrodyellow\">{accuracy:0.00}%</span>")})" +
+                $"({(isPurePerfect ? "<span style=\"color: gold\">100.00%</span>" : $"<span style=\"color: lightgoldenrodyellow\">{accuracy:0.00}%</span>")})" +
                 $"的击破视频？</p>",
                 context => { context.FollowerCount += Math.Sqrt(chart.RequiredSkill * Math.Pow(accuracy / 100, 4)); context.Hour += 0.5; },
                 _ => { }));
