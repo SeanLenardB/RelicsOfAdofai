@@ -249,7 +249,7 @@ namespace RelicsAdofai.Game
             this.Day++;
             this.Hour = 8.0;
 
-            this.ChoiceEvents.ForEach(e => e.RemainingDays--);
+            this.ChoiceEvents.ForEach(e => { if (e.RemainingDays < int.MaxValue) e.RemainingDays--; });
             foreach (var choiceEvent in this.ChoiceEvents)
             {
                 if (choiceEvent.RemainingDays >= 0) continue;
