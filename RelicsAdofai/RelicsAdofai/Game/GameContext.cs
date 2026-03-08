@@ -308,7 +308,7 @@ namespace RelicsAdofai.Game
             bool removeSuccess = this.ChoiceEvents.Remove(choiceEvent);
             Debug.Assert(removeSuccess, "Cannot remove a choice event!");
 
-            this.Log.Add($"事件“{choiceEvent.Title}”选择“{choice.Text}”");
+            this.Log.Add($"<p>事件“{choiceEvent.Title}”选择“{choice.Text}”</p>");
             choice.Consequence(this);
         }
     }
