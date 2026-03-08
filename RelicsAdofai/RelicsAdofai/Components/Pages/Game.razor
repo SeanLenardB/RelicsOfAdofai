@@ -15,7 +15,17 @@
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
 		@(Math.Floor(this.Context.Hour).ToString("00")):@(Math.Floor((this.Context.Hour % 1.0) * 60).ToString("00"))
 	</p>
-	<button class="game-topstatusbar-finishday" type="button" @onclick="this.Context.FinishDay">收工睡觉</button>
+	<button class="game-topstatusbar-finishday" type="button" @onclick="_ => this.Context.FinishDay(false)">收工睡觉</button>
+	@code {
+		public string? SaveString;
+	}
+	<div style="display: flex; flex-direction: column; width: 16ch; justify-content: center;">
+		<button class="game-topstatusbar-save" type="button" @onclick="_ => this.SaveString = this.Context.SavePersistency()">保存</button>
+		@if (!string.IsNullOrWhiteSpace(this.SaveString))
+		{
+			<p style="text-align: center; margin: 0px; font-size: 10px;">已保存至@(this.SaveString)</p>			
+		}
+		</div>
 </div>
 
 <div style="display: flex; flex-direction: row; margin: 4ch; height: 80vh;">
@@ -156,13 +166,4 @@
 	}
 
 	public string ChartSearchInput = "";
-
-	protected override void OnInitialized()
-	{
-		// @hack: The constructor will run first before the fields are set.
-		// So, to properly get the player name and other stuff, we put init here.
-		// This should not be here, though ...
-		this.Context.ImportStartupEvents();
-		base.OnInitialized();
-	}
 }

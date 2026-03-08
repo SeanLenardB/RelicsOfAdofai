@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using System.Text
+@using System.Diagnostics
 @rendermode InteractiveServer
 
 <PageTitle>Relics of Adofai</PageTitle>
@@ -16,8 +18,21 @@
 		<input @bind-value="this.PlayerName"/>
 	</div>
 
-	<button type="button" @onclick="this.StartGame">Remake</button>
-</div>
+	<p style="margin-top: 4ch; margin-bottom: 1ch; text-align: center;">或者载入存档</p>
+	<InputFile style="align-self: center;" OnChange="this.LoadSave"/>
+	@if (this.SaveFileLines is null)
+	{
+		<button type="button" @onclick="this.StartGame">开始新游戏</button>
+	}
+	else
+	{
+		<button type="button" @onclick="this.StartGame">加载存档</button>
+	}
+	@if (!string.IsNullOrWhiteSpace(this.LoadSaveError))
+	{
+		<p style="color: red; text-align: center;">@this.LoadSaveError</p>
+	}
+	</div>
 }
 else
 {
@@ -37,7 +52,34 @@ else
 	public GameContext? Context;
 	public void StartGame()
 	{
-		this.Context = new(this.Seed);
-		this.Context.PlayerName = this.PlayerName;
+		GameContext context = new(this.Seed);
+		context.ImportStartupEvents();
+		if (this.SaveFileLines is not null) context.LoadPersistency(this.SaveFileLines);
+		else context.PlayerName = this.PlayerName;
+
+		this.Context = context;
+	}
+
+	public string? LoadSaveError;
+	public List<string>? SaveFileLines;
+	public async void LoadSave(InputFileChangeEventArgs e)
+	{
+		if (e.FileCount != 1) return;
+
+		using var saveStream = e.File.OpenReadStream();
+		byte[] buffer = new byte[512000];
+		await saveStream.ReadAsync(buffer);
+
+		this.SaveFileLines = [.. Encoding.Default.GetString(buffer).Split('\n')];
+		if (this.SaveFileLines.Count < 2)
+		{
+			this.LoadSaveError = "存档格式有误";
+			this.SaveFileLines = null;
+			return;
+		}
+
+		this.PlayerName = this.SaveFileLines[0];
+		this.Seed = int.Parse(this.SaveFileLines[1]);
+		this.StateHasChanged();  // For unknown reasons the button won't update.
 	}
 }

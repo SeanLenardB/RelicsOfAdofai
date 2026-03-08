@@ -215,10 +215,18 @@ body {
     align-self: center;
 }
 .game-topstatusbar-finishday {
-    margin-right: 1ch;
+    margin-right: 2ch;
     align-self: center;
     height: fit-content;
     padding: 1ch 2ch;
+}
+.game-topstatusbar-save {
+    margin-bottom: 1ch;
+    width: 50%;
+    height: fit-content;
+    justify-self: center;
+    align-self: center;
+    padding: 0.2ch 2ch;
 }
 
 .game-content {

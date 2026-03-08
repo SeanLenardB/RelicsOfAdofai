@@ -64,7 +64,7 @@ namespace RelicsAdofai.Game
             {
                 if (value > 23.0)
                 {
-                    this.FinishDay();
+                    this.FinishDay(true);
                     this.Log.Add($"<p><strong>超过23:00，已强制结束第{this.Day - 1}天</strong></p>");
                 }
                 else
@@ -85,7 +85,6 @@ namespace RelicsAdofai.Game
         public List<Tuple<string, string>> ArtistsAndSongs = [];
         public List<string> Creators = [];
         public List<string> OtherPlayers = [];
-
 
 
         public void GenerateEvents()
@@ -140,6 +139,9 @@ namespace RelicsAdofai.Game
         // if P2 = 2 * P1, then U2 = 8 * U1 or so.
         public void AttemptChart(Chart chart)
         {
+            int chartIndex = this.Charts.IndexOf(chart);
+            Debug.Assert(chartIndex >= 0, "Invalid chart!");
+            this.SaveLines.Add($"c {chartIndex} a");
             this.Hour += 0.2;
             // This is a rough estimation of how playing adofai is. By no means is this an accurate model.
 
@@ -224,8 +226,14 @@ namespace RelicsAdofai.Game
             0.02, 0.02, 0.02, 0.02, 0.02,        // 99.90
             0.02, 0.02, 0.02, 0.02, 0.02,        // 100.00
         ];
-        public void PracticeChart(Chart chart)
+        public void PracticeChart(Chart chart, bool isForced = false)
         {
+            if (!isForced) {  // Playing Together will force play charts. Don't save that.
+                int chartIndex = this.Charts.IndexOf(chart);
+                Debug.Assert(chartIndex >= 0, "Invalid chart!");
+                this.SaveLines.Add($"c {chartIndex} p");
+            }
+
             this.Hour += 0.5;
 
             double previousFamiliarity = this.ChartFamiliarities.GetValueOrDefault(chart);
@@ -243,8 +251,10 @@ namespace RelicsAdofai.Game
             this.Skill += (newFamiliarity - previousFamiliarity) * chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 0.5);
         }
 
-        public void FinishDay()
+        public void FinishDay(bool isForced = false)
         {
+            if (!isForced) this.SaveLines.Add("d");  // forced ends are automatic, don't save them.
+
             this.Log.Clear();  // @note: might not be very ideal
             this.Day++;
             this.Hour = 8.0;
@@ -305,9 +315,14 @@ namespace RelicsAdofai.Game
 
         public void TakeChoice(ChoiceEvent choiceEvent, Choice choice)
         {
+            var eventIndex = this.ChoiceEvents.IndexOf(choiceEvent);
+            var choiceIndex = choiceEvent.Choices.IndexOf(choice);
+
             bool removeSuccess = this.ChoiceEvents.Remove(choiceEvent);
             Debug.Assert(removeSuccess, "Cannot remove a choice event!");
 
+            Debug.Assert(eventIndex >= 0 && choiceIndex >= 0, "Invalid event and/or its choice!");
+            this.SaveLines.Add($"e {eventIndex} {choiceIndex}");
             this.Log.Add($"<p>事件“{choiceEvent.Title}”选择“{choice.Text}”</p>");
             choice.Consequence(this);
         }
