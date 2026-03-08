@@ -65,7 +65,7 @@ namespace RelicsAdofai.Game
                 if (value > 23.0)
                 {
                     this.FinishDay();
-                    this.Log.Add($"<p><strong>超过23:00，已强制结束第{Day - 1}天</strong></p>");
+                    this.Log.Add($"<p><strong>超过23:00，已强制结束第{this.Day - 1}天</strong></p>");
                 }
                 else
                 {
