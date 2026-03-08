@@ -36,7 +36,7 @@ namespace RelicsAdofai.Game
         {
             get;
             set {
-                this.Log.Add($"<p>名声: <span class=\"color-follower\">{field}</span> >>> <span class=\"color-follower\">{value}</span></p>");
+                this.Log.Add($"<p>名声: <span class=\"color-follower\">{field:0.00}</span> >>> <span class=\"color-follower\">{value:0.00}</span></p>");
                 field = value;
             }
         } = 0.0;
