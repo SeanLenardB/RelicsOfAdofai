@@ -43,6 +43,21 @@
                         });
                 }));
             }
+            if (!this.Unlocked_ScIncome_Tier3 && this.FollowerCount > 100000)
+            {
+                this.Unlocked_ScIncome_Tier3 = true;
+                this.ChoiceEventWeights.Add(new(1, () =>
+                {
+                    return ChoiceEvent.Info(
+                        $"上舰通知",
+                        $"你的一位粉丝为你上舰（<span class=\"color-money\">198.00</span>）",
+                        context =>
+                        {
+                            context.Money += 198;
+                            context.FollowerCount *= 1.1;
+                        });
+                }));
+            }
         }
     }
 }
