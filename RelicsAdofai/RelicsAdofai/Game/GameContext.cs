@@ -23,8 +23,6 @@ namespace RelicsAdofai.Game
 
         // Configuration
         public int Seed = 0;
-        public int DailyEventCount = 0;
-        public int DailyEnergyRecharge = 5;
         public double MultiplierPerRating = 1.41;
 
         // Gamestat
