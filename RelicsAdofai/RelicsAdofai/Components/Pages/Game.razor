@@ -30,107 +30,151 @@
 		</div>
 </div>
 
-<div style="display: flex; flex-direction: row; margin: 4ch; height: 80vh;">
+<div style="display: flex; flex-direction: row; margin: 2.5vh; padding: 0px; flex: 1; min-height: 0;">
     <div class="game-charts">
-	<div style="display: flex; flex-direction: row;">
-		<select @bind="@this.SortStrategy" style="margin-left: 1ch; width: fit-content; padding-right: 4ch;">
-			<option value="@ChartSortStrategy.Default">默认</option>
-			<option value="@ChartSortStrategy.DifficultyAscending">技术难度 升序</option>
-			<option value="@ChartSortStrategy.DifficultyDescending">技术难度 降序</option>
-		</select>
-		<span style="margin-left: auto; margin-right: 1ch;">搜索</span>
-		<input style="margin-right: 2ch;" @bind-value="this.ChartSearchInput"/>
-	</div>
-	<div class="game-charts-scroll">
-    @foreach (var chart in this.GetSortedCharts())
-    {
-    <div class="game-charts-singlechartitem">
-        <div style="display: flex; flex-direction: row; margin-bottom: 0px;">
-            <span style="font-size: 10px;">@chart.Artist</span>
-            <span style="font-size: 10px; margin-left: auto;">@chart.Creator</span>
+        <div style="display: flex; flex-direction: row; height: fit-content;">
+            <select @bind="@this.SortStrategy" style="margin-left: 1ch; width: fit-content; padding-right: 4ch;">
+                <option value="@ChartSortStrategy.Default">默认</option>
+                <option value="@ChartSortStrategy.DifficultyAscending">技术难度 升序</option>
+                <option value="@ChartSortStrategy.DifficultyDescending">技术难度 降序</option>
+            </select>
+            <span style="margin-left: auto; margin-right: 1ch;">搜索</span>
+            <input style="margin-right: 2ch;" @bind-value="this.ChartSearchInput"/>
         </div>
-        <p style="font-weight: bold; font-size: 18px; margin-bottom: 1ch; margin-top: 0px;">@chart.Song</p>
-        @*@todo: change this to rating, and hide the required skill, which both reflects the wackiness of ratings,
-        but also the challenge to actually estimate the skill required to beat the level.*@	
-		<div style="display: flex; flex-direction: row;">
-			<span style="align-self: end; width: 5ch;">#@(chart.Id).</span>
-			<img src="@("pgu/" + this.Context.TranslatePgu(chart) + ".png")"
-				 alt="@this.Context.TranslatePgu(chart)"
-				 style="height: 36px; margin: 0px;"/>
-			<span class="color-skill" style="margin-left: auto; align-self: end;">@chart.RequiredSkill.ToString("N2")</span>
-		</div>
-		<div style="display: flex; flex-direction: row; margin-top: 1ch;">
-			<button
-				type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
-				@onclick="_ => this.Context.PracticeChart(chart)">练习谱面</button>
-			@if (this.Context.ChartAccuracies.ContainsKey(chart))
-			{
-				<button
-					type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
-					@onclick="_ => this.Context.AttemptChart(chart)">刷准度</button>
-			}
-			else
-			{
-				<button
-					type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
-					@onclick="_ => this.Context.AttemptChart(chart)">尝试击破</button>
-			}
+        <div class="game-charts-scroll">
+        @foreach (var chart in this.GetSortedCharts())
+        {
+            <div class="game-charts-singlechartitem">
+                <div style="display: flex; flex-direction: row; margin-bottom: 0px;">
+                    <span style="font-size: 10px;">@chart.Artist</span>
+                    <span style="font-size: 10px; margin-left: auto;">@chart.Creator</span>
+                </div>
+                <p style="font-weight: bold; font-size: 18px; margin-bottom: 1ch; margin-top: 0px;">@chart.Song</p>
+                @*@todo: change this to rating, and hide the required skill, which both reflects the wackiness of ratings,
+                but also the challenge to actually estimate the skill required to beat the level.*@	
+                <div style="display: flex; flex-direction: row;">
+                    <span style="align-self: end; width: 5ch;">#@(chart.Id).</span>
+                    <img src="@("pgu/" + this.Context.TranslatePgu(chart) + ".png")"
+                         alt="@this.Context.TranslatePgu(chart)"
+                         style="height: 36px; margin: 0px;"/>
+                    <span class="color-skill" style="margin-left: auto; align-self: end;">@chart.RequiredSkill.ToString("N2")</span>
+                </div>
+                <div style="display: flex; flex-direction: row; margin-top: 1ch;">
+                    <button
+                        type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
+                        @onclick="_ => this.Context.PracticeChart(chart)">练习谱面</button>
+                    @if (this.Context.ChartAccuracies.ContainsKey(chart))
+                    {
+                        <button
+                            type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
+                            @onclick="_ => this.Context.AttemptChart(chart)">刷准度</button>
+                    }
+                    else
+                    {
+                        <button
+                            type="button" style="margin-right: 1ch; padding: 0.5ch 1ch;"
+                            @onclick="_ => this.Context.AttemptChart(chart)">尝试击破</button>
+                    }
 
-			<div style="display: flex; flex-direction: column; margin-left: auto;">
-				<p style="margin: 0px; text-align: right; font-size: 10px; color: gray">
-					(+@((this.Context.ChartFamiliarities.GetValueOrDefault(chart)).ToString("0.00%")))</p>
-			@if (this.Context.ChartAccuracies.ContainsKey(chart))
-			{
-				@if (this.Context.ChartAccuracies[chart] > 99.99)
-				{
-					<p style="font-weight: bold; margin: 0px; text-align: right; color: gold;">
-						100.00%</p>
-				}
-				else
-				{
-					<p style="font-weight: bold; margin: 0px; text-align: right; color: lightgoldenrodyellow">
-						@((this.Context.ChartAccuracies[chart]).ToString("0.00"))%</p>
-					@*@note: do not put the percentile inside the string format. C# will helpfully times 100 for you.*@
-				}
-			}
-			else { <p style="margin: 0px; text-align: right;">未击破</p> }
-			</div>
-		</div>
-	</div>
-    }
+                    <div style="display: flex; flex-direction: column; margin-left: auto;">
+                        <p style="margin: 0px; text-align: right; font-size: 10px; color: gray">
+                            (+@((this.Context.ChartFamiliarities.GetValueOrDefault(chart)).ToString("0.00%")))</p>
+                    @if (this.Context.ChartAccuracies.ContainsKey(chart))
+                    {
+                        @if (this.Context.ChartAccuracies[chart] > 99.99)
+                        {
+                            <p style="font-weight: bold; margin: 0px; text-align: right; color: gold;">
+                                100.00%</p>
+                        }
+                        else
+                        {
+                            <p style="font-weight: bold; margin: 0px; text-align: right; color: lightgoldenrodyellow">
+                                @((this.Context.ChartAccuracies[chart]).ToString("0.00"))%</p>
+                            @*@note: do not put the percentile inside the string format. C# will helpfully times 100 for you.*@
+                        }
+                    }
+                    else { <p style="margin: 0px; text-align: right;">未击破</p> }
+                    </div>
+                </div>
+            </div>
+        }
 	</div>
     </div>
 
-	<div style="display: flex; flex-direction: column; width: 100%; margin-left: 3ch;">
-        <div class="game-events">
-        @foreach (var choiceEvent in this.Context.ChoiceEvents)
+	<div style="display: flex; flex-direction: column; width: 100%; margin: 0px; margin-left: 2ch; height: 100%">
+    <div class="game-multipanel">
+		<div style="display: flex; flex-direction: row; height: 4ch; padding: 0.5ch;">
+			<button style="padding: 0.5ch 2ch; align-self: center; margin-right: 1ch;" type="button"
+				@onclick="_ => this.SelectedMultipanelPage = MultipanelPage.Events">事件</button>
+			<button style="padding: 0.5ch 2ch; align-self: center; margin-right: 1ch;" type="button"
+				@onclick="_ => this.SelectedMultipanelPage = MultipanelPage.Networking">社交</button>
+			<button style="padding: 0.5ch 2ch; align-self: center; margin-right: 1ch;" type="button"
+				@onclick="_ => this.SelectedMultipanelPage = MultipanelPage.Statistics">统计</button>
+		</div>
+        @switch (this.SelectedMultipanelPage)
         {
-        <div class="game-events-singleeventitem">
-            <div style="display: flex; flex-direction: row">
-            <p style="font-weight: bold; font-size: 24px; margin-top: 0ch; margin-bottom: 0ch;">@choiceEvent.Title</p>
-            @if (choiceEvent.RemainingDays < int.MaxValue)
+            case MultipanelPage.Events:
+            <div class="game-multipanel-events">
+            @foreach (var choiceEvent in this.Context.ChoiceEvents)
             {
-                <p style="margin-left: auto; align-self: start; margin-top: 0ch; font-size: 12px;">
-                    @(choiceEvent.RemainingDays == 0 ? "今天结束" : $"剩余{choiceEvent.RemainingDays}天")
+            <div class="game-multipanel-events-item">
+                <div style="display: flex; flex-direction: row">
+                <p style="font-weight: bold; font-size: 24px; margin-top: 0ch; margin-bottom: 0ch;">@choiceEvent.Title</p>
+                @if (choiceEvent.RemainingDays < int.MaxValue)
+                {
+                    <p style="margin-left: auto; align-self: start; margin-top: 0ch; font-size: 12px;">
+                        @(choiceEvent.RemainingDays == 0 ? "今天结束" : $"剩余{choiceEvent.RemainingDays}天")
+                    </p>
+                }
+                </div>
+                <p>@(new MarkupString(choiceEvent.Description.Replace("\n", "<br>")))</p>
+                <div style="margin-top: 0.5ch; display: flex; flex-direction: row;">
+                @foreach (var choice in choiceEvent.Choices)
+                {
+                    <button disabled="@(!choice.IsChoiceAvailable(this.Context))"
+                            @onclick="_ => this.Context.TakeChoice(choiceEvent, choice)"
+                            style="padding: 0.5ch 1.5ch; margin-right: 0.5ch;" type="button">
+                        @choice.Text
+                    </button>
+                }
+                </div>
+            </div>
+            }
+            </div>
+            break;
+
+			case MultipanelPage.Networking:
+            <div class="game-multipanel-networking">
+            @if (this.Context.FriendlinessWithOtherPlayers.All(p => p.Value == 0))
+            {
+                <p style="justify-self: center; align-self: center; text-align: center;">
+                    还没有和其他玩家互动过
                 </p>
             }
-            </div>
-            <p>@(new MarkupString(choiceEvent.Description.Replace("\n", "<br>")))</p>
-            <div style="margin-top: 0.5ch; display: flex; flex-direction: row;">
-            @foreach (var choice in choiceEvent.Choices)
+            else
             {
-                <button disabled="@(!choice.IsChoiceAvailable(this.Context))"
-                        @onclick="_ => this.Context.TakeChoice(choiceEvent, choice)"
-                        style="padding: 0.5ch 1.5ch; margin-right: 0.5ch;" type="button">
-                    @choice.Text
-                </button>
+                @foreach (var player in this.Context.OtherPlayers)
+                {
+                    if (this.Context.FriendlinessWithOtherPlayers[player] == 0) continue;
+                    <div class="game-multipanel-networking-item">
+                        <p style="font-weight: bold;">@player</p>
+                    </div>
+                }
             }
             </div>
-        </div>
-        }
-        </div>
+            break;
 
-        <div class="game-log">
+			case MultipanelPage.Statistics:
+            <div class="game-multipanel-stats">
+
+            </div>
+			break;
+
+			default: break;
+        }
+    </div>
+
+    <div class="game-log">
 	@*  @hack: if the log is in normal order we need to keep scrolling the box.
 		Although there is a very scuffed way to do that (inject JsRuntime)
 		that will be very shit and not very useful.
@@ -171,4 +215,12 @@
 	}
 
 	public string ChartSearchInput = "";
+
+	public enum MultipanelPage
+	{
+		Events,
+		Networking,
+		Statistics
+	}
+	public MultipanelPage SelectedMultipanelPage = MultipanelPage.Events;
 }

@@ -178,7 +178,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 3ch);
 }
 
 .game-topstatusbar {
@@ -190,6 +190,7 @@ body {
     padding: 0ch 4ch;
     display: flex;
     flex-direction: row;
+    height: fit-content;
 }
 .game-topstatusbar-title {
     font-weight: bold;
@@ -229,9 +230,6 @@ body {
     padding: 0.2ch 2ch;
 }
 
-.game-content {
-    height: 100%;
-}
 .game-charts {
     background-color: #5a189a88;
     border-color: #ffffff88;
@@ -239,16 +237,17 @@ body {
     border-style: solid;
     border-radius: 4px;
     padding: 2ch;
+    margin: 0px;
     display: flex;
     flex-direction: column;
+
     width: 50%;
-    height: 100%;
 }
 .game-charts-scroll {
     margin-top: 1ch;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex-grow: 1;
     overflow: auto;
 }
 .game-charts-singlechartitem {
@@ -258,21 +257,39 @@ body {
     padding: 1ch 2ch;
 }
 
-.game-events {
+.game-multipanel {
     background-color: #2d6a4f88;
     border-color: #ffffff88;
     border-width: 2px;
     border-style: solid;
     border-radius: 4px;
     padding: 2ch;
+    padding-top: 0.5ch;
     display: flex;
     flex-direction: column;
 
-    height: 70%;
+    height: 60%;
     width: auto;
-    overflow: auto;
 }
-.game-events-singleeventitem {
+.game-multipanel-events {
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+.game-multipanel-events-item {
+    background-color: #ffffff33;
+    border-radius: 2px;
+    margin: 1ch;
+    padding: 1ch 2ch;
+}
+.game-multipanel-networking {
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+.game-multipanel-networking-item {
     background-color: #ffffff33;
     border-radius: 2px;
     margin: 1ch;
@@ -288,9 +305,10 @@ body {
     padding: 2ch;
     display: flex;
     flex-direction: column;
-    margin-top: 3ch;
+    margin-top: 2ch;
 
-    height: 30%;
+    flex: 1;
+    min-height: 0;
     width: auto;
     overflow: auto;
 }
