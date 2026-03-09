@@ -66,7 +66,7 @@ namespace RelicsAdofai.Game
                 this.Log.Add($"<p>理智: <span class=\"color-sanity\">{field:0.00%}</span> >>> <span class=\"color-sanity\">{value:0.00%}</span></p>");
                 field = value;
             }
-        }
+        } = 0.0;
         // @note: this is not listened, although it might be useful to listen to this.
         public int Day = 1;
         public double Hour
@@ -180,9 +180,12 @@ namespace RelicsAdofai.Game
 
             
 
-            double clearChance = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 8);
             double familiarity = this.ChartFamiliarities.GetValueOrDefault(chart);
+
+            double clearChance = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 8);
             clearChance *= familiarity;
+            if (this.Sanity < 0.5) clearChance *= this.Sanity * 2;
+
             if (this.Random.NextDouble() > clearChance)
             {
                 this.Sanity *= 0.95;
@@ -274,7 +277,9 @@ namespace RelicsAdofai.Game
             this.Log.Clear();  // @note: might not be very ideal
             this.Day++;
             this.Hour = 8.0;
-            this.Sanity *= 1.2;
+
+            if (this.Sanity < 0.3) this.Sanity = 0.7;
+            else this.Sanity = 1;
 
             this.ChoiceEvents.ForEach(e => { if (e.RemainingDays < int.MaxValue) e.RemainingDays--; });
             foreach (var choiceEvent in this.ChoiceEvents)
