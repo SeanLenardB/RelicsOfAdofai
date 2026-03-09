@@ -96,6 +96,7 @@ namespace RelicsAdofai.Game
         public List<Tuple<string, string>> ArtistsAndSongs = [];
         public List<string> Creators = [];
         public List<string> OtherPlayers = [];
+        public Dictionary<string, double> FriendlinessWithOtherPlayers = [];
 
 
         public void GenerateEvents()
@@ -290,6 +291,7 @@ namespace RelicsAdofai.Game
                 this.Log.Add($"<p>事件“{choiceEvent.Title}”已结束</p>");
                 choiceEvent.OvertimeConsequence(this);
             }
+
             // @cleanup: This OnDayEnd loop is before the RemoveAll because there are events
             // where they have a chance to be discarded at the end of a day.
             //

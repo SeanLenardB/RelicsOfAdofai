@@ -108,6 +108,7 @@ namespace RelicsAdofai.Game
             this.OtherPlayers.Add("Ling_Centrifuge");
             this.OtherPlayers.Add("A2ra_");
             this.OtherPlayers.Add("listenwind");
+            foreach (var player in this.OtherPlayers) this.FriendlinessWithOtherPlayers.Add(player, 0);
 
 
 
