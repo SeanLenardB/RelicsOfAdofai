@@ -19,7 +19,7 @@ namespace RelicsAdofai.Game
             this.GenerateCharts();
         }
 
-        public int Version = 1;
+        public static readonly int Version = 2;
 
         // Configuration
         public int Seed = 0;

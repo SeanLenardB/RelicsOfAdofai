@@ -41,7 +41,7 @@ else
 
 @*@cleanup: put this into a constant variable place*@
 <div class="credit">
-	<p>Created by SeanLB & quartrond. Built on Mar 7, 2026. <a style="color: lightblue" href="https://github.com/SeanLenardB/RelicsOfAdofai">View on GitHub</a></p>
+	<p>Created by SeanLB & quartrond. Relics Version @(GameContext.Version). <a style="color: lightblue" href="https://github.com/SeanLenardB/RelicsOfAdofai">View on GitHub</a></p>
 	<p>Data are fake. Please don't take this seriously.</p>
 </div>
 
@@ -53,9 +53,9 @@ else
 	public void StartGame()
 	{
 		GameContext context = new(this.Seed);
+		context.PlayerName = this.PlayerName;
 		context.ImportStartupEvents();
 		if (this.SaveFileLines is not null) context.LoadPersistency(this.SaveFileLines);
-		else context.PlayerName = this.PlayerName;
 
 		this.Context = context;
 	}
@@ -71,15 +71,22 @@ else
 		await saveStream.ReadAsync(buffer);
 
 		this.SaveFileLines = [.. Encoding.Default.GetString(buffer).Split('\n')];
-		if (this.SaveFileLines.Count < 2)
+		if (this.SaveFileLines.Count < 3)
 		{
 			this.LoadSaveError = "存档格式有误";
 			this.SaveFileLines = null;
 			return;
 		}
 
-		this.PlayerName = this.SaveFileLines[0];
-		this.Seed = int.Parse(this.SaveFileLines[1]);
+		if (!int.TryParse(this.SaveFileLines[0], out var version)) version = 1;
+		if (GameContext.Version != version)
+		{
+			this.LoadSaveError = $"存档版本为{version}，但当前游戏版本为{GameContext.Version}";
+			return;
+		}
+
+		this.PlayerName = this.SaveFileLines[1];
+		this.Seed = int.Parse(this.SaveFileLines[2]);
 		this.StateHasChanged();  // For unknown reasons the button won't update.
 	}
 }

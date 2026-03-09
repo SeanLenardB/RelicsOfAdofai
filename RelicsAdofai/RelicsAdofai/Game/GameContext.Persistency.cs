@@ -6,6 +6,7 @@ namespace RelicsAdofai.Game
     {
         // The format of the save file is as follows:
         /* 
+         * <Version>
          * <PlayerName>
          * <Seed>
          * <Action type> <Argument>
@@ -19,11 +20,11 @@ namespace RelicsAdofai.Game
         public List<string> SaveLines = [];
         public void LoadPersistency(List<string> saveFileLines)
         {
-            Debug.Assert(saveFileLines.Count >= 2, "Invalid save file!");
-            this.PlayerName = saveFileLines[0];
+            Debug.Assert(saveFileLines.Count >= 3, "Invalid save file!");
+            Debug.Assert(int.TryParse(saveFileLines[0], out var version) && Version == version, "Invalid version representation!");
             // @note: the seed has already been set once this class is instantiated. No need to load.
             
-            for (int i = 2; i < saveFileLines.Count; i++)
+            for (int i = 3; i < saveFileLines.Count; i++)
             {
                 Debug.Assert(!string.IsNullOrWhiteSpace(saveFileLines[i]), "There is an empty line in the save file!");
                 string[] lineSplit = saveFileLines[i].Replace("\n", "").Replace("\r", "").Split(' ');  // fuck carriage returns
@@ -52,7 +53,7 @@ namespace RelicsAdofai.Game
 
         public string SavePersistency()
         {
-            File.WriteAllLines($"save.{this.Seed.ToString().Replace('-', 'n')}.txt", [this.PlayerName, this.Seed.ToString()]);
+            File.WriteAllLines($"save.{this.Seed.ToString().Replace('-', 'n')}.txt", [Version.ToString(), this.PlayerName, this.Seed.ToString()]);
             File.AppendAllLines($"save.{this.Seed.ToString().Replace('-', 'n')}.txt", this.SaveLines);
 
             return $"save.{this.Seed.ToString().Replace('-', 'n')}.txt";
