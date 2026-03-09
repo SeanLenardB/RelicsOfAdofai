@@ -129,9 +129,6 @@ namespace RelicsAdofai.Game
             }
         }
         
-        // @todo: players can get more familiar with different charts
-        // and the familiarity can help them clear charts easier with a lower skill level.
-
         // The current skill system is based on a logarithmatic scale.
         // That is, the skill number of P2 = 2 * P1, P3 = 2 * P2, etc.
         // However this is a simplification and ideal situation of the ratings.
