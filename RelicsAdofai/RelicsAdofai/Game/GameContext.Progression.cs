@@ -4,7 +4,7 @@ namespace RelicsAdofai.Game
 {
     public partial class GameContext
     {
-        public double[] OtherPlayerScAmounts = [0.11, 8.88, 11.45, 19.9, 24.8, 66.6];
+        public double[] OtherPlayerScAmounts = [1.14, 8.88, 11.45, 19.9, 24.8, 66.6];
 
         public bool Unlocked_ScIncome_Tier1 = false;
         public bool Unlocked_ScIncome_Tier2 = false;
@@ -18,6 +18,8 @@ namespace RelicsAdofai.Game
         public bool Unlocked_MainQuests_NetworkingAndUnlocking = false;
         public bool Unlocked_MainQuests_Bounty = false;
         public bool Unlocked_MainQuests_EventCountCap = false;
+        public bool Unlocked_MainQuests_UniversalClear = false;
+        public bool Unlocked_MainQuests_FinishGame = false;
         public void UpdateProgression()
         {
             if (!this.Unlocked_ScIncome_Tier1 && this.FollowerCount > 100)
@@ -286,7 +288,7 @@ namespace RelicsAdofai.Game
                 Debug.Assert(this.Unlocked_OtherPlayer_BigSc.ContainsKey(player), "Cannot find the player in the dictionary!");
                 Debug.Assert(this.FriendlinessWithOtherPlayers.ContainsKey(player), "Cannot find the player in the dictionary!");
                 Debug.Assert(this.Unlocked_OtherPlayer_Recreation.ContainsKey(player), "Cannot find the player in the dictionary!");
-                if (!this.Unlocked_OtherPlayer_Sc[player] && this.FriendlinessWithOtherPlayers[player] > 8)
+                if (!this.Unlocked_OtherPlayer_Sc[player] && this.FriendlinessWithOtherPlayers[player] > 2)
                 {
                     this.Unlocked_OtherPlayer_Sc[player] = true;
                     this.ChoiceEventWeights.Add(new(1, () =>
@@ -298,7 +300,7 @@ namespace RelicsAdofai.Game
                             context =>
                             {
                                 context.Money -= scAmount;
-                                context.FriendlinessWithOtherPlayers[player] += scAmount;
+                                context.FriendlinessWithOtherPlayers[player] += scAmount / 4;
                                 context.Sanity += 0.15;
                                 context.Hour += 1;
                                 if (context.Random.NextDouble() > scAmount / this.OtherPlayerScAmounts[^1]) return;
@@ -435,6 +437,36 @@ namespace RelicsAdofai.Game
                         当然，进度不仅仅包括社交。在不久的将来（或者你可能已经看到了）你会解锁打谱赏金事件。
                         
                         所有事件解锁都有一定的条件。你可以在“进度”窗口中查看解锁进度。
+                        """,
+                        _ => { })
+                    .MainQuest());
+            }
+            if (!this.Unlocked_MainQuests_UniversalClear && this.ChartAccuracies.Any(p => p.Key.RequiredSkill >= Math.Pow(this.MultiplierPerRating, 40)))
+            {
+                this.Unlocked_MainQuests_UniversalClear = true;
+                this.ChoiceEvents.Add(ChoiceEvent
+                    .Info(
+                        "U级击破",
+                        """
+                        <p>恭喜你！你刚刚击破了你（这一世）的第一个U级谱！
+                        
+                        回想一下你真实世界中第一次击破U级谱的时候是什么情况吧。（或者想象一下）
+
+                        希望这些<span class="color-money">资金</span>对你有帮助。</p>
+                        """,
+                        context => context.Money += 114.51)
+                    .MainQuest());
+            }
+            if (!this.Unlocked_MainQuests_FinishGame && this.ChartAccuracies.Count == this.Charts.Count)
+            {
+                this.Unlocked_MainQuests_FinishGame = true;
+                this.ChoiceEvents.Add(ChoiceEvent
+                    .Info(
+                        $"恭喜你，{this.PlayerName}！",
+                        """
+                        你已经击破了异世界历史上所有的谱面。
+
+                        我希望这个游戏让你开心。
                         """,
                         _ => { })
                     .MainQuest());

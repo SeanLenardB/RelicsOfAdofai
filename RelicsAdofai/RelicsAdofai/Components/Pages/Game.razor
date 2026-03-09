@@ -128,7 +128,7 @@
                         <div style="margin-left: auto; align-self: start; margin-top: 0ch; font-size: 12px; display: flex; flex-direction: row;">
                         @if (choiceEvent.IsMainQuest)
                         {
-                            <p style="margin-left: 3ch; color: lime; font-weight: bold;">
+                            <p style="margin-left: 3ch; color: #88d498; font-weight: bold;">
                                 主线任务
                             </p>
                         }
@@ -196,18 +196,27 @@
                     @(this.Context.Unlocked_MainQuests_Bounty ? "game-multipanel-progression-item-completed" : "")">
                     <span style="font-weight: bold; align-self: center;">主线任务 赏金</span>
                 </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_MainQuests_UniversalClear ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">主线任务 击破U级谱面</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_MainQuests_FinishGame ? "game-multipanel-progression-item-completed" : "")"
+                    style="background-color: #d9ed9288;">
+                    <span style="font-weight: bold; align-self: center;">主线任务 完成Relics of Adofai</span>
+                </div>
 
                 <div class="game-multipanel-progression-item 
                     @(this.Context.Unlocked_Bounty_Planetary ? "game-multipanel-progression-item-completed" : "")">
-                    <span style="font-weight: bold; align-self: center;">赏金事件 P级别</span>
+                    <span style="font-weight: bold; align-self: center;">赏金事件 I P级</span>
                 </div>
                 <div class="game-multipanel-progression-item 
                     @(this.Context.Unlocked_Bounty_Galactic ? "game-multipanel-progression-item-completed" : "")">
-                    <span style="font-weight: bold; align-self: center;">赏金事件 G级别</span>
+                    <span style="font-weight: bold; align-self: center;">赏金事件 II G级</span>
                 </div>
                 <div class="game-multipanel-progression-item 
                     @(this.Context.Unlocked_Bounty_Universal ? "game-multipanel-progression-item-completed" : "")">
-                    <span style="font-weight: bold; align-self: center;">赏金事件 U级别</span>
+                    <span style="font-weight: bold; align-self: center;">赏金事件 III U级</span>
                 </div>
 
                 <div class="game-multipanel-progression-item 
@@ -225,27 +234,27 @@
 
                 <div class="game-multipanel-progression-item 
                     @(this.Context.Unlocked_OtherPlayer_Sc.All(p => p.Value) ? "game-multipanel-progression-item-completed" : "")">
-                    <span style="font-weight: bold; align-self: center;">所有玩家社交指数 I 打赏</span>
+                    <span style="font-weight: bold; align-self: center;">玩家社交 I 打赏</span>
                     <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
                         @this.Context.Unlocked_OtherPlayer_Sc.Count(p => p.Value)</span>
                     <span style="margin-left: 0.5ch; align-self: center;">
                         /@(this.Context.Unlocked_OtherPlayer_Sc.Count())</span>
                 </div>
                 <div class="game-multipanel-progression-item 
-                    @(this.Context.Unlocked_OtherPlayer_BigSc.All(p => p.Value) ? "game-multipanel-progression-item-completed" : "")">
-                    <span style="font-weight: bold; align-self: center;">所有玩家社交指数 II 上舰</span>
-                    <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
-                        @this.Context.Unlocked_OtherPlayer_BigSc.Count(p => p.Value)</span>
-                    <span style="margin-left: 0.5ch; align-self: center;">
-                        /@(this.Context.Unlocked_OtherPlayer_BigSc.Count())</span>
-                </div>
-                <div class="game-multipanel-progression-item 
                     @(this.Context.Unlocked_OtherPlayer_Recreation.All(p => p.Value) ? "game-multipanel-progression-item-completed" : "")">
-                    <span style="font-weight: bold; align-self: center;">所有玩家社交指数 III 其他游戏</span>
+                    <span style="font-weight: bold; align-self: center;">玩家社交 II 其他游戏</span>
                     <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
                         @this.Context.Unlocked_OtherPlayer_Recreation.Count(p => p.Value)</span>
                     <span style="margin-left: 0.5ch; align-self: center;">
                         /@(this.Context.Unlocked_OtherPlayer_Recreation.Count())</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_OtherPlayer_BigSc.All(p => p.Value) ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">玩家社交 III 上舰</span>
+                    <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
+                        @this.Context.Unlocked_OtherPlayer_BigSc.Count(p => p.Value)</span>
+                    <span style="margin-left: 0.5ch; align-self: center;">
+                        /@(this.Context.Unlocked_OtherPlayer_BigSc.Count())</span>
                 </div>
             </div>
 			break;

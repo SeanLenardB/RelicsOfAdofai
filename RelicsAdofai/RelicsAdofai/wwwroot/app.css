@@ -285,7 +285,7 @@ body {
     padding: 1ch 2ch;
 }
 .game-multipanel-events-item-main {
-    border-color: lime;
+    border-color: #88d498;
     border-width: 2px;
     border-style: solid
 }
@@ -332,7 +332,7 @@ body {
     flex-direction: row;
 }
 .game-multipanel-progression-item-completed {
-    border-color: lime;
+    border-color: #88d498;
     border-width: 2px;
     border-style: solid
 }
