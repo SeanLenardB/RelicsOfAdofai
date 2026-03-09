@@ -453,8 +453,8 @@ namespace RelicsAdofai.Game
                     有一些事件有时效性，这些事件的右上角会显示剩余天数（例如本事件）。
                     请注意时间，在23:00后将强制结束一天。
                     
-                    你有一个选择：如果现在完成这个事件，你会获得更多的资金，但是会消耗比较多的时间。
-                    或者，你可以今天不处理这个事件。到第二天时，这个事件会自动结束，你获得的资金会更少，但是完全不会消耗你宝贵的时间。
+                    你有一个选择：如果现在完成这个事件，你获得的资金会更少。
+                    或者，你可以今天不处理这个事件。到第二天时，这个事件会自动结束，你获得的资金会更多。
                     点击下面的“OK”就可以完成这个事件，或者不要管这个事件。
                     
                     这一世，祝你好运！
@@ -462,7 +462,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         context.Skill += 1;
-                        context.Money += 72.7;
+                        context.Money += 11.4;
                         context.FollowerCount += 1;
                         context.Sanity = 1;
                         context.Hour += 6;
@@ -472,7 +472,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         context.Skill += 1;
-                        context.Money += 11.4;
+                        context.Money += 72.7;
                         context.FollowerCount += 1;
                         context.Sanity = 1;
                     }
