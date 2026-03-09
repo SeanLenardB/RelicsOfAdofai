@@ -107,6 +107,7 @@ namespace RelicsAdofai.Game
             int eventCount = 1 + this.Random.Next(3);  // @cleanup: should not be hardcoded and should be configurable.
             for (int i = 0; i < eventCount; i++)
             {
+                if (this.ChoiceEvents.Count >= 8) { break; }
                 int randomWeight = this.Random.Next(totalWeight);
                 foreach (var eventPair in this.ChoiceEventWeights)
                 {
