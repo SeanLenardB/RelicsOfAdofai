@@ -98,9 +98,13 @@ namespace RelicsAdofai.Game
             this.OtherPlayers.Add("FireCave");
             this.OtherPlayers.Add("ikun_");
             this.OtherPlayers.Add("HuiZai_");
+            this.OtherPlayers.Add("Ling_Centrifuge");
+            this.OtherPlayers.Add("A2ra_");
+            this.OtherPlayers.Add("listenwind");
 
 
 
+            // More events are unlocked through progression. They are located in GameContext.Progression.
             this.ChoiceEventWeights.Add(new(2, () =>
             {
                 string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
