@@ -173,7 +173,7 @@ namespace RelicsAdofai.Game
 
             double clearChance = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 8);
             double familiarity = this.ChartFamiliarities.GetValueOrDefault(chart);
-            clearChance = (clearChance + familiarity) / (1 + familiarity);
+            clearChance *= familiarity;
             if (this.Random.NextDouble() > clearChance)
             {
                 this.Log.Add($"<p>尝试谱面{chart}失败，死在{Math.Floor(clearChance * 100)}%</p>");
@@ -237,7 +237,7 @@ namespace RelicsAdofai.Game
             this.Hour += 0.5;
 
             double previousFamiliarity = this.ChartFamiliarities.GetValueOrDefault(chart);
-            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 4);  // @note: nerfed from 8 to 4
+            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 6);  // @note: nerfed from 8 to 4
             if (interpolation > 1.0) interpolation = 1.0;
 
             double newFamiliarity = (previousFamiliarity + interpolation) / 2.0;
@@ -247,8 +247,8 @@ namespace RelicsAdofai.Game
                 $"熟练度: <span style=\"color: gray\">{previousFamiliarity:0.00%}</span> " +
                 $">>> <span style=\"color: gray\">{newFamiliarity:0.00%}</span></p>");
 
-            if (newFamiliarity < 0.3) return;
-            this.Skill += (newFamiliarity - previousFamiliarity) * chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 0.5);
+            if (newFamiliarity < 0.5) return;
+            this.Skill += (newFamiliarity - previousFamiliarity) * chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 2);
         }
 
         public void FinishDay(bool isForced = false)
