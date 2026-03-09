@@ -122,14 +122,19 @@ namespace RelicsAdofai.Game
 
 
             // More events are unlocked through progression. They are located in GameContext.Progression.
-            this.ChoiceEventWeights.Add(new(1, () =>
+            this.ChoiceEventWeights.Add(new(2, () =>
             {
                 string player = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
                 double livestreamTime = this.Random.NextDouble() * 4;
                 return ChoiceEvent.YesNo(
                     $"看{player}直播",
                     $"{player}开播了，是否要看一会儿？",
-                    context => { context.Sanity += livestreamTime / 80; this.FriendlinessWithOtherPlayers[player] += livestreamTime / 2; },
+                    context =>
+                    {
+                        context.Hour += livestreamTime;
+                        context.Sanity += livestreamTime / 80;
+                        this.FriendlinessWithOtherPlayers[player] += livestreamTime / 2;
+                    },
                     _ => { }
                     ).WithDayLimit(1, _ => { });
             }));
