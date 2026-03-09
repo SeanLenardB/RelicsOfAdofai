@@ -260,13 +260,17 @@ namespace RelicsAdofai.Game
             if (interpolation > 1.0) interpolation = 1.0;
 
             double newFamiliarity = (previousFamiliarity + interpolation) / 2.0;
+
+            if (this.Sanity < 0.25) newFamiliarity *= this.Sanity * 4;
+            if (newFamiliarity < previousFamiliarity) newFamiliarity = previousFamiliarity;
+
             this.ChartFamiliarities[chart] = newFamiliarity;
 
             this.Log.Add($"<p>练习谱面{chart}，" +
                 $"熟练度: <span style=\"color: gray\">{previousFamiliarity:0.00%}</span> " +
                 $">>> <span style=\"color: gray\">{newFamiliarity:0.00%}</span></p>");
 
-            if (newFamiliarity < 0.25) return;
+            if (newFamiliarity < 0.2) return;
             this.Skill += (newFamiliarity - previousFamiliarity) * chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 2);
         }
 
