@@ -11,7 +11,7 @@
         <span class="game-topstatusbar-stat-margin-large">资金</span>
         <span class="game-topstatusbar-stat-margin-small color-money">@this.Context.Money.ToString("N2")</span>
         <span class="game-topstatusbar-stat-margin-large">理智</span>
-        <span class="game-topstatusbar-stat-margin-small color-sanity">@this.Context.Sanity.ToString("N2")</span>
+        <span class="game-topstatusbar-stat-margin-small color-sanity">@this.Context.Sanity.ToString("0.00%")</span>
 	</div>
 	<p class="game-topstatusbar-dayinfo">
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
@@ -109,7 +109,7 @@
 			<button style="padding: 0.5ch 2ch; align-self: center; margin-right: 1ch;" type="button"
 				@onclick="_ => this.SelectedMultipanelPage = MultipanelPage.Networking">社交</button>
 			<button style="padding: 0.5ch 2ch; align-self: center; margin-right: 1ch;" type="button"
-				@onclick="_ => this.SelectedMultipanelPage = MultipanelPage.Statistics">统计</button>
+				@onclick="_ => this.SelectedMultipanelPage = MultipanelPage.Progression">进度</button>
 		</div>
         @switch (this.SelectedMultipanelPage)
         {
@@ -178,9 +178,75 @@
             </div>
             break;
 
-			case MultipanelPage.Statistics:
-            <div class="game-multipanel-stats">
+			case MultipanelPage.Progression:
+            <div class="game-multipanel-progression">
+                <div class="game-multipanel-progression-item 
+                    @(true ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">主线任务 基本</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_MainQuests_NetworkingAndUnlocking ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">主线任务 社交</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_MainQuests_EventCountCap ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">主线任务 事件上限</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_MainQuests_Bounty ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">主线任务 赏金</span>
+                </div>
 
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_Bounty_Planetary ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">赏金事件 P级别</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_Bounty_Galactic ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">赏金事件 G级别</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_Bounty_Universal ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">赏金事件 U级别</span>
+                </div>
+
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_ScIncome_Tier1 ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">充电事件 I</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_ScIncome_Tier2 ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">充电事件 II</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_ScIncome_Tier3 ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">充电事件 III 舰长</span>
+                </div>
+
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_OtherPlayer_Sc.All(p => p.Value) ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">所有玩家社交指数 I 打赏</span>
+                    <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
+                        @this.Context.Unlocked_OtherPlayer_Sc.Count(p => p.Value)</span>
+                    <span style="margin-left: 0.5ch; align-self: center;">
+                        /@(this.Context.Unlocked_OtherPlayer_Sc.Count())</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_OtherPlayer_BigSc.All(p => p.Value) ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">所有玩家社交指数 II 上舰</span>
+                    <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
+                        @this.Context.Unlocked_OtherPlayer_BigSc.Count(p => p.Value)</span>
+                    <span style="margin-left: 0.5ch; align-self: center;">
+                        /@(this.Context.Unlocked_OtherPlayer_BigSc.Count())</span>
+                </div>
+                <div class="game-multipanel-progression-item 
+                    @(this.Context.Unlocked_OtherPlayer_Recreation.All(p => p.Value) ? "game-multipanel-progression-item-completed" : "")">
+                    <span style="font-weight: bold; align-self: center;">所有玩家社交指数 III 其他游戏</span>
+                    <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
+                        @this.Context.Unlocked_OtherPlayer_Recreation.Count(p => p.Value)</span>
+                    <span style="margin-left: 0.5ch; align-self: center;">
+                        /@(this.Context.Unlocked_OtherPlayer_Recreation.Count())</span>
+                </div>
             </div>
 			break;
 
@@ -234,7 +300,7 @@
 	{
 		Events,
 		Networking,
-		Statistics
+		Progression
 	}
 	public MultipanelPage SelectedMultipanelPage = MultipanelPage.Events;
 }

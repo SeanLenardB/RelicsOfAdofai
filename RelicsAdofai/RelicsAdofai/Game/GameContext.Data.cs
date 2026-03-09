@@ -155,7 +155,7 @@ namespace RelicsAdofai.Game
                     _ => { }
                     ).WithDayLimit(1, _ => { });
             }));
-            this.ChoiceEventWeights.Add(new(2, () =>
+            this.ChoiceEventWeights.Add(new(1, () =>
             {
                 return ChoiceEvent.YesNo(
                     $"打一会儿Gtg",

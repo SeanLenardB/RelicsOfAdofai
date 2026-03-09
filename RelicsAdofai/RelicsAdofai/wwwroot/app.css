@@ -297,7 +297,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1ch;
-    grid-auto-rows: auto;
+    grid-auto-rows: min-content;
 }
 .game-multipanel-networking-item {
     background-color: #ffffff33;
@@ -309,6 +309,32 @@ body {
 
     display: flex;
     flex-direction: row;
+}
+
+.game-multipanel-progression {
+    height: 100%;
+    overflow: auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1ch;
+    grid-auto-rows: min-content;
+}
+.game-multipanel-progression-item {
+    background-color: #ffffff33;
+    border-radius: 2px;
+    margin: 1ch;
+    padding: 1ch 2ch;
+    width: 1fr;
+    height: 5ch;
+
+    display: flex;
+    flex-direction: row;
+}
+.game-multipanel-progression-item-completed {
+    border-color: lime;
+    border-width: 2px;
+    border-style: solid
 }
 
 .game-log {
