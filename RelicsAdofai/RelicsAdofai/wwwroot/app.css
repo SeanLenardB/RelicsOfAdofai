@@ -286,14 +286,22 @@ body {
 .game-multipanel-networking {
     height: 100%;
     overflow: auto;
-    display: flex;
-    flex-direction: column;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1ch;
+    grid-auto-rows: auto;
 }
 .game-multipanel-networking-item {
     background-color: #ffffff33;
     border-radius: 2px;
     margin: 1ch;
     padding: 1ch 2ch;
+    width: 1fr;
+    height: 5ch;
+
+    display: flex;
+    flex-direction: row;
 }
 
 .game-log {

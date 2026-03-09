@@ -144,22 +144,23 @@
             break;
 
 			case MultipanelPage.Networking:
-            <div class="game-multipanel-networking">
             @if (this.Context.FriendlinessWithOtherPlayers.All(p => p.Value == 0))
             {
                 <p style="justify-self: center; align-self: center; text-align: center;">
                     还没有和其他玩家互动过
                 </p>
+                break;
             }
-            else
+            <div class="game-multipanel-networking">
+            @foreach (var player in this.Context.OtherPlayers)
             {
-                @foreach (var player in this.Context.OtherPlayers)
-                {
-                    if (this.Context.FriendlinessWithOtherPlayers[player] == 0) continue;
-                    <div class="game-multipanel-networking-item">
-                        <p style="font-weight: bold;">@player</p>
-                    </div>
-                }
+                if (this.Context.FriendlinessWithOtherPlayers[player] == 0) continue;
+                <div class="game-multipanel-networking-item">
+                    <span style="font-weight: bold; align-self: center;">@player</span>
+                    <span style="margin-left: auto; align-self: center;">
+                        @(this.Context.FriendlinessWithOtherPlayers[player].ToString("N2"))
+                    </span>
+                </div>
             }
             </div>
             break;
