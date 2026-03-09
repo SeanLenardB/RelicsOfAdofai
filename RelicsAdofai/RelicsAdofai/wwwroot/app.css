@@ -230,6 +230,7 @@ body {
 }
 
 .game-content {
+    height: 100%;
 }
 .game-charts {
     background-color: #5a189a88;
@@ -241,7 +242,13 @@ body {
     display: flex;
     flex-direction: column;
     width: 50%;
-
+    height: 100%;
+}
+.game-charts-scroll {
+    margin-top: 1ch;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     overflow: auto;
 }
 .game-charts-singlechartitem {

@@ -41,6 +41,7 @@
 		<span style="margin-left: auto; margin-right: 1ch;">搜索</span>
 		<input style="margin-right: 2ch;" @bind-value="this.ChartSearchInput"/>
 	</div>
+	<div class="game-charts-scroll">
     @foreach (var chart in this.GetSortedCharts())
     {
     <div class="game-charts-singlechartitem">
@@ -97,6 +98,7 @@
 		</div>
 	</div>
     }
+	</div>
     </div>
 
 	<div style="display: flex; flex-direction: column; width: 100%; margin-left: 3ch;">
