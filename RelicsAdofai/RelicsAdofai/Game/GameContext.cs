@@ -112,10 +112,6 @@ namespace RelicsAdofai.Game
                 (var artist, var song) = this.ArtistsAndSongs[this.Random.Next(this.ArtistsAndSongs.Count)];
                 var creator = this.Creators[this.Random.Next(this.Creators.Count)];
 
-                // @note: this might not be necessary and might end up being changed.
-                // right now we don't have a good estimation of how the game will end like
-                // so we will play safe and generate charts that have the similar difficulty
-                // of the player's skill.
                 double requiredSkill = Math.Pow(this.MultiplierPerRating, this.Random.NextDouble() * 60);
 
                 this.Charts.Add(new()
@@ -234,7 +230,7 @@ namespace RelicsAdofai.Game
             this.Hour += 0.5;
 
             double previousFamiliarity = this.ChartFamiliarities.GetValueOrDefault(chart);
-            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 6);  // @note: nerfed from 8 to 4
+            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 6);
             if (interpolation > 1.0) interpolation = 1.0;
 
             double newFamiliarity = (previousFamiliarity + interpolation) / 2.0;
