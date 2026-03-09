@@ -63,6 +63,13 @@ namespace RelicsAdofai.Game
             this.ArtistsAndSongs.Add(new("Dilucin_", "Found Requiem"));
             this.ArtistsAndSongs.Add(new("Dilucin_", "Memories of Echoes"));
 
+            this.ArtistsAndSongs.Add(new("7bug", "A Dance of Ice and Fire"));
+            this.ArtistsAndSongs.Add(new("7bug", "Onbeats"));
+            this.ArtistsAndSongs.Add(new("7bug", "Onbeats but it's too long"));
+            this.ArtistsAndSongs.Add(new("7bug", "Thank you for being tortured"));
+            this.ArtistsAndSongs.Add(new("7bug", "The Midnoon Airplane"));
+            this.ArtistsAndSongs.Add(new("7bug", "Rotate 2 Lose"));
+
 
 
             this.Creators.Add("Sucrose_No_Lactose");
