@@ -150,7 +150,7 @@ namespace RelicsAdofai.Game
                 this.SaveLines.Add($"c {chartIndex} a");
             }
 
-            if (isAutomatic) this.Sanity += 0.05;
+            if (isAutomatic) this.Sanity += 0.03;
 
             this.Hour += 0.2;
             // This is a rough estimation of how playing adofai is. By no means is this an accurate model.
@@ -188,7 +188,7 @@ namespace RelicsAdofai.Game
 
             if (this.Random.NextDouble() > clearChance)
             {
-                this.Sanity *= 0.95;
+                if (!isAutomatic) this.Sanity *= 0.95;  // @hack: don't punish player in together events
                 this.Log.Add($"<p>尝试谱面{chart}失败，死在{Math.Floor(clearChance * 100)}%</p>");
                 return;
             }
@@ -256,7 +256,7 @@ namespace RelicsAdofai.Game
             this.Hour += 0.5;
 
             double previousFamiliarity = this.ChartFamiliarities.GetValueOrDefault(chart);
-            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 4);
+            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 3);
             if (interpolation > 1.0) interpolation = 1.0;
 
             double newFamiliarity = (previousFamiliarity + interpolation) / 2.0;
@@ -308,7 +308,7 @@ namespace RelicsAdofai.Game
                 double previousFamiliarity = this.ChartFamiliarities[chart];
                 if (previousFamiliarity >= 0.9) continue;
 
-                double newFamiliarity = Math.Pow(previousFamiliarity, 1.3);
+                double newFamiliarity = Math.Pow(previousFamiliarity, 1.14);
                 this.Log.Add($"<p>谱面{chart}的熟练度下降: " +
                     $"<span style=\"color: gray;\">{previousFamiliarity:0.00%}</span> >>> " +
                     $"<span style=\"color: gray;\">{newFamiliarity:0.00%}</span></p>");
