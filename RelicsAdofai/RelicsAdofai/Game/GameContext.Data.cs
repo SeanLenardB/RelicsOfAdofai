@@ -215,12 +215,12 @@ namespace RelicsAdofai.Game
                     $"是否要打4小时Gtg休息一下？",
                     context =>
                     {
-                        for (int i = 0; i < 20; i++)  // @note: the 10 here is derived from 2h / 0.2h/chart.
+                        for (int i = 0; i < 20; i++)  // @note: the 20 here is derived from 4h / 0.2h/chart.
                             context.AttemptChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
                         context.Skill *= 1.03;
 
                         if (context.Random.NextDouble() > 0.8) return;
-                        context.FollowerCount *= 1.03;
+                        context.FollowerCount *= 1.01;
                     },
                     _ => { }
                     ).WithDayLimit(1, _ => { });
