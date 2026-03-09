@@ -271,6 +271,7 @@ body {
     height: 60%;
     width: auto;
 }
+
 .game-multipanel-events {
     height: 100%;
     overflow: auto;
@@ -283,6 +284,12 @@ body {
     margin: 1ch;
     padding: 1ch 2ch;
 }
+.game-multipanel-events-item-main {
+    border-color: lime;
+    border-width: 2px;
+    border-style: solid
+}
+
 .game-multipanel-networking {
     height: 100%;
     overflow: auto;
