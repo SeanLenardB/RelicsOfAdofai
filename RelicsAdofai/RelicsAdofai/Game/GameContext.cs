@@ -256,7 +256,7 @@ namespace RelicsAdofai.Game
             this.Hour += 0.5;
 
             double previousFamiliarity = this.ChartFamiliarities.GetValueOrDefault(chart);
-            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 6);
+            double interpolation = this.Skill / chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 4);
             if (interpolation > 1.0) interpolation = 1.0;
 
             double newFamiliarity = (previousFamiliarity + interpolation) / 2.0;
@@ -278,9 +278,6 @@ namespace RelicsAdofai.Game
             this.Day++;
             this.Hour = 8.0;
 
-            if (this.Sanity < 0.3) this.Sanity = 0.7;
-            else this.Sanity = 1;
-
             this.ChoiceEvents.ForEach(e => { if (e.RemainingDays < int.MaxValue) e.RemainingDays--; });
             foreach (var choiceEvent in this.ChoiceEvents)
             {
@@ -299,13 +296,15 @@ namespace RelicsAdofai.Game
             this.ChoiceEvents.ForEach(e => e.OnDayEnd(this));
             this.ChoiceEvents.RemoveAll(e => e.RemainingDays < 0);
 
+            if (this.Sanity < 0.3) this.Sanity = 0.7;
+            else this.Sanity = 1;
 
             foreach (var chart in this.ChartFamiliarities.Keys)
             {
                 double previousFamiliarity = this.ChartFamiliarities[chart];
                 if (previousFamiliarity >= 0.9) continue;
 
-                double newFamiliarity = Math.Pow(previousFamiliarity, 1.5);
+                double newFamiliarity = Math.Pow(previousFamiliarity, 1.3);
                 this.Log.Add($"<p>谱面{chart}的熟练度下降: " +
                     $"<span style=\"color: gray;\">{previousFamiliarity:0.00%}</span> >>> " +
                     $"<span style=\"color: gray;\">{newFamiliarity:0.00%}</span></p>");
