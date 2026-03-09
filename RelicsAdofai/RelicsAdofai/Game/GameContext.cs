@@ -56,6 +56,17 @@ namespace RelicsAdofai.Game
                 field = value;
             }
         } = 0.0;
+        public double Sanity
+        {
+            get;
+            set
+            {
+                if (value > 1) value = 1;
+                else if (value < 0) value = 0;
+                this.Log.Add($"<p>理智: <span class=\"color-sanity\">{field:0.00%}</span> >>> <span class=\"color-sanity\">{value:0.00%}</span></p>");
+                field = value;
+            }
+        }
         // @note: this is not listened, although it might be useful to listen to this.
         public int Day = 1;
         public double Hour
@@ -140,8 +151,6 @@ namespace RelicsAdofai.Game
 
             // @note: Players attempting charts that are too hard will not gain anything from the chart (no skill gain).
             // And it's a guaranteed failure.
-            // If I end up adding SANITY as an element of the game, I will change this.
-            // Because playing easy charts regains your sanity.
             if (chart.RequiredSkill > this.Skill * Math.Pow(this.MultiplierPerRating, 8))
             {
                 this.Log.Add($"<p>尝试谱面{chart}失败，判定万紫千红</p>");
@@ -153,6 +162,7 @@ namespace RelicsAdofai.Game
             if (chart.RequiredSkill * Math.Pow(this.MultiplierPerRating, 8) < this.Skill)
             {
                 this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: gold\">100.00%</span>（啊！完美无瑕！）</p>");
+                if (this.Sanity < 0.5) this.Sanity = (this.Sanity + 0.5) / 1.5;
                 this.ChartAccuracies[chart] = 100;
                 this.ChoiceEvents.Add(ChoiceEvent.YesNo(
                     "发布击破视频",
@@ -169,9 +179,12 @@ namespace RelicsAdofai.Game
             clearChance *= familiarity;
             if (this.Random.NextDouble() > clearChance)
             {
+                this.Sanity *= 0.95;
                 this.Log.Add($"<p>尝试谱面{chart}失败，死在{Math.Floor(clearChance * 100)}%</p>");
                 return;
             }
+
+            this.Sanity = (this.Sanity + 1) / 2;
 
             // @hack: we will reuse the clear chance and estimate the clear accuracy with it.
             // From 96.00, we roll random steps to obtain the preeliminary accuracy.
@@ -227,6 +240,9 @@ namespace RelicsAdofai.Game
                 this.SaveLines.Add($"c {chartIndex} p");
             }
 
+            if (isForced) this.Sanity = (this.Sanity + 0.75) / 1.75;
+            else this.Sanity *= 0.9;
+
             this.Hour += 0.5;
 
             double previousFamiliarity = this.ChartFamiliarities.GetValueOrDefault(chart);
@@ -251,6 +267,7 @@ namespace RelicsAdofai.Game
             this.Log.Clear();  // @note: might not be very ideal
             this.Day++;
             this.Hour = 8.0;
+            this.Sanity *= 1.2;
 
             this.ChoiceEvents.ForEach(e => { if (e.RemainingDays < int.MaxValue) e.RemainingDays--; });
             foreach (var choiceEvent in this.ChoiceEvents)
