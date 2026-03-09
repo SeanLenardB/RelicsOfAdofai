@@ -1,5 +1,4 @@
 <Solution>
   <Project Path="RelicsAdofai/RelicsAdofai.Client/RelicsAdofai.Client.csproj" Id="f4fc0ae6-69da-4a3b-a4dd-bf83eff18253" />
   <Project Path="RelicsAdofai/RelicsAdofai/RelicsAdofai.csproj" Id="ac384b39-7534-4dde-9952-ff348e0f236c" />
-  <Project Path="RelicsConsole/RelicsConsole.csproj" />
 </Solution>
