@@ -4,6 +4,8 @@ namespace RelicsAdofai.Game
 {
     public partial class GameContext
     {
+        public double[] OtherPlayerScAmounts = [0.11, 8.88, 11.45, 19.9, 24.8, 66.6];
+
         public bool Unlocked_ScIncome_Tier1 = false;
         public bool Unlocked_ScIncome_Tier2 = false;
         public bool Unlocked_ScIncome_Tier3 = false;
@@ -13,7 +15,9 @@ namespace RelicsAdofai.Game
         public Dictionary<string, bool> Unlocked_OtherPlayer_Sc = [];
         public Dictionary<string, bool> Unlocked_OtherPlayer_Recreation = [];
         public Dictionary<string, bool> Unlocked_OtherPlayer_BigSc = [];
-        public double[] OtherPlayerScAmounts = [0.11, 8.88, 11.45, 19.9, 24.8, 66.6];
+        public bool Unlocked_MainQuests_NetworkingAndUnlocking = false;
+        public bool Unlocked_MainQuests_Bounty = false;
+        public bool Unlocked_MainQuests_EventCountCap = false;
         public void UpdateProgression()
         {
             if (!this.Unlocked_ScIncome_Tier1 && this.FollowerCount > 100)
@@ -368,6 +372,64 @@ namespace RelicsAdofai.Game
                             ).WithDayLimit(1, _ => { });
                     }));
                 }
+            }
+
+            // Main Quests
+            if (!this.Unlocked_MainQuests_EventCountCap && this.ChoiceEvents.Count >= 6)
+            {
+                this.Unlocked_MainQuests_EventCountCap = true;
+                this.ChoiceEvents.Add(ChoiceEvent
+                    .Info(
+                        "事件数量有上限",
+                        """
+                        尽管每一天都会发生新的事件，但是你同时能够遇到的事件总数有限。超过阈值后，你将不会遇到新事件。
+                        这既包含限时事件，也包含不限时事件。
+
+                        一个重要的提示是，如果你短期内无法完成一个事件，那么最好的办法就是取消它。
+                        这样，你可以遇到一些对你更有用的事件。
+
+                        这个事件没有限时，但很明显你应该现在就完成这个事件。
+                        """,
+                        _ => { })
+                    .MainQuest());
+            }
+            if (!this.Unlocked_MainQuests_Bounty && this.Skill > Math.Pow(this.MultiplierPerRating, 15))
+            {
+                this.Unlocked_MainQuests_Bounty = true;
+                this.ChoiceEvents.Add(ChoiceEvent
+                    .Info(
+                        "赏金阶段",
+                        """
+                        <p>在这个游戏刚发布的时候，赏金任务是随机生成的。
+                        这会导致作为新手的你遇到一些高难度谱的赏金事件，但是你又无力完成。
+                        
+                        现在赏金事件会根据你的<span class="color-skill">技术</span>自动调节。
+                        总共有3个阶段，每个阶段分别解锁P、G、U谱面的赏金事件。
+                        你现在的<span class="color-skill">技术</span>已经非常接近解锁第一阶段了！
+                        加油！</p>
+                        """,
+                        _ => { })
+                    .MainQuest());
+            }
+            if (!this.Unlocked_MainQuests_NetworkingAndUnlocking && this.FriendlinessWithOtherPlayers.Any(p => p.Value > 0))
+            {
+                this.Unlocked_MainQuests_NetworkingAndUnlocking = true;
+                this.ChoiceEvents.Add(ChoiceEvent
+                    .Info(
+                        "社交与事件解锁",
+                        """
+                        你刚刚与Relics of Adofai中的一位玩家（虚拟的，有可能以后会添加多人联机）互动。
+                        你可以在“社交”窗口中查看你和其他玩家的互动情况。
+
+                        在这个游戏中，不是所有事件都是一开始就有的。随着你做出更多的选择，你会遇到不同种类的事件。
+                        比如，如果你和一位玩家的社交指数较高，则会解锁新的独特事件。
+
+                        当然，进度不仅仅包括社交。在不久的将来（或者你可能已经看到了）你会解锁打谱赏金事件。
+                        
+                        所有事件解锁都有一定的条件。你可以在“统计”窗口中查看解锁进度。
+                        """,
+                        _ => { })
+                    .MainQuest());
             }
         }
     }

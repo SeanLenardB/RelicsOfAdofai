@@ -9,6 +9,8 @@
         public Action<GameContext> OvertimeConsequence = _ => { };
         public Action<GameContext> OnDayEnd = _ => { };
 
+        public bool IsMainQuest = false;
+
         public static ChoiceEvent Info(string title, string description, Action<GameContext> consequence)
         {
             return new()
@@ -84,6 +86,8 @@
                 ]
             }.WithDayLimit(days, failConsequence);
         }
+
+        public ChoiceEvent MainQuest() { this.IsMainQuest = true; return this; }
     }
 
     public class Choice

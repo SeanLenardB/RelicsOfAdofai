@@ -299,7 +299,8 @@ namespace RelicsAdofai.Game
                         context.FollowerCount += 1;
                         context.Sanity = 1;
                     }
-                ));
+                )
+                .MainQuest());
         }
     }
 }
