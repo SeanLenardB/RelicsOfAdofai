@@ -334,7 +334,7 @@ namespace RelicsAdofai.Game
         {
             this.ChoiceEvents.Add(
                 ChoiceEvent.Info(
-                    $"欢迎转世者，{this.PlayerName}！",
+                    $"欢迎来到Relics of Adofai",
                     """
                     <p>欢迎来到Relics of Adofai。这条信息是你的第一个教程。
 
