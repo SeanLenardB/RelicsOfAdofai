@@ -97,7 +97,6 @@ namespace RelicsAdofai.Game
 
 
 
-            // @todo: add more players when we get to "Networking DLC".
             this.OtherPlayers.Add("Reppij");
             this.OtherPlayers.Add("Teaj_");
             this.OtherPlayers.Add("Vate_Jalery");
@@ -108,112 +107,30 @@ namespace RelicsAdofai.Game
             this.OtherPlayers.Add("Ling_Centrifuge");
             this.OtherPlayers.Add("A2ra_");
             this.OtherPlayers.Add("listenwind");
-            foreach (var player in this.OtherPlayers) this.FriendlinessWithOtherPlayers.Add(player, 0);
+            this.OtherPlayers.Add("Firepika");
+            this.OtherPlayers.Add("afgiago'");
+            this.OtherPlayers.Add("Iris");
+            foreach (var player in this.OtherPlayers)
+            {
+                this.FriendlinessWithOtherPlayers.Add(player, 0);
+
+                this.Unlocked_OtherPlayer_Sc.Add(player, false);
+                this.Unlocked_OtherPlayer_Recreation.Add(player, false);
+                this.Unlocked_OtherPlayer_BigSc.Add(player, false);
+            }
 
 
 
             // More events are unlocked through progression. They are located in GameContext.Progression.
-            this.ChoiceEventWeights.Add(new(2, () =>
-            {
-                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
-                return ChoiceEvent.YesNo(
-                    $"给{streamer}发SC",
-                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">10</span>的礼物？",
-                    context =>
-                    {
-                        context.Money -= 10;
-                        context.Sanity += 0.05;
-                        if (context.Random.NextDouble() > 0.2) return;
-
-                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
-                        context.Skill *= 1.02;
-
-                        if (context.Random.NextDouble() > 0.2) return;
-                        context.FollowerCount *= 1.02;
-                    },
-                    _ => { },
-                    context => context.Money > 10
-                    ).WithDayLimit(1, _ => { });
-            }));
-            this.ChoiceEventWeights.Add(new(2, () =>
-            {
-                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
-                return ChoiceEvent.YesNo(
-                    $"给{streamer}发SC",
-                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">20</span>的礼物？",
-                    context =>
-                    {
-                        context.Money -= 20;
-                        context.Sanity += 0.05;
-                        if (context.Random.NextDouble() > 0.2) return;
-
-                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
-                        context.Skill *= 1.05;
-
-                        if (context.Random.NextDouble() > 0.5) return;
-                        context.FollowerCount *= 1.02;
-                    },
-                    _ => { },
-                    context => context.Money > 20
-                    ).WithDayLimit(1, _ => { });
-            }));
-            this.ChoiceEventWeights.Add(new(2, () =>
-            {
-                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
-                return ChoiceEvent.YesNo(
-                    $"给{streamer}发SC",
-                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">50</span>的礼物？",
-                    context =>
-                    {
-                        context.Money -= 50;
-                        context.Sanity += 0.05;
-                        if (context.Random.NextDouble() > 0.4) return;
-
-                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
-                        context.Skill *= 1.1;
-
-                        if (context.Random.NextDouble() > 0.5) return;
-                        context.FollowerCount *= 1.05;
-                    },
-                    _ => { },
-                    context => context.Money > 50
-                    ).WithDayLimit(1, _ => { });
-            }));
             this.ChoiceEventWeights.Add(new(1, () =>
             {
-                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                string player = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                double livestreamTime = this.Random.NextDouble() * 4;
                 return ChoiceEvent.YesNo(
-                    $"给{streamer}发SC",
-                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">100</span>的礼物？",
-                    context =>
-                    {
-                        context.Money -= 100;
-                        context.Sanity += 0.05;
-                        if (context.Random.NextDouble() > 0.8) return;
-
-                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
-                        context.Skill *= 1.1;
-                        context.FollowerCount *= 1.05;
-                    },
-                    _ => { },
-                    context => context.Money > 100
-                    ).WithDayLimit(1, _ => { });
-            }));
-            this.ChoiceEventWeights.Add(new(1, () =>
-            {
-                string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
-                return ChoiceEvent.YesNo(
-                    $"给{streamer}上舰",
-                    $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">198</span>的舰长？（不续舰不会毁号）",
-                    context =>
-                    {
-                        context.Money -= 198;
-                        context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
-                        context.Skill *= 1.1;
-                        context.FollowerCount *= 1.1;
-                    },
-                    _ => { },
-                    context => context.Money > 198
+                    $"看{player}直播",
+                    $"{player}开播了，是否要看一会儿？",
+                    context => { context.Sanity += livestreamTime / 80; this.FriendlinessWithOtherPlayers[player] += livestreamTime / 2; },
+                    _ => { }
                     ).WithDayLimit(1, _ => { });
             }));
             this.ChoiceEventWeights.Add(new(1, () =>
@@ -225,7 +142,7 @@ namespace RelicsAdofai.Game
                     {
                         for (int i = 0; i < 20; i++)  // @note: the 20 here is derived from 4h / 0.2h/chart.
                             context.AttemptChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
-                        context.Skill *= 1.03;
+                        context.Skill *= 1.02;
 
                         if (context.Random.NextDouble() > 0.8) return;
                         context.FollowerCount *= 1.01;

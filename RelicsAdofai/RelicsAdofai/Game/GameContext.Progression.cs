@@ -1,4 +1,6 @@
-﻿namespace RelicsAdofai.Game
+﻿using System.Diagnostics;
+
+namespace RelicsAdofai.Game
 {
     public partial class GameContext
     {
@@ -8,6 +10,10 @@
         public bool Unlocked_Bounty_Planetary = false;
         public bool Unlocked_Bounty_Galactic = false;
         public bool Unlocked_Bounty_Universal = false;
+        public Dictionary<string, bool> Unlocked_OtherPlayer_Sc = [];
+        public Dictionary<string, bool> Unlocked_OtherPlayer_Recreation = [];
+        public Dictionary<string, bool> Unlocked_OtherPlayer_BigSc = [];
+        public double[] OtherPlayerScAmounts = [0.11, 8.88, 11.45, 19.9, 24.8, 66.6];
         public void UpdateProgression()
         {
             if (!this.Unlocked_ScIncome_Tier1 && this.FollowerCount > 100)
@@ -270,6 +276,98 @@
                             $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:N2}</span></p>");
                     }).WithDayLimit(bountyDays, _ => { });
                 }));
+            }
+            foreach (var player in this.OtherPlayers)
+            {
+                Debug.Assert(this.Unlocked_OtherPlayer_BigSc.ContainsKey(player), "Cannot find the player in the dictionary!");
+                Debug.Assert(this.FriendlinessWithOtherPlayers.ContainsKey(player), "Cannot find the player in the dictionary!");
+                Debug.Assert(this.Unlocked_OtherPlayer_Recreation.ContainsKey(player), "Cannot find the player in the dictionary!");
+                if (!this.Unlocked_OtherPlayer_Sc[player] && this.FriendlinessWithOtherPlayers[player] > 8)
+                {
+                    this.Unlocked_OtherPlayer_Sc[player] = true;
+                    this.ChoiceEventWeights.Add(new(1, () =>
+                    {
+                        double scAmount = this.OtherPlayerScAmounts[this.Random.Next(this.OtherPlayerScAmounts.Length)];
+                        return ChoiceEvent.YesNo(
+                            $"给{player}发SC",
+                            $"{player}开播了，是否要给他刷一个<span class=\"color-money\">{scAmount:N2}</span>的礼物？",
+                            context =>
+                            {
+                                context.Money -= scAmount;
+                                context.FriendlinessWithOtherPlayers[player] += scAmount;
+                                context.Sanity += 0.15;
+                                context.Hour += 1;
+                                if (context.Random.NextDouble() > scAmount / this.OtherPlayerScAmounts[^1]) return;
+
+                                context.Log.Add($"<p>{player}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
+                                context.Skill *= 1.02;
+                                context.FollowerCount *= 1.02;
+                            },
+                            _ => { },
+                            context => context.Money > scAmount
+                            ).WithDayLimit(1, _ => { });
+                    }));
+                }
+                if (!this.Unlocked_OtherPlayer_Recreation[player] && this.FriendlinessWithOtherPlayers[player] > 32)
+                {
+                    this.Unlocked_OtherPlayer_Recreation[player] = true;
+                    this.ChoiceEvents.Add(ChoiceEvent.Info(
+                        $"你已成为{player}的群管理",
+                        $"在长期观看和互动后，{player}将你设置为粉丝群管理。",
+                        context => { context.Sanity += 0.1; context.FollowerCount *= 1.04; }));
+                    this.ChoiceEventWeights.Add(new(2, () =>
+                    {
+                        return ChoiceEvent.YesNo(
+                            $"{player}邀请你玩AmongSus",
+                            "是否要玩2小时？",
+                            context => { context.Hour += 2; context.FollowerCount *= 1.005; context.Sanity += 0.5; },
+                            _ => { }).WithDayLimit(2, _ => { });
+                    }));
+                    this.ChoiceEventWeights.Add(new(2, () =>
+                    {
+                        return ChoiceEvent.YesNo(
+                            $"{player}邀请你玩你打我猜",
+                            "是否要玩1小时？",
+                            context => { context.Hour += 1; context.FollowerCount *= 1.003; context.Sanity += 0.3; },
+                            _ => { }).WithDayLimit(2, _ => { });
+                    }));
+                    this.ChoiceEventWeights.Add(new(1, () =>
+                    {
+                        return ChoiceEvent.YesNo(
+                            $"{player}邀请你玩ScGo",
+                            "是否要玩3小时？",
+                            context =>
+                            {
+                                context.Hour += 3;
+                                context.Skill *= 1.005;
+                                context.FollowerCount *= 1.01;
+                                context.Sanity += 0.8;
+                            },
+                            _ => { }).WithDayLimit(3, _ => { });
+                    }));
+                }
+                if (!this.Unlocked_OtherPlayer_BigSc[player] && this.FriendlinessWithOtherPlayers[player] > 128)
+                {
+                    this.Unlocked_OtherPlayer_BigSc[player] = true;
+                    this.ChoiceEventWeights.Add(new(1, () =>
+                    {
+                        string streamer = this.OtherPlayers[this.Random.Next(this.OtherPlayers.Count)];
+                        return ChoiceEvent.YesNo(
+                            $"给{streamer}上舰",
+                            $"{streamer}开播了，是否要给他刷一个<span class=\"color-money\">198</span>的舰长？（不续舰不会毁号）",
+                            context =>
+                            {
+                                context.Money -= 198;
+                                context.Hour += 2;
+                                context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
+                                context.Skill *= 1.05;
+                                context.FollowerCount *= 1.1;
+                            },
+                            _ => { },
+                            context => context.Money > 198
+                            ).WithDayLimit(1, _ => { });
+                    }));
+                }
             }
         }
     }
