@@ -135,17 +135,23 @@ namespace RelicsAdofai.Game
                 });
             }
         }
-        
+
         // The current skill system is based on a logarithmatic scale.
         // That is, the skill number of P2 = 2 * P1, P3 = 2 * P2, etc.
         // However this is a simplification and ideal situation of the ratings.
         // In reality, the logarithmatic scalar might not be a constant, that is,
         // if P2 = 2 * P1, then U2 = 8 * U1 or so.
-        public void AttemptChart(Chart chart)
+        public void AttemptChart(Chart chart, bool isAutomatic = false)
         {
-            int chartIndex = this.Charts.IndexOf(chart);
-            Debug.Assert(chartIndex >= 0, "Invalid chart!");
-            this.SaveLines.Add($"c {chartIndex} a");
+            if (!isAutomatic)  // Playing Together will force play charts. Don't save that.
+            {
+                int chartIndex = this.Charts.IndexOf(chart);
+                Debug.Assert(chartIndex >= 0, "Invalid chart!");
+                this.SaveLines.Add($"c {chartIndex} a");
+            }
+
+            if (isAutomatic) this.Sanity += 0.05;
+
             this.Hour += 0.2;
             // This is a rough estimation of how playing adofai is. By no means is this an accurate model.
 
@@ -232,15 +238,16 @@ namespace RelicsAdofai.Game
             0.02, 0.02, 0.02, 0.02, 0.02,        // 99.90
             0.02, 0.02, 0.02, 0.02, 0.02,        // 100.00
         ];
-        public void PracticeChart(Chart chart, bool isForced = false)
+        public void PracticeChart(Chart chart, bool isAutomatic = false)
         {
-            if (!isForced) {  // Playing Together will force play charts. Don't save that.
+            if (!isAutomatic)  // Playing Together will force play charts. Don't save that.
+            {
                 int chartIndex = this.Charts.IndexOf(chart);
                 Debug.Assert(chartIndex >= 0, "Invalid chart!");
                 this.SaveLines.Add($"c {chartIndex} p");
             }
 
-            if (isForced) this.Sanity = (this.Sanity + 0.75) / 1.75;
+            if (isAutomatic) this.Sanity += 0.02;
             else this.Sanity *= 0.9;
 
             this.Hour += 0.5;

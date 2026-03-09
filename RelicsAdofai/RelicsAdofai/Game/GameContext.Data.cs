@@ -320,7 +320,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         for (int i = 0; i < 20; i++)  // @note: the 10 here is derived from 2h / 0.2h/chart.
-                            context.PracticeChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
+                            context.AttemptChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
                         context.Skill *= 1.03;
 
                         if (context.Random.NextDouble() > 0.8) return;
@@ -337,7 +337,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         for (int i = 0; i < 10; i++)  // @note: ditto.
-                            context.PracticeChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
+                            context.AttemptChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
                         context.Skill *= 1.01;
 
                         if (context.Random.NextDouble() > 0.8) return;
@@ -354,7 +354,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         for (int i = 0; i < 5; i++)  // @note: ditto.
-                            context.PracticeChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
+                            context.AttemptChart(context.Charts[context.Random.Next(context.Charts.Count)], true);
                         context.Skill *= 1.003;
 
                         if (context.Random.NextDouble() > 0.5) return;
