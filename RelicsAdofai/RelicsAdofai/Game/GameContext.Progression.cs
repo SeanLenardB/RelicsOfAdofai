@@ -322,6 +322,14 @@ namespace RelicsAdofai.Game
                     this.ChoiceEventWeights.Add(new(2, () =>
                     {
                         return ChoiceEvent.YesNo(
+                            $"{player}邀请你玩AdofaiGuessr",
+                            "是否要玩2小时？",
+                            context => { context.Hour += 2; context.FollowerCount *= 1.005; context.Sanity += 0.5; context.Skill *= 1.03; },
+                            _ => { }).WithDayLimit(2, _ => { });
+                    }));
+                    this.ChoiceEventWeights.Add(new(2, () =>
+                    {
+                        return ChoiceEvent.YesNo(
                             $"{player}邀请你玩AmongSus",
                             "是否要玩2小时？",
                             context => { context.Hour += 2; context.FollowerCount *= 1.005; context.Sanity += 0.5; },
@@ -426,7 +434,7 @@ namespace RelicsAdofai.Game
 
                         当然，进度不仅仅包括社交。在不久的将来（或者你可能已经看到了）你会解锁打谱赏金事件。
                         
-                        所有事件解锁都有一定的条件。你可 fd以在“统计”窗口中查看解锁进度。
+                        所有事件解锁都有一定的条件。你可以在“进度”窗口中查看解锁进度。
                         """,
                         _ => { })
                     .MainQuest());
