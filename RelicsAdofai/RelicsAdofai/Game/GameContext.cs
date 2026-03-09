@@ -266,7 +266,7 @@ namespace RelicsAdofai.Game
                 $"熟练度: <span style=\"color: gray\">{previousFamiliarity:0.00%}</span> " +
                 $">>> <span style=\"color: gray\">{newFamiliarity:0.00%}</span></p>");
 
-            if (newFamiliarity < 0.5) return;
+            if (newFamiliarity < 0.25) return;
             this.Skill += (newFamiliarity - previousFamiliarity) * chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 2);
         }
 
