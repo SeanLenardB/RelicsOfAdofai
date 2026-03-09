@@ -111,7 +111,7 @@ namespace RelicsAdofai.Game
                     bountyDays,
                     $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart} ({this.TranslatePgu(bountyChart)})的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
-                    context => { context.Money += bountyMoney; },
+                    context => { context.Money += bountyMoney; context.Sanity += 0.05; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var _)
                 ).WithDayLimit(bountyDays, _ => { });
@@ -127,7 +127,7 @@ namespace RelicsAdofai.Game
                     bountyDays,
                     $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内击破{bountyChart} ({this.TranslatePgu(bountyChart)})，且精准度高于{bountyAccuracy}的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
-                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.01; },
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.01; context.Sanity += 0.05; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy >= bountyAccuracy
                 ).WithDayLimit(bountyDays, _ => { });
@@ -142,7 +142,7 @@ namespace RelicsAdofai.Game
                     bountyDays,
                     $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的所有玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>",
-                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.02; },
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.02; context.Sanity += 0.05; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy > 99.99
                 ).WithDayLimit(bountyDays, _ => { });
@@ -168,7 +168,7 @@ namespace RelicsAdofai.Game
                     $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
                     $"目前看下来，这张谱面" + tabubIsMineString,
-                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.1; },
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.1; context.Sanity += 0.1; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var _)
                 ).WithOnDayEnd((context, e) =>
@@ -201,7 +201,7 @@ namespace RelicsAdofai.Game
                     $"谱面#{bountyChart.Id}悬赏",
                     $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
                     $"目前看下来，这张谱面" + tabubIsMineString,
-                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.2; },
+                    context => { context.Money += bountyMoney; context.FollowerCount *= 1.2; context.Sanity += 0.1; },
                     _ => { },
                     context => context.ChartAccuracies.TryGetValue(bountyChart, out var accuracy) && accuracy > 99.99
                 ).WithOnDayEnd((context, e) =>
@@ -222,6 +222,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         context.Money -= 10;
+                        context.Sanity += 0.05;
                         if (context.Random.NextDouble() > 0.2) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -243,6 +244,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         context.Money -= 20;
+                        context.Sanity += 0.05;
                         if (context.Random.NextDouble() > 0.2) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -264,6 +266,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         context.Money -= 50;
+                        context.Sanity += 0.05;
                         if (context.Random.NextDouble() > 0.4) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -285,6 +288,7 @@ namespace RelicsAdofai.Game
                     context =>
                     {
                         context.Money -= 100;
+                        context.Sanity += 0.05;
                         if (context.Random.NextDouble() > 0.8) return;
 
                         context.Log.Add($"<p>{streamer}很高兴，并且在接下来的直播中打了你点的谱面。在看直播的过程中，你学习到了一些更好的手法。</p>");
@@ -460,6 +464,7 @@ namespace RelicsAdofai.Game
                         context.Skill += 1;
                         context.Money += 72.7;
                         context.FollowerCount += 1;
+                        context.Sanity = 1;
                         context.Hour += 6;
                     })
                 .WithDayLimit(
@@ -469,6 +474,7 @@ namespace RelicsAdofai.Game
                         context.Skill += 1;
                         context.Money += 11.4;
                         context.FollowerCount += 1;
+                        context.Sanity = 1;
                     }
                 ));
         }
