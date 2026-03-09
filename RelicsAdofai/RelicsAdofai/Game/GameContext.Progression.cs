@@ -18,7 +18,7 @@
                     double moneyAmount = this.Random.NextDouble() * 10;
                     return ChoiceEvent.Info(
                         $"充电通知",
-                        $"<p>你的一位粉丝给你充电<span class=\"color-money\">{moneyAmount:0.00}</span></p>",
+                        $"<p>你的一位粉丝给你充电<span class=\"color-money\">{moneyAmount:N2}</span></p>",
                         context => context.Money += moneyAmount);
                 }));
             }
@@ -30,7 +30,7 @@
                     double moneyAmount = this.Random.NextDouble() * 10;
                     return ChoiceEvent.Info(
                         $"充电通知",
-                        $"<p>你的一位粉丝给你充电<span class=\"color-money\">{moneyAmount:0.00}</span></p>",
+                        $"<p>你的一位粉丝给你充电<span class=\"color-money\">{moneyAmount:N2}</span></p>",
                         context => context.Money += moneyAmount);
                 }));
                 this.ChoiceEventWeights.Add(new(1, () =>
@@ -38,7 +38,7 @@
                     double moneyAmount = this.Random.NextDouble() * 50;
                     return ChoiceEvent.Info(
                         $"充电通知",
-                        $"<p>你的一位粉丝给你充电<span class=\"color-money\">{moneyAmount:0.00}</span></p>",
+                        $"<p>你的一位粉丝给你充电<span class=\"color-money\">{moneyAmount:N2}</span></p>",
                         context =>
                         {
                             context.Money += moneyAmount;
@@ -83,7 +83,7 @@
                     return ChoiceEvent.MeetCriteria(
                         bountyDays,
                         $"谱面#{bountyChart.Id}悬赏",
-                        $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                        $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:N2}</span>。" +
                         $"目前看下来，这张谱面" + tabubIsMineString,
                         context => { context.Money += bountyMoney; context.FollowerCount *= 1.01; context.Sanity += 0.1; },
                         _ => { },
@@ -94,7 +94,7 @@
 
                         e.RemainingDays = -1;
                         context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
+                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:N2}</span></p>");
                     }).WithDayLimit(bountyDays, _ => { });
                 }));
                 this.ChoiceEventWeights.Add(new(1, () =>
@@ -116,7 +116,7 @@
                     return ChoiceEvent.MeetCriteria(
                         bountyDays,
                         $"谱面#{bountyChart.Id}悬赏",
-                        $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                        $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:N2}</span>。" +
                         $"目前看下来，这张谱面" + tabubIsMineString,
                         context => { context.Money += bountyMoney; context.FollowerCount *= 1.02; context.Sanity += 0.1; },
                         _ => { },
@@ -127,7 +127,7 @@
 
                         e.RemainingDays = -1;
                         context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
+                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:N2}</span></p>");
                     }).WithDayLimit(bountyDays, _ => { });
                 }));
             }
@@ -153,7 +153,7 @@
                     return ChoiceEvent.MeetCriteria(
                         bountyDays,
                         $"谱面#{bountyChart.Id}悬赏",
-                        $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                        $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:N2}</span>。" +
                         $"目前看下来，这张谱面" + tabubIsMineString,
                         context => { context.Money += bountyMoney; context.FollowerCount *= 1.03; context.Sanity += 0.1; },
                         _ => { },
@@ -164,7 +164,7 @@
 
                         e.RemainingDays = -1;
                         context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
+                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:N2}</span></p>");
                     }).WithDayLimit(bountyDays, _ => { });
                 }));
                 this.ChoiceEventWeights.Add(new(1, () =>
@@ -186,7 +186,7 @@
                     return ChoiceEvent.MeetCriteria(
                         bountyDays,
                         $"谱面#{bountyChart.Id}悬赏",
-                        $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                        $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:N2}</span>。" +
                         $"目前看下来，这张谱面" + tabubIsMineString,
                         context => { context.Money += bountyMoney; context.FollowerCount *= 1.05; context.Sanity += 0.1; },
                         _ => { },
@@ -197,7 +197,7 @@
 
                         e.RemainingDays = -1;
                         context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
+                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:N2}</span></p>");
                     }).WithDayLimit(bountyDays, _ => { });
                 }));
             }
@@ -223,7 +223,7 @@
                     return ChoiceEvent.MeetCriteria(
                         bountyDays,
                         $"谱面#{bountyChart.Id}悬赏",
-                        $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                        $"{bountyChart.Creator}愿意给{bountyDays}天内首通{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:N2}</span>。" +
                         $"目前看下来，这张谱面" + tabubIsMineString,
                         context => { context.Money += bountyMoney; context.FollowerCount *= 1.05; context.Sanity += 0.15; },
                         _ => { },
@@ -234,7 +234,7 @@
 
                         e.RemainingDays = -1;
                         context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
+                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:N2}</span></p>");
                     }).WithDayLimit(bountyDays, _ => { });
                 }));
                 this.ChoiceEventWeights.Add(new(2, () =>
@@ -256,7 +256,7 @@
                     return ChoiceEvent.MeetCriteria(
                         bountyDays,
                         $"谱面#{bountyChart.Id}悬赏",
-                        $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:0.00}</span>。" +
+                        $"{bountyChart.Creator}愿意给{bountyDays}天内第一个完美无瑕{bountyChart} ({this.TranslatePgu(bountyChart)})的玩家发赏金<span class=\"color-money\">{bountyMoney:N2}</span>。" +
                         $"目前看下来，这张谱面" + tabubIsMineString,
                         context => { context.Money += bountyMoney; context.FollowerCount *= 1.1; context.Sanity += 0.2; },
                         _ => { },
@@ -267,7 +267,7 @@
 
                         e.RemainingDays = -1;
                         context.Log.Add($"<p>{context.OtherPlayers[context.Random.Next(context.OtherPlayers.Count)]}" +
-                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:0.00}</span></p>");
+                            $"已砍下谱面{bountyChart} ({this.TranslatePgu(bountyChart)})的悬赏<span class=\"color-money\">{bountyMoney:N2}</span></p>");
                     }).WithDayLimit(bountyDays, _ => { });
                 }));
             }

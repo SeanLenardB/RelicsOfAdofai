@@ -272,7 +272,7 @@ namespace RelicsAdofai.Game
                 double money = (this.Random.NextDouble() * 300) + 200;
                 return ChoiceEvent.YesNo(
                     $"升级键盘",
-                    $"有一些Adofai玩家换了一种新的键盘，看上去还挺顺手，要不要也买一把？消耗资金<span class=\"color-money\">{money:0.00}</span>",
+                    $"有一些Adofai玩家换了一种新的键盘，看上去还挺顺手，要不要也买一把？消耗资金<span class=\"color-money\">{money:N2}</span>",
                     context =>
                     {
                         context.Money -= money;
@@ -292,7 +292,7 @@ namespace RelicsAdofai.Game
                 double money = (this.Random.NextDouble() * 600) + 400;
                 return ChoiceEvent.YesNo(
                     $"升级键盘",
-                    $"有一些Adofai玩家换了一种新的键盘，看上去还挺顺手，要不要也买一把？消耗资金<span class=\"color-money\">{money:0.00}</span>",
+                    $"有一些Adofai玩家换了一种新的键盘，看上去还挺顺手，要不要也买一把？消耗资金<span class=\"color-money\">{money:N2}</span>",
                     context => { context.Money -= money; context.Skill *= 1.05; },
                     _ => { },
                     context => context.Money > money
@@ -303,7 +303,7 @@ namespace RelicsAdofai.Game
                 double money = (this.Random.NextDouble() * 200) + 100;
                 return ChoiceEvent.YesNo(
                     $"升级摄像头",
-                    $"你的摄像头有一点旧了，要不要升级一下摄像头，增加机位或是提高画质？消耗资金<span class=\"color-money\">{money:0.00}</span>",
+                    $"你的摄像头有一点旧了，要不要升级一下摄像头，增加机位或是提高画质？消耗资金<span class=\"color-money\">{money:N2}</span>",
                     context =>
                     {
                         context.Money -= money;
@@ -319,7 +319,7 @@ namespace RelicsAdofai.Game
                 double money = (this.Random.NextDouble() * 400) + 400;
                 return ChoiceEvent.YesNo(
                     $"升级摄像头",
-                    $"你的摄像头有一点旧了，要不要升级一下摄像头，增加机位或是提高画质？消耗资金<span class=\"color-money\">{money:0.00}</span>",
+                    $"你的摄像头有一点旧了，要不要升级一下摄像头，增加机位或是提高画质？消耗资金<span class=\"color-money\">{money:N2}</span>",
                     context =>
                     {
                         context.Money -= money;

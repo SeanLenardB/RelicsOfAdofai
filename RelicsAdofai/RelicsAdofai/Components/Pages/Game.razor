@@ -5,13 +5,13 @@
 	<p class="game-topstatusbar-playername">@this.Context.PlayerName</p>
 	<div class="game-topstatusbar-stat">
 		<span>技术</span>
-		<span class="game-topstatusbar-stat-margin-small color-skill">@this.Context.Skill.ToString("0.00")</span>
+		<span class="game-topstatusbar-stat-margin-small color-skill">@this.Context.Skill.ToString("N2")</span>
 		<span class="game-topstatusbar-stat-margin-large">名声</span>
-		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount.ToString("0.00")</span>
+		<span class="game-topstatusbar-stat-margin-small color-follower">@this.Context.FollowerCount.ToString("N2")</span>
         <span class="game-topstatusbar-stat-margin-large">资金</span>
-        <span class="game-topstatusbar-stat-margin-small color-money">@this.Context.Money.ToString("0.00")</span>
+        <span class="game-topstatusbar-stat-margin-small color-money">@this.Context.Money.ToString("N2")</span>
         <span class="game-topstatusbar-stat-margin-large">理智</span>
-        <span class="game-topstatusbar-stat-margin-small color-sanity">@this.Context.Sanity.ToString("0.00%")</span>
+        <span class="game-topstatusbar-stat-margin-small color-sanity">@this.Context.Sanity.ToString("N2")</span>
 	</div>
 	<p class="game-topstatusbar-dayinfo">
 		第@(this.Context.Day)天<span style="margin-left: 1ch;"></span>
@@ -57,7 +57,7 @@
 			<img src="@("pgu/" + this.Context.TranslatePgu(chart) + ".png")"
 				 alt="@this.Context.TranslatePgu(chart)"
 				 style="height: 36px; margin: 0px;"/>
-			<span class="color-skill" style="margin-left: auto; align-self: end;">@chart.RequiredSkill.ToString("0.00")</span>
+			<span class="color-skill" style="margin-left: auto; align-self: end;">@chart.RequiredSkill.ToString("N2")</span>
 		</div>
 		<div style="display: flex; flex-direction: row; margin-top: 1ch;">
 			<button

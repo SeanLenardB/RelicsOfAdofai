@@ -36,7 +36,7 @@ namespace RelicsAdofai.Game
         {
             get;
             set {
-                this.Log.Add($"<p>名声: <span class=\"color-follower\">{field:0.00}</span> >>> <span class=\"color-follower\">{value:0.00}</span></p>");
+                this.Log.Add($"<p>名声: <span class=\"color-follower\">{value:N2}</span> (<span class=\"color-follower\">{value - field:+##,0.00;-##,0.00}</span>)</p>");
                 field = value;
             }
         } = 0.0;
@@ -44,7 +44,7 @@ namespace RelicsAdofai.Game
             get;
             set
             {
-                this.Log.Add($"<p>技术: <span class=\"color-skill\">{field:0.00}</span> >>> <span class=\"color-skill\">{value:0.00}</span></p>");
+                this.Log.Add($"<p>技术: <span class=\"color-skill\">{value:N2}</span> (<span class=\"color-skill\">{value - field:+##,0.00;-##,0.00}</span>)</p>");
                 field = value;
             }
         } = 0.0;
@@ -52,7 +52,7 @@ namespace RelicsAdofai.Game
             get;
             set
             {
-                this.Log.Add($"<p>资金: <span class=\"color-money\">{field:0.00}</span> >>> <span class=\"color-money\">{value:0.00}</span></p>");
+                this.Log.Add($"<p>资金: <span class=\"color-money\">{value:N2}</span> (<span class=\"color-money\">{value - field:+##,0.00;-##,0.00}</span>)</p>");
                 field = value;
             }
         } = 0.0;
@@ -61,9 +61,13 @@ namespace RelicsAdofai.Game
             get;
             set
             {
+                if (value >= 1 && field >= 1) return;
+                if (value <= 0 && field <= 0) return;
+
                 if (value > 1) value = 1;
                 else if (value < 0) value = 0;
-                this.Log.Add($"<p>理智: <span class=\"color-sanity\">{field:0.00%}</span> >>> <span class=\"color-sanity\">{value:0.00%}</span></p>");
+                
+                this.Log.Add($"<p>理智: <span class=\"color-sanity\">{value:N2}</span> (<span class=\"color-sanity\">{value - field:+##,0.00;-##,0.00}</span>)</p>");
                 field = value;
             }
         } = 0.0;
@@ -80,7 +84,7 @@ namespace RelicsAdofai.Game
                 }
                 else
                 {
-                    this.Log.Add($"<p>时间经过{(value - field <= 0 ? value - field + 24 : value - field):0.0}小时</p>");
+                    this.Log.Add($"<p>时间经过{(value - field <= 0 ? value - field + 24 : value - field):N2}小时</p>");
                     field = value;
                 }
             }
@@ -216,7 +220,7 @@ namespace RelicsAdofai.Game
             if (isPurePerfect)
                 this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: gold\">100.00%</span>（啊！完美无瑕！）</p>");
             else
-                this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: lightgoldenrodyellow\">{accuracy:0.00}%</span></p>");
+                this.Log.Add($"<p>击破谱面{chart}，精准<span style=\"color: lightgoldenrodyellow\">{accuracy:N2}%</span></p>");
 
             if (this.ChartAccuracies.TryGetValue(chart, out var previousAccuracy) && previousAccuracy > accuracy) return;
             this.ChartAccuracies[chart] = isPurePerfect ? 100 : accuracy;  // prevent precision loss
@@ -225,7 +229,7 @@ namespace RelicsAdofai.Game
             this.ChoiceEvents.Add(ChoiceEvent.YesNo(
                 "发布击破视频",
                 $"<p>是否发布{chart}" +
-                $"({(isPurePerfect ? "<span style=\"color: gold\">100.00%</span>" : $"<span style=\"color: lightgoldenrodyellow\">{accuracy:0.00}%</span>")})" +
+                $"({(isPurePerfect ? "<span style=\"color: gold\">100.00%</span>" : $"<span style=\"color: lightgoldenrodyellow\">{accuracy:N2}%</span>")})" +
                 $"的击破视频？</p>",
                 context => { context.FollowerCount += Math.Sqrt(chart.RequiredSkill * Math.Pow(accuracy / 100, 4)); context.Hour += 0.5; },
                 _ => { }));
@@ -268,8 +272,8 @@ namespace RelicsAdofai.Game
             this.ChartFamiliarities[chart] = newFamiliarity;
 
             this.Log.Add($"<p>练习谱面{chart}，" +
-                $"熟练度: <span style=\"color: gray\">{previousFamiliarity:0.00%}</span> " +
-                $">>> <span style=\"color: gray\">{newFamiliarity:0.00%}</span></p>");
+                $"熟练度: <span style=\"color: gray\">{newFamiliarity:N2}</span> " +
+                $"(<span style=\"color: gray\">{newFamiliarity - previousFamiliarity:+##,0.00;-##,0.00}</span>)</p>");
 
             if (newFamiliarity < 0.2) return;
             this.Skill += (newFamiliarity - previousFamiliarity) * chart.RequiredSkill / Math.Pow(this.MultiplierPerRating, 2);
@@ -312,8 +316,8 @@ namespace RelicsAdofai.Game
 
                 double newFamiliarity = Math.Pow(previousFamiliarity, 1.14);
                 this.Log.Add($"<p>谱面{chart}的熟练度下降: " +
-                    $"<span style=\"color: gray;\">{previousFamiliarity:0.00%}</span> >>> " +
-                    $"<span style=\"color: gray;\">{newFamiliarity:0.00%}</span></p>");
+                    $"<span style=\"color: gray;\">{newFamiliarity:N2}</span> " +
+                    $"(<span style=\"color: gray;\">{newFamiliarity - previousFamiliarity:+##,0.00;-##,0.00}</span>)</p>");
                 this.ChartFamiliarities[chart] = newFamiliarity;
             }
 
@@ -322,7 +326,7 @@ namespace RelicsAdofai.Game
                 double videoIncome = Math.Log(this.FollowerCount) * 10;
                 this.ChoiceEvents.Add(ChoiceEvent.Info(
                     "视频创作收入",
-                    $"上周你的视频共产生收入<span class=\"color-money\">{videoIncome:0.00}</span>",
+                    $"上周你的视频共产生收入<span class=\"color-money\">{videoIncome:N2}</span>",
                     context => context.Money += videoIncome
                     ));
             }
