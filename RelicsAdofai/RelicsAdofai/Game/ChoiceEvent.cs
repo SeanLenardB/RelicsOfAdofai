@@ -80,7 +80,7 @@
         }
         public ChoiceEvent WithOnDayEnd(Action<GameContext, ChoiceEvent> onDayEnd)
         {
-            // @cleanup: the reason this exists is that we need to have a way to
+            // @hack: the reason this exists is that we need to have a way to
             // remove a choice event on day end. This is a very dirty way to do it
             // but, hey! it works!
             this.OnDayEnd = context => onDayEnd(context, this);

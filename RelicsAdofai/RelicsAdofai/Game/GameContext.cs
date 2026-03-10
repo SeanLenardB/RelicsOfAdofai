@@ -104,7 +104,7 @@ namespace RelicsAdofai.Game
         public void GenerateEvents()
         {
             int totalWeight = this.ChoiceEventWeights.Sum(c => c.Item1);
-            int eventCount = 2 + this.Random.Next(4);  // @cleanup: should not be hardcoded and should be configurable.
+            int eventCount = 2 + this.Random.Next(4);
             for (int i = 0; i < eventCount; i++)
             {
                 if (this.ChoiceEvents.Count >= 8) { break; }
@@ -295,7 +295,7 @@ namespace RelicsAdofai.Game
                 choiceEvent.OvertimeConsequence(this);
             }
 
-            // @cleanup: This OnDayEnd loop is before the RemoveAll because there are events
+            // @note: This OnDayEnd loop is before the RemoveAll because there are events
             // where they have a chance to be discarded at the end of a day.
             //
             // As we can't modify the ChoiceEvents list in OnDayEnd itself
