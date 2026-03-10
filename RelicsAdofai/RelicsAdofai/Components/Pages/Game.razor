@@ -204,6 +204,10 @@
                     @(this.Context.Unlocked_MainQuests_FinishGame ? "game-multipanel-progression-item-completed" : "")"
                     style="background-color: #d9ed9288;">
                     <span style="font-weight: bold; align-self: center;">主线任务 完成Relics of Adofai</span>
+                    <span style="margin-left: auto; align-self: center; font-size: 24px; font-weight: bold;">
+                        @this.Context.ChartAccuracies.Count(p => p.Value > 99.99)</span>
+                    <span style="margin-left: 0.5ch; align-self: center;">
+                        /@(this.Context.ChartAccuracies.Count())</span>
                 </div>
 
                 <div class="game-multipanel-progression-item 
