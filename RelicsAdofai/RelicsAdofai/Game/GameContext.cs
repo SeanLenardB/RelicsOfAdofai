@@ -121,7 +121,7 @@ namespace RelicsAdofai.Game
 
         public void GenerateCharts()
         {
-            for (int i = 0; i < 400; i++)
+            for (int i = 0; i < 60 * 3; i++)
             {
                 (var artist, var song) = this.ArtistsAndSongs[this.Random.Next(this.ArtistsAndSongs.Count)];
                 var creator = this.Creators[this.Random.Next(this.Creators.Count)];
