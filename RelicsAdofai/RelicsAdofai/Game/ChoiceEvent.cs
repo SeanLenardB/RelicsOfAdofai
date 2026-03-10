@@ -50,6 +50,22 @@
             };
         }
 
+        public static ChoiceEvent MeetCriteria(int days, string title, string description,
+            Action<GameContext> succeedConsequence, Action<GameContext> failConsequence,
+            Predicate<GameContext> criteria)
+        {
+            return new ChoiceEvent()
+            {
+                Title = title,
+                Description = description,
+                Choices = 
+                [
+                    new() { Text = "完成", Consequence = succeedConsequence, IsChoiceAvailable = criteria },
+                    new() { Text = "放弃", Consequence = failConsequence }
+                ]
+            }.WithDayLimit(days, failConsequence);
+        }
+
         public ChoiceEvent WithDayLimit(int days, Action<GameContext> overtimeConsequence)
         {
             this.RemainingDays = days;
@@ -69,22 +85,6 @@
             // but, hey! it works!
             this.OnDayEnd = context => onDayEnd(context, this);
             return this;
-        }
-
-        public static ChoiceEvent MeetCriteria(int days, string title, string description,
-            Action<GameContext> succeedConsequence, Action<GameContext> failConsequence,
-            Predicate<GameContext> criteria)
-        {
-            return new ChoiceEvent()
-            {
-                Title = title,
-                Description = description,
-                Choices = 
-                [
-                    new() { Text = "完成", Consequence = succeedConsequence, IsChoiceAvailable = criteria },
-                    new() { Text = "放弃", Consequence = failConsequence }
-                ]
-            }.WithDayLimit(days, failConsequence);
         }
 
         public ChoiceEvent MainQuest() { this.IsMainQuest = true; return this; }
