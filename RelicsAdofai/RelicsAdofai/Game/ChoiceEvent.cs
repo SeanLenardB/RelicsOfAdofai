@@ -81,7 +81,7 @@
             this.OnDayEnd = context => onDayEnd(context, this);
             return this;
         }
-        public ChoiceEvent WithOnDayEnd(Action<GameContext> onDayEnd) => return this.WithOnDayEnd((context, _) => onDayEnd(context));
+        public ChoiceEvent WithOnDayEnd(Action<GameContext> onDayEnd) => this.WithOnDayEnd((context, _) => onDayEnd(context));
 
         public ChoiceEvent MainQuest() { this.IsMainQuest = true; return this; }
     }

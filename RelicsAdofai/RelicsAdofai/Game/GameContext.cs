@@ -111,7 +111,6 @@ namespace RelicsAdofai.Game
                 int randomWeight = this.Random.Next(totalWeight);
                 foreach (var eventPair in this.ChoiceEventWeights)
                 {
-
                     randomWeight -= eventPair.Item1;
                     if (randomWeight >= 0) continue;
 
