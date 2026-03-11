@@ -1,11 +1,13 @@
 ﻿using Raylib_cs;
+using RelicsOfAdofai.Engine;
 
-namespace RelicsOfAdofai.Game.Gui
+namespace RelicsOfAdofai.Engine.Gui
 {
-    public class GuiInputBox()
+    public class InputBox
     {
         public string Text = "";
-        public float TextSize = 32;
+        public float TextSize = Style.SizeNormal;
+        public TextAlign Align = TextAlign.Left;
 
         public GuiState BelongingState = GuiState.Splashscreen;
         public Rectangle CollisionBox;
@@ -13,6 +15,11 @@ namespace RelicsOfAdofai.Game.Gui
         public bool IsHover = false;
         public Predicate<string> LegalText = _ => true;
 
-        public float TimeAfterPreviousDelete = 0.05f;
+        public enum TextAlign
+        {
+            Left,
+            Center,
+            Right
+        }
     }
 }

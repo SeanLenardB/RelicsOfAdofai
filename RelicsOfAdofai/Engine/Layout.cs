@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using Raylib_cs;
 
-namespace RelicsOfAdofai.Game
+namespace RelicsOfAdofai.Engine
 {
     public class Layout
     {
