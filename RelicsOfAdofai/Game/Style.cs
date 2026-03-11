@@ -8,9 +8,13 @@ namespace RelicsOfAdofai.Game
         public static Color ColorTextSkill = Color.Purple;
         public static Color ColorTextMoney = Color.Gold;
 
-        public static Color ColorBgLight = new(96, 144, 224, 239);
-        public static Color ColorBgMedium = new(96, 0, 180, 216);
-        public static Color ColorBgDark = new(96, 3, 4, 94);
+        public static Color ColorBgLight = new(144, 224, 239, 96);
+        public static Color ColorBgMedium = new(0, 180, 216, 96);
+        public static Color ColorBgDark = new(3, 4, 94, 96);
+
+        public static Color ColorBorderDark = Color.Gray;
+        public static Color ColorBorderMedium = Color.LightGray;
+        public static Color ColorBorderLight = Color.White;
 
         public static Dictionary<string, Texture2D> Textures = [];
         public static Font Font;
