@@ -78,7 +78,12 @@ namespace RelicsOfAdofai.Engine
                 // Active
                 var isMouseDown = Raylib.IsMouseButtonDown(MouseButton.Left);
                 if (isMouseDown && collide) button.IsPressed = true;
-                else if (!isMouseDown) button.IsPressed = false;
+                else if (!isMouseDown && !collide) button.IsPressed = false;
+                else if (!isMouseDown && collide && button.IsPressed)
+                {
+                    button.IsPressed = false;
+                    button.PressAction();
+                }
             }
         }
     }

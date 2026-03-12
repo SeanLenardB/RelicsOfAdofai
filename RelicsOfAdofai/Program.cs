@@ -37,7 +37,12 @@ public class Program
             {
                 Raylib.ClearBackground(Color.RayWhite);
 
-                if (GuiContext.GuiState == GuiState.Splashscreen) GameRender.SplashScreen();
+                switch (GuiContext.GuiState)
+                {
+                    case GuiState.Splashscreen: GameRender.SplashScreen(); break;
+                    case GuiState.Game: GameRender.Game(); break;
+                    default: goto case GuiState.Splashscreen;
+                }
 
                 GameRender.RenderGui();
             }

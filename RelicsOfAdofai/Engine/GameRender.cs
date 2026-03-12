@@ -69,11 +69,19 @@ namespace RelicsOfAdofai.Engine
                 0,
                 Style.ColorTextGeneral);
         }
+        public static void Game()
+        {
+            Raylib.ClearBackground(Color.SkyBlue);
+        }
+
+
 
         public static void RenderGui()
         {
             foreach (var inputBox in GuiContext.InputBoxes.Values)
             {
+                if (inputBox.BelongingState != GuiContext.GuiState) continue;
+
                 Color underbarColor;
                 if (inputBox.IsActive) underbarColor = Style.ColorBorderLight;
                 else if (inputBox.IsHover) underbarColor = Style.ColorBorderMedium;
@@ -114,6 +122,8 @@ namespace RelicsOfAdofai.Engine
             }
             foreach (var button in GuiContext.Buttons.Values)
             {
+                if (button.BelongingState != GuiContext.GuiState) continue;
+
                 Color outlineColor;
                 if (button.IsPressed) outlineColor = Style.ColorBorderDark;
                 else if (button.IsHover) outlineColor = Style.ColorBorderLight;

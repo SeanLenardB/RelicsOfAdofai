@@ -17,8 +17,13 @@ namespace RelicsOfAdofai.Engine
 
         public static void GuiInit()
         {
-            InputBoxes["rngseed"] = new() { LegalText = text => int.TryParse(text, out var _) };
-            Buttons["startgame"] = new() { Align = Button.TextAlign.Center, Text = "开始" };
+            InputBoxes["rngseed"] = 
+                new() { LegalText = text => int.TryParse(text, out var _) };
+            Buttons["startgame"] = 
+                new() { Align = Button.TextAlign.Center, Text = "开始", PressAction = () =>
+                {
+                    SwitchState(GuiState.Game);
+                }};
         }
         public static void RecalculateUIPosition()
         {
@@ -27,10 +32,17 @@ namespace RelicsOfAdofai.Engine
             Buttons["startgame"].CollisionBox =
                 Layout.CenterBottom().Hpx(72).YVh(95).DYpx(-80).Wpx(240).Xvw(50).Rect();
         }
+        public static void SwitchState(GuiState newState)
+        {
+            // @todo: impl animation?
+            Debug.Assert(newState != GuiState, "Cannot change from and to the same state!");
+            GuiState = newState;
+        }
     }
 
     public enum GuiState
     {
-        Splashscreen
+        Splashscreen,
+        Game,
     }
 }

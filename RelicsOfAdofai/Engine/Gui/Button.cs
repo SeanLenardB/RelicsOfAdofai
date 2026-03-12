@@ -15,6 +15,7 @@ namespace RelicsOfAdofai.Engine.Gui
         public Rectangle CollisionBox;
         public bool IsPressed = false;
         public bool IsHover = false;
+        public Action PressAction = () => { };
 
         public enum TextAlign
         {
