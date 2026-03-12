@@ -60,11 +60,11 @@ namespace RelicsOfAdofai.Engine
                 8,
                 Style.ColorBgMedium);
 
-            var rngSeedPromptExtent = Raylib.MeasureTextEx(Style.GenericFont, "随机数种子", Style.SizeNormal, 0);
+            var rngExtent = Raylib.MeasureTextEx(Style.GenericFont, "随机数种子", Style.SizeNormal, 0);
             Raylib.DrawTextEx(
                 Style.GenericFont,
                 "随机数种子",
-                Layout.RightBottom().Hpx(72).YVh(95).DYpx(-360).Wpx((int)rngSeedPromptExtent.X).Xvw(50).DXpx(-24).Vect(),
+                Layout.RightCenter().Hpx((int)rngExtent.Y).YVh(95).DYpx(-360).Wpx((int)rngExtent.X).Xvw(50).DXpx(-24).Vect(),
                 Style.SizeNormal,
                 0,
                 Style.ColorTextGeneral);
@@ -78,6 +78,15 @@ namespace RelicsOfAdofai.Engine
                 if (inputBox.IsActive) underbarColor = Style.ColorBorderLight;
                 else if (inputBox.IsHover) underbarColor = Style.ColorBorderMedium;
                 else underbarColor = Style.ColorBorderDark;
+
+                if (inputBox.IsActive)
+                    Raylib.DrawRectangleGradientEx(
+                        inputBox.CollisionBox,
+                        Color.Blank, Style.ColorBgInputGradientActive, Style.ColorBgInputGradientActive, Color.Blank);
+                else
+                    Raylib.DrawRectangleGradientEx(
+                        inputBox.CollisionBox,
+                        Color.Blank, Style.ColorBgInputGradientInactive, Style.ColorBgInputGradientInactive, Color.Blank);
 
                 Raylib.DrawLineEx(
                     new(inputBox.CollisionBox.X, inputBox.CollisionBox.Y + inputBox.CollisionBox.Height),
@@ -105,21 +114,18 @@ namespace RelicsOfAdofai.Engine
             }
             foreach (var button in GuiContext.Buttons.Values)
             {
-                Color underbarColor;
-                if (button.IsPressed) underbarColor = Style.ColorBorderDark;
-                else if (button.IsHover) underbarColor = Style.ColorBorderLight;
-                else underbarColor = Style.ColorBorderMedium;
+                Color outlineColor;
+                if (button.IsPressed) outlineColor = Style.ColorBorderDark;
+                else if (button.IsHover) outlineColor = Style.ColorBorderLight;
+                else outlineColor = Style.ColorBorderMedium;
 
-                Raylib.DrawLineEx(
-                    new(button.CollisionBox.X, button.CollisionBox.Y),
-                    new(button.CollisionBox.X + button.CollisionBox.Width, button.CollisionBox.Y),
+                Raylib.DrawRectangleRoundedLinesEx(
+                    button.CollisionBox,
+                    0.1f,
+                    8,
                     4.0f,
-                    underbarColor);
-                Raylib.DrawLineEx(
-                    new(button.CollisionBox.X, button.CollisionBox.Y + button.CollisionBox.Height),
-                    new(button.CollisionBox.X + button.CollisionBox.Width, button.CollisionBox.Y + button.CollisionBox.Height),
-                    4.0f,
-                    underbarColor);
+                    outlineColor
+                    );
 
                 var textExtent = Raylib.MeasureTextEx(Style.GenericFont, button.Text, button.TextSize, 0);
 

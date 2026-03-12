@@ -23,7 +23,7 @@ namespace RelicsOfAdofai.Engine
         public static void RecalculateUIPosition()
         {
             InputBoxes["rngseed"].CollisionBox = 
-                Layout.LeftBottom().Hpx(72).YVh(95).DYpx(-360).Wpx(480).Xvw(50).DXpx(24).Rect();
+                Layout.LeftCenter().Hpx((int)(Style.SizeNormal * 1.5)).YVh(95).DYpx(-360).Wpx(480).Xvw(50).DXpx(24).Rect();
             Buttons["startgame"].CollisionBox =
                 Layout.CenterBottom().Hpx(72).YVh(95).DYpx(-80).Wpx(240).Xvw(50).Rect();
         }
