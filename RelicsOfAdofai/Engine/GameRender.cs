@@ -124,8 +124,7 @@ namespace RelicsOfAdofai.Engine
                     0.1f,
                     8,
                     4.0f,
-                    outlineColor
-                    );
+                    outlineColor);
 
                 var textExtent = Raylib.MeasureTextEx(Style.GenericFont, button.Text, button.TextSize, 0);
 
