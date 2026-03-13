@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Raylib_cs;
@@ -100,7 +101,11 @@ namespace RelicsOfAdofai.Engine
 
 
 
-            var headerRect = Layout.CenterTop().Hpx(128).Ypx(0).Wvw(100).Xvw(50).Rect();
+            this.DrawChartGrid(gameContext);
+
+
+
+            var headerRect = Layout.CenterTop().Hpx(Style.HeaderHeight).Ypx(0).Wvw(100).Xvw(50).Rect();
             var headerRectLeftHalf = headerRect;
             headerRectLeftHalf.Width /= 2;
             var headerRectRightHalf = headerRectLeftHalf;
@@ -130,10 +135,7 @@ namespace RelicsOfAdofai.Engine
                 new(padding, padding),
                 Style.SizeHeaderTitle,
                 0,
-                Color.White);
-
-
-
+                Style.ColorTextGeneral);
             /*
              * [  ]----[  ]----[  ]
              *    < 96 >
@@ -144,7 +146,7 @@ namespace RelicsOfAdofai.Engine
                 new((Style.WindowWidth - chartListLineLength) / 2, 64),
                 new((Style.WindowWidth + chartListLineLength) / 2, 64),
                 4.0f,
-                Color.White);
+                Style.ColorBorderLight);
             var firstIconCenterX = (Style.WindowWidth - chartListLineLength ) / 2;
             for (int i = 0; i < gameContext.Charts.Count; i++)
             {
@@ -157,7 +159,48 @@ namespace RelicsOfAdofai.Engine
                     0.1f,
                     8,
                     4f,
-                    Color.White);
+                    Style.ColorBorderLight);
+            }
+
+
+
+            var handRect = Layout.CenterBottom().Hpx(Style.HandHeight).YVh(100).Wvw(100).Xvw(50).Rect();
+            Raylib.DrawRectangleGradientV(
+                (int)handRect.X, (int)handRect.Y, (int)handRect.Width, (int)handRect.Height,
+                Style.ColorBgInputGradientActive, Style.ColorBgInputGradientInactive);
+            Raylib.DrawLineEx(
+                new(handRect.X, handRect.Y),
+                new(handRect.X + handRect.Width, handRect.Y),
+                4,
+                Style.ColorBorderLight);
+        }
+
+        public void DrawChartGrid(GameContext gameContext)
+        {
+            foreach (var cell in gameContext.CurrentChart.Cells)
+            {
+                if (cell.IsHover)
+                    Raylib.DrawPoly(
+                        (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin,
+                        6,
+                        Style.HexCellDrawRadius,
+                        30,
+                        Style.ColorBgMedium);
+                else 
+                    Raylib.DrawPoly(
+                        (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin,
+                        6,
+                        Style.HexCellDrawRadius,
+                        30,
+                        Style.ColorBgDark);
+
+                Raylib.DrawPolyLinesEx(
+                    (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin,
+                    6,
+                    Style.HexCellDrawRadius,
+                    30,
+                    6,
+                    Style.ColorBorderLight);
             }
         }
 

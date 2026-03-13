@@ -5,8 +5,6 @@ namespace RelicsOfAdofai.Engine
     public class Style
     {
         public static Color ColorTextGeneral = Color.White;
-        public static Color ColorTextSkill = Color.Purple;
-        public static Color ColorTextMoney = Color.Gold;
 
         public static Color ColorBgLight = new(0, 88, 240, 48);
         public static Color ColorBgMedium = new(0, 34, 132, 96);
@@ -28,5 +26,14 @@ namespace RelicsOfAdofai.Engine
 
         public static int WindowWidth = 1920;
         public static int WindowHeight = 1080;
+
+        public static int HeaderHeight = 128;
+        public static int HandHeight = 256;
+
+        // https://www.redblobgames.com/grids/hexagons/
+        public static int HexCellSpaceRadius = 96 * 2;
+        public static int HexCellDrawRadius = 102;
+
+        public static double ConstSqrtThreeOverTwo = Math.Sqrt(3) / 2.0;
     }
 }

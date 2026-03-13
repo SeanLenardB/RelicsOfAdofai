@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using Raylib_cs;
+using RelicsOfAdofai.Game;
 
 namespace RelicsOfAdofai.Engine
 {
     public class Interactivity
     {
         public double BackspaceCooldown = 0;
-        public void HandleInput(GuiContext guiContext)
+        public void HandleInput(GuiContext guiContext, GameContext gameContext)
         {
+            var isMouseLeftDown = Raylib.IsMouseButtonDown(MouseButton.Left);
+            var isMouseMiddleDown = Raylib.IsMouseButtonDown(MouseButton.Middle);
+            var mousePosition = Raylib.GetMousePosition();
+
             // Input char
             int code = Raylib.GetCharPressed();
             while (code != 0 && code >= 32 && code <= 125)  // @note: might change to wider/narrower ranges
@@ -52,15 +58,14 @@ namespace RelicsOfAdofai.Engine
             {
                 if (inputBox.BelongingState != guiContext.GuiState) continue;
 
-                var collide = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), inputBox.CollisionBox);
+                var collide = Raylib.CheckCollisionPointRec(mousePosition, inputBox.CollisionBox);
                 // Hover
                 if (collide) { inputBox.IsHover = true; anyInputBoxHovered = true; }
-                if (inputBox.IsHover && !collide) inputBox.IsHover = false;
+                else if (inputBox.IsHover) inputBox.IsHover = false;
 
                 // Active
-                var isMouseDown = Raylib.IsMouseButtonDown(MouseButton.Left);
-                if (isMouseDown && collide) inputBox.IsActive = true;
-                else if (isMouseDown && !collide) inputBox.IsActive = false;
+                if (isMouseLeftDown && collide) inputBox.IsActive = true;
+                else if (isMouseLeftDown && !collide) inputBox.IsActive = false;
             }
             if (anyInputBoxHovered) Raylib.SetMouseCursor(MouseCursor.IBeam);
             else Raylib.SetMouseCursor(MouseCursor.Default);
@@ -70,19 +75,38 @@ namespace RelicsOfAdofai.Engine
             {
                 if (button.BelongingState != guiContext.GuiState) continue;
 
-                var collide = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), button.CollisionBox);
+                var collide = Raylib.CheckCollisionPointRec(mousePosition, button.CollisionBox);
                 // Hover
                 if (collide) button.IsHover = true;
-                if (button.IsHover && !collide) button.IsHover = false;
+                else if (button.IsHover) button.IsHover = false;
 
                 // Active
-                var isMouseDown = Raylib.IsMouseButtonDown(MouseButton.Left);
-                if (isMouseDown && collide) button.IsPressed = true;
-                else if (!isMouseDown && !collide) button.IsPressed = false;
-                else if (!isMouseDown && collide && button.IsPressed)
+                if (isMouseLeftDown && collide) button.IsPressed = true;
+                else if (!isMouseLeftDown && !collide) button.IsPressed = false;
+                else if (!isMouseLeftDown && collide && button.IsPressed)
                 {
                     button.IsPressed = false;
                     button.PressAction();
+                }
+            }
+
+            if (guiContext.GuiState == GuiState.Game)
+            {
+                // Panning hex grid
+                if (isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); Raylib.SetMouseCursor(MouseCursor.PointingHand); }
+                else Raylib.SetMouseCursor(MouseCursor.Default);
+
+                // Hovering hex grid
+                foreach (var cell in gameContext.CurrentChart.Cells)
+                {
+                    var collide = false;
+                    if (mousePosition.Y > Style.HeaderHeight && mousePosition.Y + Style.HandHeight < Style.WindowHeight)
+                        collide = Raylib.CheckCollisionPointPoly(
+                            mousePosition - ((cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin),
+                            cell.Coords.BoundingBox);  // @hack: the list of points is static and precalculated. Therefore we "move" the mouse.
+
+                    if (collide) cell.IsHover = true;
+                    else if (cell.IsHover) cell.IsHover = false;
                 }
             }
         }

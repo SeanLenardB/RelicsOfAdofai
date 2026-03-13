@@ -31,7 +31,7 @@ public class Program
 
         while (!Raylib.WindowShouldClose())
         {
-            interactivity.HandleInput(guiContext);
+            interactivity.HandleInput(guiContext, gameContext);
 
             if (Raylib.IsWindowResized())
             {
