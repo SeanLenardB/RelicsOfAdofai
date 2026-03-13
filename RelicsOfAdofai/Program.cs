@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using RelicsOfAdofai.Engine;
+using RelicsOfAdofai.Game;
 
 public class Program
 {
@@ -20,31 +21,37 @@ public class Program
         Style.Textures["bg"] = Raylib.LoadTextureFromImage(bgImage);
         Raylib.UnloadImage(bgImage);
 
-        GuiContext.GuiInit();
+
+
+        GameRender gameRender = new();
+        Interactivity interactivity = new();
+        GameContext gameContext = new();
+        GuiContext guiContext = new();
+        guiContext.GuiInit(gameContext);
 
         while (!Raylib.WindowShouldClose())
         {
-            Interactivity.HandleInput();
+            interactivity.HandleInput(guiContext);
 
             if (Raylib.IsWindowResized())
             {
                 Style.WindowWidth = Raylib.GetRenderWidth();
                 Style.WindowHeight = Raylib.GetRenderHeight();  // @cleanup: we might listen to an event and update the window size.
             }
-            GuiContext.RecalculateUIPosition();
+            guiContext.RecalculateUIPosition();
 
             Raylib.BeginDrawing();
             {
                 Raylib.ClearBackground(Color.RayWhite);
 
-                switch (GuiContext.GuiState)
+                switch (guiContext.GuiState)
                 {
-                    case GuiState.Splashscreen: GameRender.SplashScreen(); break;
-                    case GuiState.Game: GameRender.Game(); break;
+                    case GuiState.Splashscreen: gameRender.SplashScreen(); break;
+                    case GuiState.Game: gameRender.Game(gameContext); break;
                     default: goto case GuiState.Splashscreen;
                 }
 
-                GameRender.RenderGui();
+                gameRender.RenderGui(guiContext);
             }
             Raylib.EndDrawing();
         }

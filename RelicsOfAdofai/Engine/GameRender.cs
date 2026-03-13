@@ -11,7 +11,7 @@ namespace RelicsOfAdofai.Engine
 {
     public class GameRender
     {
-        public static void SplashScreen()
+        public void SplashScreen()
         {
             Debug.Assert(Style.Textures.ContainsKey("bg"), "Cannot find the background image bg!");
             var bg = Style.Textures["bg"];
@@ -70,7 +70,7 @@ namespace RelicsOfAdofai.Engine
                 0,
                 Style.ColorTextGeneral);
         }
-        public static void Game()
+        public void Game(GameContext gameContext)
         {
             // @cleanup: copypasta from SplashScreen()
             Debug.Assert(Style.Textures.ContainsKey("bg"), "Cannot find the background image bg!");
@@ -139,19 +139,19 @@ namespace RelicsOfAdofai.Engine
              *    < 96 >
              * <40>
              */
-            var chartListLineLength = 136 * (GameContext.Charts.Count - 1);
+            var chartListLineLength = 136 * (gameContext.Charts.Count - 1);
             Raylib.DrawLineEx(
                 new((Style.WindowWidth - chartListLineLength) / 2, 64),
                 new((Style.WindowWidth + chartListLineLength) / 2, 64),
                 4.0f,
                 Color.White);
             var firstIconCenterX = (Style.WindowWidth - chartListLineLength ) / 2;
-            for (int i = 0; i < GameContext.Charts.Count; i++)
+            for (int i = 0; i < gameContext.Charts.Count; i++)
             {
                 var iconRect = Layout.CenterCenter().Hpx(40).Ypx(64).Wpx(40).Xpx(firstIconCenterX + (i * 136)).Rect();
                 Raylib.DrawRectangle(
                     (int)iconRect.X, (int)iconRect.Y, (int)iconRect.Width, (int)iconRect.Height,
-                    GameContext.Charts[i].IconColor);
+                    gameContext.Charts[i].IconColor);
                 Raylib.DrawRectangleRoundedLinesEx(
                     iconRect,
                     0.1f,
@@ -163,11 +163,11 @@ namespace RelicsOfAdofai.Engine
 
 
 
-        public static void RenderGui()
+        public void RenderGui(GuiContext guiContext)
         {
-            foreach (var inputBox in GuiContext.InputBoxes.Values)
+            foreach (var inputBox in guiContext.InputBoxes.Values)
             {
-                if (inputBox.BelongingState != GuiContext.GuiState) continue;
+                if (inputBox.BelongingState != guiContext.GuiState) continue;
 
                 Color underbarColor;
                 if (inputBox.IsActive) underbarColor = Style.ColorBorderLight;
@@ -207,9 +207,9 @@ namespace RelicsOfAdofai.Engine
                     0,
                     Style.ColorTextGeneral);
             }
-            foreach (var button in GuiContext.Buttons.Values)
+            foreach (var button in guiContext.Buttons.Values)
             {
-                if (button.BelongingState != GuiContext.GuiState) continue;
+                if (button.BelongingState != guiContext.GuiState) continue;
 
                 Color outlineColor;
                 if (button.IsPressed) outlineColor = Style.ColorBorderDark;

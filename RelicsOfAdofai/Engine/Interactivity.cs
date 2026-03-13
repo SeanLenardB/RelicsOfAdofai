@@ -7,17 +7,17 @@ namespace RelicsOfAdofai.Engine
 {
     public class Interactivity
     {
-        public static double BackspaceCooldown = 0;
-        public static void HandleInput()
+        public double BackspaceCooldown = 0;
+        public void HandleInput(GuiContext guiContext)
         {
             // Input char
             int code = Raylib.GetCharPressed();
             while (code != 0 && code >= 32 && code <= 125)  // @note: might change to wider/narrower ranges
             {
                 char ch = (char)code;
-                foreach (var inputBox in GuiContext.InputBoxes.Values)
+                foreach (var inputBox in guiContext.InputBoxes.Values)
                 {
-                    if (inputBox.BelongingState != GuiContext.GuiState) continue;
+                    if (inputBox.BelongingState != guiContext.GuiState) continue;
                     var modifiedString = inputBox.Text + ch;
                     if (inputBox.IsActive && inputBox.LegalText(modifiedString)) inputBox.Text = modifiedString;
                 }
@@ -29,28 +29,28 @@ namespace RelicsOfAdofai.Engine
             // Another problem is that the "time after previous delete" should be global instead of belonging to a specific input box.
             if (Raylib.IsKeyDown(KeyboardKey.Backspace))
             {
-                BackspaceCooldown -= Raylib.GetFrameTime();
-                foreach (var inputBox in GuiContext.InputBoxes.Values)
+                this.BackspaceCooldown -= Raylib.GetFrameTime();
+                foreach (var inputBox in guiContext.InputBoxes.Values)
                 {
-                    if (inputBox.BelongingState != GuiContext.GuiState) continue;
-                    if (!inputBox.IsActive && BackspaceCooldown > 0) continue;
+                    if (inputBox.BelongingState != guiContext.GuiState) continue;
+                    if (!inputBox.IsActive && this.BackspaceCooldown > 0) continue;
 
-                    if (inputBox.IsActive && BackspaceCooldown <= 0 && inputBox.Text.Length > 0)
+                    if (inputBox.IsActive && this.BackspaceCooldown <= 0 && inputBox.Text.Length > 0)
                     {
                         inputBox.Text = inputBox.Text[..^1];
-                        BackspaceCooldown = 0.1;
+                        this.BackspaceCooldown = 0.1;
                     }
                 }
             }
-            else BackspaceCooldown = 0;
+            else this.BackspaceCooldown = 0;
 
 
 
             // Input focus by mouse interaction
             bool anyInputBoxHovered = false;
-            foreach (var inputBox in GuiContext.InputBoxes.Values)
+            foreach (var inputBox in guiContext.InputBoxes.Values)
             {
-                if (inputBox.BelongingState != GuiContext.GuiState) continue;
+                if (inputBox.BelongingState != guiContext.GuiState) continue;
 
                 var collide = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), inputBox.CollisionBox);
                 // Hover
@@ -66,9 +66,9 @@ namespace RelicsOfAdofai.Engine
             else Raylib.SetMouseCursor(MouseCursor.Default);
 
             // Button focus by mouse interaction
-            foreach (var button in GuiContext.Buttons.Values)
+            foreach (var button in guiContext.Buttons.Values)
             {
-                if (button.BelongingState != GuiContext.GuiState) continue;
+                if (button.BelongingState != guiContext.GuiState) continue;
 
                 var collide = Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), button.CollisionBox);
                 // Hover

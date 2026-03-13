@@ -7,19 +7,19 @@ namespace RelicsOfAdofai.Game
 {
     public class GameContext
     {
-        public static int Seed = 0;
-        public static List<Chart> Charts = [];
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
-        public static Random Random;
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+        public int Seed = 0;
+        public List<Chart> Charts = [];
+        public Random Random = new();
 
-        public static void StartGame()
+        public void RefreshSeed() => this.Random = new(this.Seed);
+
+        public void StartGame()
         {
-            Random = new(Seed);
+            this.Random = new(this.Seed);
 
             for (int i = 0; i < 9; i++)
             {
-                Charts.Add(new() { IconColor = new(Random.Next(255), Random.Next(255), Random.Next(255)) });
+                this.Charts.Add(new() { IconColor = new(this.Random.Next(255), this.Random.Next(255), this.Random.Next(255)) });
             }
         }
     }

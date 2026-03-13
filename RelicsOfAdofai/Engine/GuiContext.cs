@@ -10,33 +10,34 @@ namespace RelicsOfAdofai.Engine
 {
     public class GuiContext
     {
-        public static GuiState GuiState = GuiState.Splashscreen;
-        public static Dictionary<string, InputBox> InputBoxes = [];
-        public static Dictionary<string, Button> Buttons = [];
+        public GuiState GuiState = GuiState.Splashscreen;
+        public Dictionary<string, InputBox> InputBoxes = [];
+        public Dictionary<string, Button> Buttons = [];
 
-        public static void GuiInit()
+        public void GuiInit(GameContext gameContext)
         {
-            InputBoxes["rngseed"] = 
-                new() { LegalText = text => int.TryParse(text, out GameContext.Seed) };
-            Buttons["startgame"] = 
+            this.InputBoxes["rngseed"] = 
+                new() { LegalText = text => int.TryParse(text, out gameContext.Seed) };
+            this.Buttons["startgame"] = 
                 new() { Align = Button.TextAlign.Center, Text = "开始", PressAction = () =>
                 {
-                    SwitchState(GuiState.Game);
-                    GameContext.StartGame();
+                    this.SwitchState(GuiState.Game);
+                    gameContext.RefreshSeed();
+                    gameContext.StartGame();
                 }};
         }
-        public static void RecalculateUIPosition()
+        public void RecalculateUIPosition()
         {
-            InputBoxes["rngseed"].CollisionBox = 
+            this.InputBoxes["rngseed"].CollisionBox = 
                 Layout.LeftCenter().Hpx((int)(Style.SizeNormal * 1.5)).YVh(95).DYpx(-360).Wpx(480).Xvw(50).DXpx(24).Rect();
-            Buttons["startgame"].CollisionBox =
+            this.Buttons["startgame"].CollisionBox =
                 Layout.CenterBottom().Hpx(72).YVh(95).DYpx(-80).Wpx(240).Xvw(50).Rect();
         }
-        public static void SwitchState(GuiState newState)
+        public void SwitchState(GuiState newState)
         {
             // @todo: impl animation?
-            Debug.Assert(newState != GuiState, "Cannot change from and to the same state!");
-            GuiState = newState;
+            Debug.Assert(newState != this.GuiState, "Cannot change from and to the same state!");
+            this.GuiState = newState;
         }
     }
 
