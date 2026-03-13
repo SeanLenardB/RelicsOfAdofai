@@ -20,7 +20,7 @@ namespace RelicsOfAdofai.Game
                     Cells = [
                         new(0, 0, ChartCell.CellType.Start),
                         new(1, 0), new(2, -1), new(1, -1), new(3, -2),
-                        new(3, -1, ChartCell.CellType.Finish)]},
+                        new(3, -1, ChartCell.CellType.End)]},
             ];
         }
     }
@@ -38,14 +38,15 @@ namespace RelicsOfAdofai.Game
     public class ChartCell(double q, double r, ChartCell.CellType type = ChartCell.CellType.Normal)
     {
         public HexCoords Coords = new(q, r);
-        public bool IsHover = false;
         public CellType Type = type;
         public enum CellType
         {
             Normal,
             Start,
-            Finish,
+            End,
         }
+
+        public bool IsHover = false;
     }
     public struct HexCoords(double q, double r)
     {

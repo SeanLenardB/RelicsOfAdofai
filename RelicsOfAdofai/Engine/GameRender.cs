@@ -14,7 +14,6 @@ namespace RelicsOfAdofai.Engine
     {
         public void SplashScreen()
         {
-            Debug.Assert(Style.Textures.ContainsKey("bg"), "Cannot find the background image bg!");
             var bg = Style.Textures["bg"];
 
             var widthMultiplier = 1.0 * Style.WindowWidth / bg.Width;
@@ -122,10 +121,10 @@ namespace RelicsOfAdofai.Engine
                 Color.Blank, Style.ColorBgInputGradientInactive, Color.Blank, Color.Blank);
             Raylib.DrawRectangleGradientH(
                 0, (int)headerRect.Height,
-                (int)(headerRect.Width / 2), 6, Color.Blank, Style.ColorBorderLight);
+                (int)(headerRect.Width / 2), 6, Style.ColorBorderBlack, Style.ColorBorderLight);
             Raylib.DrawRectangleGradientH(
                 (int)(headerRect.Width / 2), (int)headerRect.Height,
-                (int)(headerRect.Width / 2), 6, Style.ColorBorderLight, Color.Blank);
+                (int)(headerRect.Width / 2), 6, Style.ColorBorderLight, Style.ColorBorderBlack);
 
             var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, "Relics of Adofai", Style.SizeHeaderTitle, 0);
             var padding = (128 - titleExtent.Y) / 2;
@@ -171,7 +170,7 @@ namespace RelicsOfAdofai.Engine
             Raylib.DrawLineEx(
                 new(handRect.X, handRect.Y),
                 new(handRect.X + handRect.Width, handRect.Y),
-                4,
+                6,
                 Style.ColorBorderLight);
         }
 
@@ -179,28 +178,46 @@ namespace RelicsOfAdofai.Engine
         {
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
+                var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
                 if (cell.IsHover)
                     Raylib.DrawPoly(
-                        (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin,
+                        cellCenter,
                         6,
                         Style.HexCellDrawRadius,
                         30,
                         Style.ColorBgMedium);
                 else 
                     Raylib.DrawPoly(
-                        (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin,
+                        cellCenter,
                         6,
                         Style.HexCellDrawRadius,
                         30,
                         Style.ColorBgDark);
 
                 Raylib.DrawPolyLinesEx(
-                    (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin,
+                    cellCenter,
                     6,
                     Style.HexCellDrawRadius,
                     30,
                     6,
                     Style.ColorBorderLight);
+
+                var imageLocation = cellCenter;
+                imageLocation.X -= 128; imageLocation.Y -= 128;  // The image is 256x256.
+                if (cell.Type == ChartCell.CellType.Start)
+                    Raylib.DrawTextureEx(
+                        Style.Textures["nodeStart"],
+                        imageLocation,
+                        0,
+                        1,
+                        Color.White);
+                else if (cell.Type == ChartCell.CellType.End)
+                    Raylib.DrawTextureEx(
+                        Style.Textures["nodeEnd"],
+                        imageLocation,
+                        0,
+                        1,
+                        Color.White);
             }
         }
 

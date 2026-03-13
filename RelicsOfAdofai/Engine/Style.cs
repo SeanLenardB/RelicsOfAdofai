@@ -12,6 +12,7 @@ namespace RelicsOfAdofai.Engine
         public static Color ColorBgInputGradientInactive = new(255, 255, 255, 64);
         public static Color ColorBgInputGradientActive = new(255, 255, 255, 128);
 
+        public static Color ColorBorderBlack = Color.Black;
         public static Color ColorBorderDark = Color.Gray;
         public static Color ColorBorderMedium = Color.LightGray;
         public static Color ColorBorderLight = Color.White;

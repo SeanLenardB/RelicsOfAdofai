@@ -21,6 +21,8 @@ public class Program
         Style.Textures["bg"] = Raylib.LoadTextureFromImage(bgImage);
         Raylib.UnloadImage(bgImage);
 
+        Style.Textures["nodeStart"] = Raylib.LoadTexture("Resources/nodeStart.png");
+        Style.Textures["nodeEnd"] = Raylib.LoadTexture("Resources/nodeEnd.png");
 
 
         GameRender gameRender = new();
