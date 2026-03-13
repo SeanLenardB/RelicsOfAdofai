@@ -10,8 +10,8 @@ public class Program
         Raylib.InitWindow(Style.WindowWidth, Style.WindowHeight, "Relics of Adofai");
         Raylib.SetWindowMinSize(Style.WindowWidth, Style.WindowHeight);
 
-        Style.TitleFont = Raylib.LoadFontEx("Resources/Anta-Regular.ttf", Style.SizeTitle, null, 0);
-        Style.GenericFont = 
+        Style.FontTitle = Raylib.LoadFontEx("Resources/Quantico-Bold.ttf", Style.SizeTitle, null, 0);
+        Style.FontNormal = 
             Raylib.LoadFontFromMemory(".ttf", File.ReadAllBytes("Resources/NotoSansSC-Medium.ttf"), 
                 Style.SizeNormal, [.. Enumerable.Range(0x4e00, 0x9fff - 0x4e00), .. Enumerable.Range(0, 256)], 0x9fff - 0x4e00 + 256);
 
@@ -49,8 +49,8 @@ public class Program
             Raylib.EndDrawing();
         }
 
-        Raylib.UnloadFont(Style.TitleFont);
-        Raylib.UnloadFont(Style.GenericFont);
+        Raylib.UnloadFont(Style.FontTitle);
+        Raylib.UnloadFont(Style.FontNormal);
         foreach (var texture in Style.Textures.Values) Raylib.UnloadTexture(texture);
 
         Raylib.CloseWindow();

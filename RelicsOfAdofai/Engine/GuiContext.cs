@@ -10,7 +10,6 @@ namespace RelicsOfAdofai.Engine
 {
     public class GuiContext
     {
-        public static GameContext GameContext = new();
         public static GuiState GuiState = GuiState.Splashscreen;
         public static Dictionary<string, InputBox> InputBoxes = [];
         public static Dictionary<string, Button> Buttons = [];
@@ -18,11 +17,12 @@ namespace RelicsOfAdofai.Engine
         public static void GuiInit()
         {
             InputBoxes["rngseed"] = 
-                new() { LegalText = text => int.TryParse(text, out var _) };
+                new() { LegalText = text => int.TryParse(text, out GameContext.Seed) };
             Buttons["startgame"] = 
                 new() { Align = Button.TextAlign.Center, Text = "开始", PressAction = () =>
                 {
                     SwitchState(GuiState.Game);
+                    GameContext.StartGame();
                 }};
         }
         public static void RecalculateUIPosition()
