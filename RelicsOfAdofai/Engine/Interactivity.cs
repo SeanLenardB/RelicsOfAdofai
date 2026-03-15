@@ -92,15 +92,16 @@ namespace RelicsOfAdofai.Engine
 
             if (guiContext.GuiState == GuiState.Game)
             {
+                var mouseInGrid = mousePosition.Y > Style.HeaderHeight && mousePosition.Y + Style.HandHeight < Style.WindowHeight;
                 // Panning hex grid
-                if (isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); Raylib.SetMouseCursor(MouseCursor.PointingHand); }
+                if (mouseInGrid && isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); Raylib.SetMouseCursor(MouseCursor.PointingHand); }
                 else Raylib.SetMouseCursor(MouseCursor.Default);
 
                 // Hovering hex grid
                 foreach (var cell in gameContext.CurrentChart.Cells)
                 {
                     var collide = false;
-                    if (mousePosition.Y > Style.HeaderHeight && mousePosition.Y + Style.HandHeight < Style.WindowHeight)
+                    if (mouseInGrid)
                         collide = Raylib.CheckCollisionPointPoly(
                             mousePosition - ((cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin),
                             cell.Coords.BoundingBox);  // @hack: the list of points is static and precalculated. Therefore we "move" the mouse.

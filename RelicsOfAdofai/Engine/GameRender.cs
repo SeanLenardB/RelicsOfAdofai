@@ -12,6 +12,7 @@ namespace RelicsOfAdofai.Engine
 {
     public class GameRender
     {
+        /* ----------- SPLASH ----------- */
         public void SplashScreen()
         {
             var bg = Style.Textures["bg"];
@@ -54,7 +55,6 @@ namespace RelicsOfAdofai.Engine
                 0,
                 Style.ColorTextGeneral);
 
-
             Raylib.DrawRectangleRounded(
                 Layout.CenterBottom().Hvh(45).YVh(95).Wvw(60).Wmax(1600).Wmin(720).Xvw(50).Rect(),
                 0.1f,
@@ -70,8 +70,13 @@ namespace RelicsOfAdofai.Engine
                 0,
                 Style.ColorTextGeneral);
         }
+
+
+        
+        /* ----------- GAME ----------- */
         public void Game(GameContext gameContext)
         {
+            /* ----- BACKGROUND ----- */
             // @cleanup: copypasta from SplashScreen()
             Debug.Assert(Style.Textures.ContainsKey("bg"), "Cannot find the background image bg!");
             var bg = Style.Textures["bg"];
@@ -100,10 +105,12 @@ namespace RelicsOfAdofai.Engine
 
 
 
+            /* ----- GRID ----- */
             this.DrawChartGrid(gameContext);
 
 
 
+            /* ----- HEADER ----- */
             var headerRect = Layout.CenterTop().Hpx(Style.HeaderHeight).Ypx(0).Wvw(100).Xvw(50).Rect();
             var headerRectLeftHalf = headerRect;
             headerRectLeftHalf.Width /= 2;
@@ -163,6 +170,7 @@ namespace RelicsOfAdofai.Engine
 
 
 
+            /* ----- HAND ----- */
             var handRect = Layout.CenterBottom().Hpx(Style.HandHeight).YVh(100).Wvw(100).Xvw(50).Rect();
             Raylib.DrawRectangleGradientV(
                 (int)handRect.X, (int)handRect.Y, (int)handRect.Width, (int)handRect.Height,
@@ -172,6 +180,8 @@ namespace RelicsOfAdofai.Engine
                 new(handRect.X + handRect.Width, handRect.Y),
                 6,
                 Style.ColorBorderLight);
+
+            this.DrawHand(gameContext);
         }
 
         public void DrawChartGrid(GameContext gameContext)
@@ -210,18 +220,51 @@ namespace RelicsOfAdofai.Engine
                         imageLocation,
                         0,
                         1,
-                        Color.White);
+                        new(255, 255, 255, 128));
                 else if (cell.Type == ChartCell.CellType.End)
                     Raylib.DrawTextureEx(
                         Style.Textures["nodeEnd"],
                         imageLocation,
                         0,
                         1,
-                        Color.White);
+                        new(255, 255, 255, 128));
+            }
+        }
+
+        public void DrawHand(GameContext gameContext)
+        {
+            // @note:
+            // The Layout **should** specify the center of the node as the variable name suggests,
+            // but we are doing Layout.LeftTop() here because the Layout construction will give the left-top corner.
+            // For perf we don't want to have a lot of calculation involved.
+            //
+            // Therefore we specify LeftTop() to let the return value be the center of the hexagon.
+            var currentNodeCenter =
+                Layout.LeftTop().Hpx(Style.NodeInHandRadius * 2).YVh(100).DYpx(-Style.HandHeight / 2).Wpx(Style.NodeInHandRadius * 2).Xpx(Style.HandHeight / 2).Vect();
+            foreach (var node in gameContext.HandNodes)
+            {
+                Raylib.DrawPoly(
+                    currentNodeCenter,
+                    6,
+                    Style.NodeInHandRadius,
+                    30,
+                    node.Color);  // @note: will get changed. Look at Node definition.
+
+                Raylib.DrawPolyLinesEx(
+                    currentNodeCenter,
+                    6,
+                    Style.NodeInHandRadius,
+                    30,
+                    6,
+                    Style.ColorBorderLight);
+
+                currentNodeCenter.X += Style.NodeInHandRadius * 2;
             }
         }
 
 
+
+        /* ----------- GENERIC GUI ----------- */
 
         public void RenderGui(GuiContext guiContext)
         {
