@@ -191,19 +191,26 @@ namespace RelicsOfAdofai.Engine
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
                 if (cell.IsHover)
-                    Raylib.DrawPoly(
-                        cellCenter,
-                        6,
-                        Style.HexCellDrawRadius,
-                        30,
-                        Style.ColorBgMedium);
-                else 
-                    Raylib.DrawPoly(
-                        cellCenter,
-                        6,
-                        Style.HexCellDrawRadius,
-                        30,
-                        Style.ColorBgDark);
+                {
+                    Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgMedium);
+                    if (gameContext.CurrentlySelectedNode is not null)
+                    {
+                        var selectedNodeTexture = Style.Textures[gameContext.CurrentlySelectedNode.ResourceKey()];
+                        var drawRect = Layout.CenterCenter()
+                                .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
+                                .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).Rect();
+                        drawRect.X += drawRect.Width / 2;
+                        drawRect.Y += drawRect.Height / 2;  // DrawTexturePro expects the center as xy
+                        Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
+                            selectedNodeTexture,
+                            new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
+                            drawRect,
+                            new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
+                            0,
+                            Style.HintSelectedNode);
+                    }
+                }
+                else Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
 
                 Raylib.DrawPolyLinesEx(
                     cellCenter,
@@ -254,7 +261,7 @@ namespace RelicsOfAdofai.Engine
 
                 Raylib.DrawTexturePro(
                     texture,
-                    new(0, 0, texture.Width, texture.Height),
+                    new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
                     scaledDrawRect,
                     new(scaledDrawRect.Width / 2, scaledDrawRect.Height / 2),
                     0,
