@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using Raylib_cs;
+using RelicsOfAdofai.Engine;
 
 namespace RelicsOfAdofai.Game
 {
@@ -72,5 +74,16 @@ namespace RelicsOfAdofai.Game
                 _ => "bg",  // probably unnecessary
             };
         }
+
+        public readonly Vector2[] BoundingBox =
+        [
+            new((float)(Style.NodeInHandRadius * Style.ConstSqrtThreeOverTwo), -(float)(0.5 * Style.NodeInHandRadius)),
+            new((float)(Style.NodeInHandRadius * Style.ConstSqrtThreeOverTwo), (float)(0.5 * Style.NodeInHandRadius)),
+            new(0, Style.NodeInHandRadius),
+            new(-(float)(Style.NodeInHandRadius * Style.ConstSqrtThreeOverTwo), (float)(0.5 * Style.NodeInHandRadius)),
+            new(-(float)(Style.NodeInHandRadius * Style.ConstSqrtThreeOverTwo), -(float)(0.5 * Style.NodeInHandRadius)),
+            new(0, -Style.NodeInHandRadius),
+        ];
+        public bool IsHover = false;
     }
 }

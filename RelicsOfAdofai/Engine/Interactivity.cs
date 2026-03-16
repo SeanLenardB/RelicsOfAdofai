@@ -116,6 +116,23 @@ namespace RelicsOfAdofai.Engine
                     if (collide) cell.IsHover = true;
                     else if (cell.IsHover) cell.IsHover = false;
                 }
+
+                // Hand hovering
+                var currentHandNodeCenter =
+                    Layout.CenterCenter().Hpx(Style.NodeInHandRadius).YVh(100).DYpx(-Style.HandHeight / 2)
+                        .Wpx(Style.NodeInHandRadius).Xpx(Style.HandHeight / 2).Vect();
+                currentHandNodeCenter += new Vector2(Style.NodeInHandRadius / 2, Style.NodeInHandRadius / 2);
+                gameContext.HandNodes.ForEach(n => n.IsHover = false);
+                foreach (var node in gameContext.HandNodes)
+                {
+                    if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, node.BoundingBox))
+                    {
+                        node.IsHover = true;
+                        break;
+                    }
+
+                    currentHandNodeCenter.X += Style.NodeInHandSpacing;
+                }
             }
         }
     }

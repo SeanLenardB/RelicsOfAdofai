@@ -32,6 +32,7 @@ namespace RelicsOfAdofai.Engine
         public static int HandHeight = 256;
 
         public static int NodeInHandRadius = 72;
+        public static int NodeInHandSpacing = 2 * NodeInHandRadius;
         public static int NodeTextureSize = 256;
 
         // https://www.redblobgames.com/grids/hexagons/

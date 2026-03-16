@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -233,19 +234,29 @@ namespace RelicsOfAdofai.Engine
 
         public void DrawHand(GameContext gameContext)
         {
-            var currentDrawLocation =
+            // @note: also see code in Interactivity.
+            // I'm concerned that the X of this currentDrawRect begins at x=0
+            var currentDrawRect =
                 Layout.CenterCenter().Hpx(Style.NodeTextureSize).YVh(100).DYpx(-Style.HandHeight / 2)
-                    .Wpx(Style.NodeTextureSize).Xpx(Style.HandHeight / 2).Vect();
+                    .Wpx(Style.NodeTextureSize).Xpx(Style.HandHeight / 2).Rect();
+            currentDrawRect.X += Style.NodeTextureSize / 2;  // DrawTexturePro expects the coords to be the center.
+            currentDrawRect.Y += Style.NodeTextureSize / 2;
             foreach (var node in gameContext.HandNodes)
             {
-                Raylib.DrawTextureEx(
-                    Style.Textures[node.ResourceKey()],
-                    currentDrawLocation,
+                var texture = Style.Textures[node.ResourceKey()];
+                var scale = node.IsHover ? 1.1f : 1;
+                var scaledDrawRect = currentDrawRect;
+                scaledDrawRect.Width *= scale;
+                scaledDrawRect.Height *= scale;
+                Raylib.DrawTexturePro(
+                    texture,
+                    new(0, 0, texture.Width, texture.Height),
+                    scaledDrawRect,
+                    new(scaledDrawRect.Width / 2, scaledDrawRect.Height / 2),
                     0,
-                    1,
                     Color.White);
 
-                currentDrawLocation.X += Style.NodeInHandRadius * 2;
+                currentDrawRect.X += Style.NodeInHandSpacing;
             }
         }
 
