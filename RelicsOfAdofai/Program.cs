@@ -39,7 +39,7 @@ public class Program
             if (Raylib.IsWindowResized())
             {
                 Style.WindowWidth = Raylib.GetRenderWidth();
-                Style.WindowHeight = Raylib.GetRenderHeight();  // @cleanup: we might listen to an event and update the window size.
+                Style.WindowHeight = Raylib.GetRenderHeight();
             }
             guiContext.RecalculateUIPosition();
 
