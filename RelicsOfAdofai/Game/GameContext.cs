@@ -14,6 +14,8 @@ namespace RelicsOfAdofai.Game
         public List<Chart> Charts = [];
         public List<HexNode> HandNodes = [];
 
+        public HexNode? CurrentlySelectedNode = null;
+
         public void RefreshSeed() => this.Random = new(this.Seed);
 
         public void StartGame()

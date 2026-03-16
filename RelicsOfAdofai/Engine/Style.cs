@@ -17,6 +17,9 @@ namespace RelicsOfAdofai.Engine
         public static Color ColorBorderMedium = Color.LightGray;
         public static Color ColorBorderLight = Color.White;
 
+        public static Color HintSelectedNode = new(255, 255, 255, 128);
+        public static Color HintUnselectedNode = Color.White;
+
         public static Dictionary<string, Texture2D> Textures = [];
         public static Font FontTitle;
         public static Font FontNormal;

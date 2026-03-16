@@ -117,17 +117,23 @@ namespace RelicsOfAdofai.Engine
                     else if (cell.IsHover) cell.IsHover = false;
                 }
 
-                // Hand hovering
+                // Hand hovering & selection
                 var currentHandNodeCenter =
                     Layout.CenterCenter().Hpx(Style.NodeInHandRadius).YVh(100).DYpx(-Style.HandHeight / 2)
                         .Wpx(Style.NodeInHandRadius).Xpx(Style.HandHeight / 2).Vect();
                 currentHandNodeCenter += new Vector2(Style.NodeInHandRadius / 2, Style.NodeInHandRadius / 2);
                 gameContext.HandNodes.ForEach(n => n.IsHover = false);
+
+                // Currently a selection will only get changed when the left click is down. Therefore it's safe to do this.
+                // When we allow keyboard controls we need to refactor this.
+                if (isMouseLeftDown) gameContext.CurrentlySelectedNode = null;
+
                 foreach (var node in gameContext.HandNodes)
                 {
                     if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, node.BoundingBox))
                     {
                         node.IsHover = true;
+                        if (node != gameContext.CurrentlySelectedNode && isMouseLeftDown) gameContext.CurrentlySelectedNode = node;
                         break;
                     }
 

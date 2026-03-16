@@ -244,17 +244,21 @@ namespace RelicsOfAdofai.Engine
             foreach (var node in gameContext.HandNodes)
             {
                 var texture = Style.Textures[node.ResourceKey()];
+
                 var scale = node.IsHover ? 1.1f : 1;
                 var scaledDrawRect = currentDrawRect;
                 scaledDrawRect.Width *= scale;
                 scaledDrawRect.Height *= scale;
+
+                var colorHint = gameContext.CurrentlySelectedNode == node ? Style.HintSelectedNode : Style.HintUnselectedNode;
+
                 Raylib.DrawTexturePro(
                     texture,
                     new(0, 0, texture.Width, texture.Height),
                     scaledDrawRect,
                     new(scaledDrawRect.Width / 2, scaledDrawRect.Height / 2),
                     0,
-                    Color.White);
+                    colorHint);
 
                 currentDrawRect.X += Style.NodeInHandSpacing;
             }
