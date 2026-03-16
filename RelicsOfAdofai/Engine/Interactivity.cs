@@ -92,6 +92,13 @@ namespace RelicsOfAdofai.Engine
 
             if (guiContext.GuiState == GuiState.Game)
             {
+                // @cleanup: This is fairly inefficient because the algo needs to go through all hexagons to find which one is highlighted.
+                // But since the transformation to hex -> cart is a matrix multiplication,
+                // it's possible to invert the matrix and directly get the hex coords from the cart pixel location.
+                //
+                // But that will include some crazy offseting and other things. We will do this for now.
+                // If the performance is bad, we will change it.
+
                 var mouseInGrid = mousePosition.Y > Style.HeaderHeight && mousePosition.Y + Style.HandHeight < Style.WindowHeight;
                 // Panning hex grid
                 if (mouseInGrid && isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); Raylib.SetMouseCursor(MouseCursor.PointingHand); }

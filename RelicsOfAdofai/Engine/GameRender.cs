@@ -265,7 +265,6 @@ namespace RelicsOfAdofai.Engine
 
 
         /* ----------- GENERIC GUI ----------- */
-
         public void RenderGui(GuiContext guiContext)
         {
             foreach (var inputBox in guiContext.InputBoxes.Values)
