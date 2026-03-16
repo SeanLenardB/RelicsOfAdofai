@@ -22,14 +22,14 @@ namespace RelicsOfAdofai.Engine
             }
             public AnchorSide Side = AnchorSide.XLeft | AnchorSide.YTop;
             public double Width = 0; public double Height = 0;
-            public double AnchorX = 0; public double AnchorY = 0;
+            public double LeftX = 0; public double TopY = 0;
             public Rectangle Rect()
             {
-                return new((int)this.AnchorX, (int)this.AnchorY, (int)this.Width, (int)this.Height);
+                return new((int)this.LeftX, (int)this.TopY, (int)this.Width, (int)this.Height);
             }
             public Vector2 Vect()
             {
-                return new((int)this.AnchorX, (int)this.AnchorY);
+                return new((int)this.LeftX, (int)this.TopY);
             }
 
             public LayoutData Wvw(int percentage)
@@ -81,9 +81,9 @@ namespace RelicsOfAdofai.Engine
             {
                 Debug.Assert(this.Width > 0, "You need to first set w, and then set x!");
 
-                if ((this.Side & AnchorSide.XLeft) != 0) this.AnchorX = px;
-                else if ((this.Side & AnchorSide.XCenter) != 0) this.AnchorX = px - (this.Width / 2.0);
-                else this.AnchorX = px - this.Width;
+                if ((this.Side & AnchorSide.XLeft) != 0) this.LeftX = px;
+                else if ((this.Side & AnchorSide.XCenter) != 0) this.LeftX = px - (this.Width / 2.0);
+                else this.LeftX = px - this.Width;
 
                 return this;
             }
@@ -91,9 +91,9 @@ namespace RelicsOfAdofai.Engine
             {
                 Debug.Assert(this.Height > 0, "You need to first set h, and then set y!");
 
-                if ((this.Side & AnchorSide.YTop) != 0) this.AnchorY = px;
-                else if ((this.Side & AnchorSide.YCenter) != 0) this.AnchorY = px - (this.Height / 2.0);
-                else this.AnchorY = px - this.Height;
+                if ((this.Side & AnchorSide.YTop) != 0) this.TopY = px;
+                else if ((this.Side & AnchorSide.YCenter) != 0) this.TopY = px - (this.Height / 2.0);
+                else this.TopY = px - this.Height;
 
                 return this;
             }
@@ -102,16 +102,16 @@ namespace RelicsOfAdofai.Engine
 
             public LayoutData DXpx(int px)
             {
-                Debug.Assert(this.AnchorX > 0, "This is an offset function, you need to first set x!");
+                Debug.Assert(this.LeftX > 0, "This is an offset function, you need to first set x!");
 
-                this.AnchorX += px;
+                this.LeftX += px;
                 return this;
             }
             public LayoutData DYpx(int px)
             {
-                Debug.Assert(this.AnchorY > 0, "This is an offset function, you need to first set y!");
+                Debug.Assert(this.TopY > 0, "This is an offset function, you need to first set y!");
 
-                this.AnchorY += px;
+                this.TopY += px;
                 return this;
             }
         }
