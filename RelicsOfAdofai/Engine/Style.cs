@@ -31,11 +31,12 @@ namespace RelicsOfAdofai.Engine
         public static int HeaderHeight = 128;
         public static int HandHeight = 256;
 
-        public static int NodeInHandRadius = 96;
+        public static int NodeInHandRadius = 72;
+        public static int NodeTextureSize = 256;
 
         // https://www.redblobgames.com/grids/hexagons/
-        public static int HexCellSpaceRadius = 96 * 2;
-        public static int HexCellDrawRadius = 102;
+        public static int HexCellSpaceRadius = (72 * 2) - 8;
+        public static int HexCellDrawRadius = NodeInHandRadius;
 
         public static double ConstSqrtThreeOverTwo = Math.Sqrt(3) / 2.0;
     }

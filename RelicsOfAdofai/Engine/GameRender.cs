@@ -213,52 +213,39 @@ namespace RelicsOfAdofai.Engine
                     Style.ColorBorderLight);
 
                 var imageLocation = cellCenter;
-                imageLocation.X -= 128; imageLocation.Y -= 128;  // The image is 256x256.
+                imageLocation.X -= 64; imageLocation.Y -= 64;  // The image is 256x256. We draw 0.5x.
                 if (cell.Type == ChartCell.CellType.Start)
                     Raylib.DrawTextureEx(
                         Style.Textures["nodeStart"],
                         imageLocation,
                         0,
-                        1,
+                        0.5f,
                         new(255, 255, 255, 128));
                 else if (cell.Type == ChartCell.CellType.End)
                     Raylib.DrawTextureEx(
                         Style.Textures["nodeEnd"],
                         imageLocation,
                         0,
-                        1,
+                        0.5f,
                         new(255, 255, 255, 128));
             }
         }
 
         public void DrawHand(GameContext gameContext)
         {
-            // @note:
-            // The Layout **should** specify the center of the node as the variable name suggests,
-            // but we are doing Layout.LeftTop() here because the Layout construction will give the left-top corner.
-            // For perf we don't want to have a lot of calculation involved.
-            //
-            // Therefore we specify LeftTop() to let the return value be the center of the hexagon.
-            var currentNodeCenter =
-                Layout.LeftTop().Hpx(Style.NodeInHandRadius * 2).YVh(100).DYpx(-Style.HandHeight / 2).Wpx(Style.NodeInHandRadius * 2).Xpx(Style.HandHeight / 2).Vect();
+            var currentDrawLocation =
+                Layout.CenterCenter().Hpx(Style.NodeTextureSize).YVh(100).DYpx(-Style.HandHeight / 2)
+                    .Wpx(Style.NodeTextureSize).Xpx(Style.HandHeight / 2).Vect();
             foreach (var node in gameContext.HandNodes)
             {
-                Raylib.DrawPoly(
-                    currentNodeCenter,
-                    6,
-                    Style.NodeInHandRadius,
-                    30,
-                    node.Color);  // @note: will get changed. Look at Node definition.
+                Raylib.DrawTextureEx(
+                    Style.Textures[node.ResourceKey()],
+                    currentDrawLocation,
+                    0,
+                    1,
+                    Color.White);
 
-                Raylib.DrawPolyLinesEx(
-                    currentNodeCenter,
-                    6,
-                    Style.NodeInHandRadius,
-                    30,
-                    6,
-                    Style.ColorBorderLight);
-
-                currentNodeCenter.X += Style.NodeInHandRadius * 2;
+                currentDrawLocation.X += Style.NodeInHandRadius * 2;
             }
         }
 

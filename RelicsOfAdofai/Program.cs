@@ -24,6 +24,10 @@ public class Program
         Style.Textures["nodeStart"] = Raylib.LoadTexture("Resources/nodeStart.png");
         Style.Textures["nodeEnd"] = Raylib.LoadTexture("Resources/nodeEnd.png");
 
+        Style.Textures["node-connector-opposite"] = Raylib.LoadTexture("Resources/connector-opposite.png");
+        Style.Textures["node-connector-interval"] = Raylib.LoadTexture("Resources/connector-interval.png");
+        Style.Textures["node-connector-adjacent"] = Raylib.LoadTexture("Resources/connector-adjacent.png");
+
 
 
         GameRender gameRender = new();

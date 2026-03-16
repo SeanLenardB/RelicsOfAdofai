@@ -53,9 +53,6 @@ namespace RelicsOfAdofai.Game
         public string Name = "";
         public string Description = "";
 
-        // @todo: change this to an icon.
-        public Color Color = Color.DarkBlue;
-
         public double ConnectorEfficiency = 0.9;
         public NodeType Type = NodeType.Connector_Opposite;
         public enum NodeType
@@ -63,6 +60,17 @@ namespace RelicsOfAdofai.Game
             Connector_Opposite,
             Connector_Interval,
             Connector_Adjacent,
+        }
+
+        public string ResourceKey()
+        {
+            return this.Type switch
+            {
+                NodeType.Connector_Opposite => "node-connector-opposite",
+                NodeType.Connector_Interval => "node-connector-interval",
+                NodeType.Connector_Adjacent => "node-connector-adjacent",
+                _ => "bg",  // probably unnecessary
+            };
         }
     }
 }
