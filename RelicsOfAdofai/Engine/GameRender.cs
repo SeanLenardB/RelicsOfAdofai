@@ -190,6 +190,24 @@ namespace RelicsOfAdofai.Engine
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
+
+                if (cell.FilledNode is not null)  // @copypasta
+                {
+                    var selectedNodeTexture = Style.Textures[cell.FilledNode.ResourceKey()];
+                    var drawRect = Layout.CenterCenter()
+                            .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
+                            .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).Rect();
+                    drawRect.X += drawRect.Width / 2;
+                    drawRect.Y += drawRect.Height / 2;  // DrawTexturePro expects the center as xy
+                    Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
+                        selectedNodeTexture,
+                        new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
+                        drawRect,
+                        new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
+                        0,
+                        Style.HintUnselectedNode);
+                }
+
                 if (cell.IsHover)
                 {
                     Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgMedium);
@@ -210,7 +228,7 @@ namespace RelicsOfAdofai.Engine
                             Style.HintSelectedNode);
                     }
                 }
-                else Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
+                else if (cell.FilledNode is null) Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
 
                 Raylib.DrawPolyLinesEx(
                     cellCenter,
@@ -250,6 +268,7 @@ namespace RelicsOfAdofai.Engine
             currentDrawRect.Y += Style.NodeTextureSize / 2;
             foreach (var node in gameContext.HandNodes)
             {
+                if (node.IsUsed) continue;
                 var texture = Style.Textures[node.ResourceKey()];
 
                 var scale = node.IsHover ? 1.1f : 1;

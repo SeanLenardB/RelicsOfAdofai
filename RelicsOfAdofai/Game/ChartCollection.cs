@@ -39,6 +39,7 @@ namespace RelicsOfAdofai.Game
     {
         public HexCoords Coords = new(q, r);
         public CellType Type = type;
+        public HexNode? FilledNode = null;
         public enum CellType
         {
             Normal,

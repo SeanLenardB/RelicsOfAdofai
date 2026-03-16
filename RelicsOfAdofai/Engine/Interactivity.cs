@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using Raylib_cs;
@@ -115,6 +116,15 @@ namespace RelicsOfAdofai.Engine
 
                     if (collide) cell.IsHover = true;
                     else if (cell.IsHover) cell.IsHover = false;
+
+                    if (collide && isMouseLeftDown && gameContext.CurrentlySelectedNode is not null)
+                    {
+                        cell.FilledNode?.IsUsed = false;
+
+                        Debug.Assert(!gameContext.CurrentlySelectedNode.IsUsed, "Cannot use a used node!");
+                        cell.FilledNode = gameContext.CurrentlySelectedNode;
+                        cell.FilledNode.IsUsed = true;
+                    }
                 }
 
                 // Hand hovering & selection
@@ -130,6 +140,8 @@ namespace RelicsOfAdofai.Engine
 
                 foreach (var node in gameContext.HandNodes)
                 {
+                    if (node.IsUsed) continue;
+
                     if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, node.BoundingBox))
                     {
                         node.IsHover = true;

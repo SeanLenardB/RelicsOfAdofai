@@ -85,5 +85,6 @@ namespace RelicsOfAdofai.Game
             new(0, -Style.NodeInHandRadius),
         ];
         public bool IsHover = false;
+        public bool IsUsed = false;
     }
 }
