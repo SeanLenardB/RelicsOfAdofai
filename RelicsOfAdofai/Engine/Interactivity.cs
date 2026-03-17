@@ -15,6 +15,7 @@ namespace RelicsOfAdofai.Engine
         {
             var isMouseLeftDown = Raylib.IsMouseButtonDown(MouseButton.Left);
             var isMouseMiddleDown = Raylib.IsMouseButtonDown(MouseButton.Middle);
+            var isMouseRightDown = Raylib.IsMouseButtonDown(MouseButton.Right);
             var mousePosition = Raylib.GetMousePosition();
 
             // Input char
@@ -124,6 +125,12 @@ namespace RelicsOfAdofai.Engine
                         Debug.Assert(!gameContext.CurrentlySelectedNode.IsUsed, "Cannot use a used node!");
                         cell.FilledNode = gameContext.CurrentlySelectedNode;
                         cell.FilledNode.IsUsed = true;
+                    }
+
+                    if (collide && isMouseRightDown && cell.FilledNode is not null)
+                    {
+                        cell.FilledNode.IsUsed = false;
+                        cell.FilledNode = null;
                     }
                 }
 
