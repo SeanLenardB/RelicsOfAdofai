@@ -212,16 +212,16 @@ namespace RelicsOfAdofai.Engine
                         new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
                         drawRect,
                         new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
-                        0,
+                        cell.FilledNode.Rotation,
                         Style.HintUnselectedNode);
                 }
 
                 if (cell.IsHover)
                 {
                     Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgMedium);
-                    if (gameContext.CurrentlySelectedNode is not null)
+                    if (gameContext.CurrentSelectedNode is not null)
                     {
-                        var selectedNodeTexture = Style.Textures[gameContext.CurrentlySelectedNode.ResourceKey()];
+                        var selectedNodeTexture = Style.Textures[gameContext.CurrentSelectedNode.ResourceKey()];
                         var drawRect = Layout.CenterCenter()
                                 .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
                                 .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).Rect();
@@ -232,7 +232,7 @@ namespace RelicsOfAdofai.Engine
                             new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
                             drawRect,
                             new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
-                            0,
+                            gameContext.CurrentSelectedNode.Rotation,
                             Style.HintSelectedNode);
                     }
                 }
@@ -276,7 +276,7 @@ namespace RelicsOfAdofai.Engine
                 scaledDrawRect.Width *= scale;
                 scaledDrawRect.Height *= scale;
 
-                var colorHint = gameContext.CurrentlySelectedNode == node ? Style.HintSelectedNode : Style.HintUnselectedNode;
+                var colorHint = gameContext.CurrentSelectedNode == node ? Style.HintSelectedNode : Style.HintUnselectedNode;
 
                 Raylib.DrawTexturePro(
                     texture,

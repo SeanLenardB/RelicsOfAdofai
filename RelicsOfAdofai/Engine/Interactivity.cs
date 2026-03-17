@@ -18,6 +18,7 @@ namespace RelicsOfAdofai.Engine
             var isMouseRightDown = Raylib.IsMouseButtonDown(MouseButton.Right);
             var mousePosition = Raylib.GetMousePosition();
 
+            /* ---------- GENERIC GUI ---------- */
             // Input char
             int code = Raylib.GetCharPressed();
             while (code != 0 && code >= 32 && code <= 125)  // @note: might change to wider/narrower ranges
@@ -92,6 +93,9 @@ namespace RelicsOfAdofai.Engine
                 }
             }
 
+
+
+            /* ---------- SCENE SPECIFIC ---------- */
             if (guiContext.GuiState == GuiState.Game)
             {
                 Debug.Assert(gameContext.CurrentChart is not null, "Cannot interact with a null chart!");
@@ -119,11 +123,12 @@ namespace RelicsOfAdofai.Engine
                     if (collide) cell.IsHover = true;
                     else if (cell.IsHover) cell.IsHover = false;
 
-                    if (collide && isMouseLeftDown && gameContext.CurrentlySelectedNode is not null)
+                    if (collide && isMouseLeftDown && gameContext.CurrentSelectedNode is not null)
                     {
                         cell.FilledNode?.IsUsed = false;
-                        Debug.Assert(!gameContext.CurrentlySelectedNode.IsUsed, "Cannot use a used node!");
-                        cell.FilledNode = gameContext.CurrentlySelectedNode;
+                        cell.FilledNode?.Rotation = 0;
+                        Debug.Assert(!gameContext.CurrentSelectedNode.IsUsed, "Cannot use a used node!");
+                        cell.FilledNode = gameContext.CurrentSelectedNode;
                         cell.FilledNode.IsUsed = true;
                         gameContext.RecalculateCurrentChart();
                     }
@@ -131,6 +136,7 @@ namespace RelicsOfAdofai.Engine
                     if (collide && isMouseRightDown && cell.FilledNode is not null)
                     {
                         cell.FilledNode.IsUsed = false;
+                        cell.FilledNode.Rotation = 0;
                         cell.FilledNode = null;
                         gameContext.RecalculateCurrentChart();
                     }
@@ -145,7 +151,7 @@ namespace RelicsOfAdofai.Engine
 
                 // Currently a selection will only get changed when the left click is down. Therefore it's safe to do this.
                 // When we allow keyboard controls we need to refactor this.
-                if (isMouseLeftDown) gameContext.CurrentlySelectedNode = null;
+                if (isMouseLeftDown) gameContext.CurrentSelectedNode = null;
 
                 foreach (var node in gameContext.HandNodes)
                 {
@@ -154,12 +160,20 @@ namespace RelicsOfAdofai.Engine
                     if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, node.BoundingBox))
                     {
                         node.IsHover = true;
-                        if (node != gameContext.CurrentlySelectedNode && isMouseLeftDown) gameContext.CurrentlySelectedNode = node;
-                        break;
+                        if (isMouseLeftDown)
+                        {
+                            gameContext.CurrentSelectedNode?.Rotation = 0;
+                            if (node != gameContext.CurrentSelectedNode) gameContext.CurrentSelectedNode = node;
+                            break;
+                        }
                     }
 
                     currentHandNodeCenter.X += Style.NodeInHandSpacing;
                 }
+
+                // Candidate node rotation
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation += 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation -= 60;
             }
         }
     }

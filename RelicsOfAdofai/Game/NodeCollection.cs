@@ -55,6 +55,8 @@ namespace RelicsOfAdofai.Game
         public string Name = "";
         public string Description = "";
 
+        // @clanup: this is a fat struct. Might need some polymorphism?
+        public int Rotation { get; set { field = value % 360; } } = 0;
         public double ConnectorEfficiency = 0.9;
         public NodeType Type = NodeType.Connector_Opposite;
         public enum NodeType
