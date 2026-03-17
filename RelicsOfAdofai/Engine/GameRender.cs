@@ -190,6 +190,13 @@ namespace RelicsOfAdofai.Engine
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
+                Raylib.DrawPolyLinesEx(
+                    cellCenter,
+                    6,
+                    Style.HexCellDrawRadius,
+                    30,
+                    6,
+                    Style.ColorBorderMedium);
 
                 if (cell.FilledNode is not null)  // @copypasta
                 {
@@ -229,14 +236,6 @@ namespace RelicsOfAdofai.Engine
                     }
                 }
                 else if (cell.FilledNode is null) Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
-
-                Raylib.DrawPolyLinesEx(
-                    cellCenter,
-                    6,
-                    Style.HexCellDrawRadius,
-                    30,
-                    6,
-                    Style.ColorBorderLight);
 
                 var imageLocation = cellCenter;
                 imageLocation.X -= 64; imageLocation.Y -= 64;  // The image is 256x256. We draw 0.5x.
