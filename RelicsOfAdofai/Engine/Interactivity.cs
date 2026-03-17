@@ -148,7 +148,6 @@ namespace RelicsOfAdofai.Engine
                         .Wpx(Style.NodeInHandRadius).Xpx(Style.HandHeight / 2).Vect();
                 currentHandNodeCenter += new Vector2(Style.NodeInHandRadius / 2, Style.NodeInHandRadius / 2);
                 gameContext.HandNodes.ForEach(n => n.IsHover = false);
-
                 // Currently a selection will only get changed when the left click is down. Therefore it's safe to do this.
                 // When we allow keyboard controls we need to refactor this.
                 if (isMouseLeftDown) gameContext.CurrentSelectedNode = null;
