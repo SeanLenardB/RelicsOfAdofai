@@ -187,6 +187,7 @@ namespace RelicsOfAdofai.Engine
 
         public void DrawChartGrid(GameContext gameContext)
         {
+            Debug.Assert(gameContext.CurrentChart is not null, "Cannot render a null chart!");
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;

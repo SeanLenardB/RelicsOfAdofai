@@ -94,6 +94,7 @@ namespace RelicsOfAdofai.Engine
 
             if (guiContext.GuiState == GuiState.Game)
             {
+                Debug.Assert(gameContext.CurrentChart is not null, "Cannot interact with a null chart!");
                 // @cleanup: This is fairly inefficient because the algo needs to go through all hexagons to find which one is highlighted.
                 // But since the transformation to hex -> cart is a matrix multiplication,
                 // it's possible to invert the matrix and directly get the hex coords from the cart pixel location.
@@ -121,16 +122,17 @@ namespace RelicsOfAdofai.Engine
                     if (collide && isMouseLeftDown && gameContext.CurrentlySelectedNode is not null)
                     {
                         cell.FilledNode?.IsUsed = false;
-
                         Debug.Assert(!gameContext.CurrentlySelectedNode.IsUsed, "Cannot use a used node!");
                         cell.FilledNode = gameContext.CurrentlySelectedNode;
                         cell.FilledNode.IsUsed = true;
+                        gameContext.RecalculateCurrentChart();
                     }
 
                     if (collide && isMouseRightDown && cell.FilledNode is not null)
                     {
                         cell.FilledNode.IsUsed = false;
                         cell.FilledNode = null;
+                        gameContext.RecalculateCurrentChart();
                     }
                 }
 
