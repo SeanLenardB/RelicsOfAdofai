@@ -171,8 +171,8 @@ namespace RelicsOfAdofai.Engine
                 }
 
                 // Candidate node rotation
-                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation += 60;
-                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation -= 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation += 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation -= 60;
             }
         }
     }
