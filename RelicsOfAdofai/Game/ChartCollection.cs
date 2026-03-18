@@ -55,6 +55,14 @@ namespace RelicsOfAdofai.Game
     }
     public struct HexCoords(double q, double r)
     {
+        /*
+         *    0 ---- Q+
+         *     \
+         *      \
+         *       R+
+         *
+         *   Rotation +direction: CCW
+         */
         public double Q = q;
         public double R = r;
         public readonly double S => -this.Q - this.R;

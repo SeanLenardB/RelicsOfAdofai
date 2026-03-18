@@ -257,7 +257,7 @@ namespace RelicsOfAdofai.Engine
                 Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
                     selectedNodeTexture,
                     gameContext.CurrentSelectedNode.IsFlipped ?
-                        new(Style.NodeTextureSize, Style.NodeTextureSize, -Style.NodeTextureSize, -Style.NodeTextureSize) :
+                        new(Style.NodeTextureSize, 0, -Style.NodeTextureSize, Style.NodeTextureSize) :
                         new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
                     hoveredCellDrawRect,
                     new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
@@ -276,16 +276,42 @@ namespace RelicsOfAdofai.Engine
             switch (node.Type)  // @copypasta: from GameContext.PropagateChartCell()
             {
                 case SkillNode.NodeType.Connector_Opposite:
-                    var inOffsetAngle = 180; var outOffsetAngle = 0;
-                    if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
-                    inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
-                    var inCenter = hoveredCellCenter + (HexCoords.RotationUnit(inOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
-                    var outCenter = hoveredCellCenter + (HexCoords.RotationUnit(outOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
-                    Raylib.DrawPolyLinesEx(inCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxIn);
-                    Raylib.DrawPolyLinesEx(outCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
-                    break;
+                    {
+                        var inOffsetAngle = 180; var outOffsetAngle = 0;
+                        if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
+                        inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
+                        var inCenter = hoveredCellCenter + (HexCoords.RotationUnit(inOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                        var outCenter = hoveredCellCenter + (HexCoords.RotationUnit(outOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                        Raylib.DrawPolyLinesEx(inCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxIn);
+                        Raylib.DrawPolyLinesEx(outCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
+                        break;
+                    }
 
-                default: return;
+                case SkillNode.NodeType.Connector_Interval:
+                    {
+                        var inOffsetAngle = 180; var outOffsetAngle = 60;
+                        if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
+                        inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
+                        var inCenter = hoveredCellCenter + (HexCoords.RotationUnit(inOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                        var outCenter = hoveredCellCenter + (HexCoords.RotationUnit(outOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                        Raylib.DrawPolyLinesEx(inCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxIn);
+                        Raylib.DrawPolyLinesEx(outCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
+                        break;
+                    }
+
+                case SkillNode.NodeType.Connector_Adjacent:
+                    {
+                        var inOffsetAngle = 180; var outOffsetAngle = 120;
+                        if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
+                        inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
+                        var inCenter = hoveredCellCenter + (HexCoords.RotationUnit(inOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                        var outCenter = hoveredCellCenter + (HexCoords.RotationUnit(outOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                        Raylib.DrawPolyLinesEx(inCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxIn);
+                        Raylib.DrawPolyLinesEx(outCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
+                        break;
+                    }
+
+                default: Debug.Assert(false, "Discrimitive union!"); return;
             }
         }
 
