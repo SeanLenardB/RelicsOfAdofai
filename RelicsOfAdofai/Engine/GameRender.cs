@@ -144,6 +144,15 @@ namespace RelicsOfAdofai.Engine
                 Style.SizeHeaderTitle,
                 0,
                 Style.ColorTextGeneral);
+
+            if (gameContext.DebugMode)
+                Raylib.DrawTextEx(
+                    Style.FontTitle,
+                    $"{1.0 / Raylib.GetFrameTime():0.00}",
+                    Layout.RightTop().Hpx(1).Ypx(0).Wpx(160).Xvw(100).Vect(),
+                    Style.SizeHeaderTitle,
+                    0,
+                    Style.ColorTextGeneral);
             /*
              * [  ]----[  ]----[  ]
              *    < 96 >
