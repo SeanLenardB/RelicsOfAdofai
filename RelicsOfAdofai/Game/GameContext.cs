@@ -47,10 +47,11 @@ namespace RelicsOfAdofai.Game
         }
         public void PropagateChartCell(Chart chart, ChartCell cell, CellPropagationPacket packet)
         {
-            if (this.DebugMode) Console.WriteLine($"{packet.From} -[{packet.Energy}]-> {cell.Coords}");
+            if (this.DebugMode) Console.WriteLine($"{packet.From.Coords} -[{packet.Energy}]-> {cell.Coords}");
             Debug.Assert(chart == this.CurrentChart, "You're trying to propagate a cell that is not in the current chart!");
             var node = cell.FilledNode;
             Debug.Assert(node is not null, "A packet is propagated to a cell that has no node inside it! Prune it in the first place!");
+            cell.FluxIn += packet.Energy;
             switch (node.Type)
             {
                 case SkillNode.NodeType.Extractor_Single:
@@ -60,13 +61,13 @@ namespace RelicsOfAdofai.Game
                         outOffsetAngle += node.Rotation;
 
                         if (packet.From.Type != ChartCell.CellType.Start) break;
-                        
-                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
-                        if (outCell is null) break;
+
+                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
+                        if (outCell is null || outCell.FilledNode is null) break;
 
                         var outEnergy = packet.Energy * node.ConnectorEfficiency;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
-                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
+                        cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
                     }
 
@@ -76,14 +77,14 @@ namespace RelicsOfAdofai.Game
                         if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
                         inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
 
-                        if (!packet.From.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
+                        if (!packet.From.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
 
-                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
-                        if (outCell is null) break;
+                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
+                        if (outCell is null || outCell.FilledNode is null) break;
 
                         var outEnergy = packet.Energy * node.ConnectorEfficiency;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
-                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
+                        cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
                     }
 
@@ -93,14 +94,14 @@ namespace RelicsOfAdofai.Game
                         if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
                         inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
 
-                        if (!packet.From.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
+                        if (!packet.From.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
 
-                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
-                        if (outCell is null) break;
+                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
+                        if (outCell is null || outCell.FilledNode is null) break;
 
                         var outEnergy = packet.Energy * node.ConnectorEfficiency;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
-                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
+                        cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
                     }
 
@@ -110,20 +111,20 @@ namespace RelicsOfAdofai.Game
                         if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
                         inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
 
-                        if (!packet.From.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
+                        if (!packet.From.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
 
-                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
-                        if (outCell is null) break;
+                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
+                        if (outCell is null || outCell.FilledNode is null) break;
 
                         var outEnergy = packet.Energy * node.ConnectorEfficiency;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
-                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
+                        cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
                     }
 
                 case SkillNode.NodeType.Receiver_Neighbor:
                     {
-                        if (!HexCoords.Directions.Any(d => (cell.Coords + d).Equals(packet.From.Coords))) break;
+                        if (!HexCoords.Directions.Any(d => (cell.Coords + d).CoordsEqual(packet.From.Coords))) break;
                         chart.FinalEnergy += packet.Energy;
                         break;
                     }

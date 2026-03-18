@@ -109,7 +109,7 @@ namespace RelicsOfAdofai.Game
             };
         }
         public static HexCoords operator +(HexCoords left, HexCoords right) { return new(left.Q + right.Q, left.R + right.R); }
-        public bool IsEqual(HexCoords hex) { return this.Q == hex.Q && this.R == hex.R; }
+        public bool CoordsEqual(HexCoords hex) { return this.Q == hex.Q && this.R == hex.R; }
         public override string ToString() => $"{{HexCoords <Q={this.Q}, R={this.R}>}}";
     }
 }
