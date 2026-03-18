@@ -11,7 +11,7 @@ namespace RelicsOfAdofai.Game
     {
         // @enhance: we might want different startup hand sets,
         // such as different character/player gives different skillsets.
-        public static List<HexNode> StartingCollection()
+        public static List<SkillNode> StartingCollection()
         {
             // @cleanup: we might want a "nodeStack" style impl like minecraft does for items.
             // but I don't really see the benefit being that much,
@@ -21,42 +21,43 @@ namespace RelicsOfAdofai.Game
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = HexNode.NodeType.Connector_Opposite },
+                    Type = SkillNode.NodeType.Connector_Opposite },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = HexNode.NodeType.Connector_Opposite },
+                    Type = SkillNode.NodeType.Connector_Opposite },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = HexNode.NodeType.Connector_Opposite },
+                    Type = SkillNode.NodeType.Connector_Opposite },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = HexNode.NodeType.Connector_Interval },
+                    Type = SkillNode.NodeType.Connector_Interval },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = HexNode.NodeType.Connector_Interval },
+                    Type = SkillNode.NodeType.Connector_Interval },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = HexNode.NodeType.Connector_Adjacent },
+                    Type = SkillNode.NodeType.Connector_Adjacent },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = HexNode.NodeType.Connector_Adjacent },
+                    Type = SkillNode.NodeType.Connector_Adjacent },
             ];
         }
     }
 
-    public class HexNode
+    public class SkillNode
     {
         public string Name = "";
         public string Description = "";
 
         // @clanup: this is a fat struct. Might need some polymorphism?
-        public int Rotation { get; set { field = value % 360; } } = 0;
+        public int Rotation { get; set { field = value % 360; if (field < 0) field += 360; } } = 0;
+        public bool IsFlipped = false;
         public double ConnectorEfficiency = 0.9;
         public NodeType Type = NodeType.Connector_Opposite;
         public enum NodeType

@@ -127,6 +127,7 @@ namespace RelicsOfAdofai.Engine
                     {
                         cell.FilledNode?.IsUsed = false;
                         cell.FilledNode?.Rotation = 0;
+                        cell.FilledNode?.IsFlipped = false;
                         Debug.Assert(!gameContext.CurrentSelectedNode.IsUsed, "Cannot use a used node!");
                         cell.FilledNode = gameContext.CurrentSelectedNode;
                         cell.FilledNode.IsUsed = true;
@@ -137,6 +138,7 @@ namespace RelicsOfAdofai.Engine
                     {
                         cell.FilledNode.IsUsed = false;
                         cell.FilledNode.Rotation = 0;
+                        cell.FilledNode.IsFlipped = false;
                         cell.FilledNode = null;
                         gameContext.RecalculateCurrentChart();
                     }
@@ -162,6 +164,7 @@ namespace RelicsOfAdofai.Engine
                         if (isMouseLeftDown)
                         {
                             gameContext.CurrentSelectedNode?.Rotation = 0;
+                            gameContext.CurrentSelectedNode?.IsFlipped = false;
                             if (node != gameContext.CurrentSelectedNode) gameContext.CurrentSelectedNode = node;
                             break;
                         }
@@ -171,8 +174,9 @@ namespace RelicsOfAdofai.Engine
                 }
 
                 // Candidate node rotation
-                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation += 60;
-                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation -= 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation -= 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation += 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.F)) gameContext.CurrentSelectedNode?.IsFlipped = !gameContext.CurrentSelectedNode.IsFlipped;
             }
         }
     }

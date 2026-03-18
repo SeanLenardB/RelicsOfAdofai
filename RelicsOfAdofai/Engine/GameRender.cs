@@ -129,10 +129,10 @@ namespace RelicsOfAdofai.Engine
                 Color.Blank, Style.ColorBgInputGradientInactive, Color.Blank, Color.Blank);
             Raylib.DrawRectangleGradientH(
                 0, (int)headerRect.Height,
-                (int)(headerRect.Width / 2), 6, Style.ColorBorderBlack, Style.ColorBorderLight);
+                (int)(headerRect.Width / 2), Style.NormalThickness, Style.ColorBorderBlack, Style.ColorBorderLight);
             Raylib.DrawRectangleGradientH(
                 (int)(headerRect.Width / 2), (int)headerRect.Height,
-                (int)(headerRect.Width / 2), 6, Style.ColorBorderLight, Style.ColorBorderBlack);
+                (int)(headerRect.Width / 2), Style.NormalThickness, Style.ColorBorderLight, Style.ColorBorderBlack);
 
             var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, "Relics of Adofai", Style.SizeHeaderTitle, 0);
             var padding = (128 - titleExtent.Y) / 2;
@@ -179,7 +179,7 @@ namespace RelicsOfAdofai.Engine
             Raylib.DrawLineEx(
                 new(handRect.X, handRect.Y),
                 new(handRect.X + handRect.Width, handRect.Y),
-                6,
+                Style.NormalThickness,
                 Style.ColorBorderLight);
 
             this.DrawHand(gameContext);
@@ -188,6 +188,7 @@ namespace RelicsOfAdofai.Engine
         public void DrawChartGrid(GameContext gameContext)
         {
             Debug.Assert(gameContext.CurrentChart is not null, "Cannot render a null chart!");
+            ChartCell? hoveredCell = null;
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
@@ -196,47 +197,31 @@ namespace RelicsOfAdofai.Engine
                     6,
                     Style.HexCellDrawRadius,
                     30,
-                    6,
+                    Style.NormalThickness,
                     Style.ColorBorderMedium);
+
+                var drawRect = Layout.CenterCenter()
+                        .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
+                        .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).Rect();
+                drawRect.X += drawRect.Width / 2;
+                drawRect.Y += drawRect.Height / 2;  // DrawTexturePro expects the center as xy
 
                 if (cell.FilledNode is not null)  // @copypasta
                 {
-                    var selectedNodeTexture = Style.Textures[cell.FilledNode.ResourceKey()];
-                    var drawRect = Layout.CenterCenter()
-                            .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
-                            .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).Rect();
-                    drawRect.X += drawRect.Width / 2;
-                    drawRect.Y += drawRect.Height / 2;  // DrawTexturePro expects the center as xy
+                    var filledNodeTexture = Style.Textures[cell.FilledNode.ResourceKey()];
                     Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
-                        selectedNodeTexture,
-                        new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
+                        filledNodeTexture,
+                        cell.FilledNode.IsFlipped ? 
+                            new(Style.NodeTextureSize, 0, -Style.NodeTextureSize, Style.NodeTextureSize) :
+                            new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
                         drawRect,
                         new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
-                        cell.FilledNode.Rotation,
+                        -cell.FilledNode.Rotation,
                         Style.HintUnselectedNode);
                 }
+                else Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
 
-                if (cell.IsHover)
-                {
-                    Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgMedium);
-                    if (gameContext.CurrentSelectedNode is not null)
-                    {
-                        var selectedNodeTexture = Style.Textures[gameContext.CurrentSelectedNode.ResourceKey()];
-                        var drawRect = Layout.CenterCenter()
-                                .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
-                                .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).Rect();
-                        drawRect.X += drawRect.Width / 2;
-                        drawRect.Y += drawRect.Height / 2;  // DrawTexturePro expects the center as xy
-                        Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
-                            selectedNodeTexture,
-                            new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
-                            drawRect,
-                            new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
-                            gameContext.CurrentSelectedNode.Rotation,
-                            Style.HintSelectedNode);
-                    }
-                }
-                else if (cell.FilledNode is null) Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
+                if (cell.IsHover) hoveredCell = cell;
 
                 var imageLocation = cellCenter;
                 imageLocation.X -= 64; imageLocation.Y -= 64;  // The image is 256x256. We draw 0.5x.
@@ -254,6 +239,53 @@ namespace RelicsOfAdofai.Engine
                         0,
                         0.5f,
                         new(255, 255, 255, 128));
+            }
+
+
+            if (hoveredCell is null) return;
+            // @hack: the hover hint should render after everything has been drawn. Otherwise it might get overriden.
+            var hoveredCellCenter = (hoveredCell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
+            var hoveredCellDrawRect = Layout.CenterCenter()
+                    .Hpx(Style.NodeTextureSize).Ypx((int)hoveredCellCenter.Y)
+                    .Wpx(Style.NodeTextureSize).Xpx((int)hoveredCellCenter.X).Rect();
+            hoveredCellDrawRect.X += hoveredCellDrawRect.Width / 2;
+            hoveredCellDrawRect.Y += hoveredCellDrawRect.Height / 2;  // DrawTexturePro expects the center as xy
+            Raylib.DrawPoly(hoveredCellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgMedium);
+            if (gameContext.CurrentSelectedNode is not null)
+            {
+                var selectedNodeTexture = Style.Textures[gameContext.CurrentSelectedNode.ResourceKey()];
+                Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
+                    selectedNodeTexture,
+                    gameContext.CurrentSelectedNode.IsFlipped ?
+                        new(Style.NodeTextureSize, Style.NodeTextureSize, -Style.NodeTextureSize, -Style.NodeTextureSize) :
+                        new(0, 0, Style.NodeTextureSize, Style.NodeTextureSize),
+                    hoveredCellDrawRect,
+                    new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
+                    -gameContext.CurrentSelectedNode.Rotation,
+                    Style.HintSelectedNode);
+                this.DrawFluxHint(gameContext, hoveredCell);
+            }
+        }
+
+        public void DrawFluxHint(GameContext gameContext, ChartCell cell)
+        {
+            var node = gameContext.CurrentSelectedNode;
+            Debug.Assert(node is not null, "Trying to draw flux hint of a null cell!");
+            Debug.Assert(gameContext.CurrentChart is not null, "Trying to draw on a null chart!");
+            var hoveredCellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
+            switch (node.Type)  // @copypasta: from GameContext.PropagateChartCell()
+            {
+                case SkillNode.NodeType.Connector_Opposite:
+                    var inOffsetAngle = 180; var outOffsetAngle = 0;
+                    if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
+                    inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
+                    var inCenter = hoveredCellCenter + (HexCoords.RotationUnit(inOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                    var outCenter = hoveredCellCenter + (HexCoords.RotationUnit(outOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                    Raylib.DrawPolyLinesEx(inCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxIn);
+                    Raylib.DrawPolyLinesEx(outCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
+                    break;
+
+                default: return;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using System.Diagnostics;
+using Raylib_cs;
 using RelicsOfAdofai.Engine;
 using RelicsOfAdofai.Game;
 
@@ -38,6 +39,7 @@ public class Program
 
         while (!Raylib.WindowShouldClose())
         {
+            Debug.Assert(!Raylib.IsKeyPressed(KeyboardKey.B), "Debug Breakpoint");
             interactivity.HandleInput(guiContext, gameContext);
 
             if (Raylib.IsWindowResized())

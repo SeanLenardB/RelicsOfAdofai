@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using Raylib_cs;
@@ -39,13 +40,16 @@ namespace RelicsOfAdofai.Game
     {
         public HexCoords Coords = new(q, r);
         public CellType Type = type;
-        public HexNode? FilledNode = null;
+        public SkillNode? FilledNode = null;
         public enum CellType
         {
             Normal,
             Start,
             End,
         }
+
+        public double FluxIn = 0;
+        public double FluxOut = 0;
 
         public bool IsHover = false;
     }
@@ -76,5 +80,23 @@ namespace RelicsOfAdofai.Game
         public static readonly HexCoords DirectionLeftUp = new(0, -1);
         public static readonly HexCoords DirectionLeftDown = new(-1, 1);
         public static readonly HexCoords DirectionRightDown = new(0, 1);
+        public static HexCoords RotationUnit(int rotation)
+        {
+            Debug.Assert(rotation % 60 == 0, "Rotation should be multiples of 60 and positive!");
+            rotation %= 360; if (rotation < 0) rotation += 360;
+
+            return rotation switch
+            {
+                0 => DirectionRight,
+                60 => DirectionRightUp,
+                120 => DirectionLeftUp,
+                180 => DirectionLeft,
+                240 => DirectionLeftDown,
+                300 => DirectionRightDown,
+                _ => DirectionRight,
+            };
+        }
+        public static HexCoords operator +(HexCoords left, HexCoords right) { return new(left.Q + right.Q, left.R + right.R); }
+        public bool IsEqual(HexCoords hex) { return this.Q == hex.Q && this.R == hex.R; }
     }
 }

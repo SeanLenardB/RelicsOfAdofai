@@ -17,6 +17,9 @@ namespace RelicsOfAdofai.Engine
         public static Color ColorBorderMedium = Color.LightGray;
         public static Color ColorBorderLight = Color.White;
 
+        public static Color ColorBorderFluxIn = Color.SkyBlue;
+        public static Color ColorBorderFluxOut = Color.Red;
+
         public static Color HintSelectedNode = new(255, 255, 255, 128);
         public static Color HintUnselectedNode = Color.White;
 
@@ -37,6 +40,8 @@ namespace RelicsOfAdofai.Engine
         public static int NodeInHandRadius = 72;
         public static int NodeInHandSpacing = 2 * NodeInHandRadius;
         public static int NodeTextureSize = 256;
+        public static int NormalThickness = 6;
+        public static int ThinThickness = 3;
 
         // https://www.redblobgames.com/grids/hexagons/
         public static int HexCellSpaceRadius = (72 * 2) - 8;
