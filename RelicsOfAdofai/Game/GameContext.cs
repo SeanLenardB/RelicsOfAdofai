@@ -11,6 +11,7 @@ namespace RelicsOfAdofai.Game
         public int Seed = 0;
         public Random Random = new();
 
+        public bool DebugMode = true;
         public Chart? CurrentChart = null;
         public List<Chart> Charts = [];
         public List<SkillNode> HandNodes = [];

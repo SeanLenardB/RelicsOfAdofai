@@ -18,6 +18,8 @@ namespace RelicsOfAdofai.Engine
             var isMouseRightDown = Raylib.IsMouseButtonDown(MouseButton.Right);
             var mousePosition = Raylib.GetMousePosition();
 
+            if (Raylib.IsKeyPressed(KeyboardKey.Grave)) gameContext.DebugMode = !gameContext.DebugMode;
+
             /* ---------- GENERIC GUI ---------- */
             // Input char
             if (guiContext.InputBoxes.Values.Any(i => i.IsActive))

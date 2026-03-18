@@ -37,6 +37,9 @@ public class Program
         GuiContext guiContext = new();
         guiContext.GuiInit(gameContext);
 
+        // @note: remove this when publishing?
+        if (gameContext.DebugMode && guiContext.GuiState == GuiState.Splashscreen) guiContext.Buttons["startgame"].PressAction();
+
         while (!Raylib.WindowShouldClose())
         {
             Debug.Assert(!Raylib.IsKeyPressed(KeyboardKey.B), "Debug Breakpoint");

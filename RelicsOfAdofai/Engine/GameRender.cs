@@ -134,11 +134,12 @@ namespace RelicsOfAdofai.Engine
                 (int)(headerRect.Width / 2), (int)headerRect.Height,
                 (int)(headerRect.Width / 2), Style.NormalThickness, Style.ColorBorderLight, Style.ColorBorderBlack);
 
-            var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, "Relics of Adofai", Style.SizeHeaderTitle, 0);
+            var headerString = gameContext.DebugMode ? "Debug Mode" : "Relics of Adofai";
+            var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, headerString, Style.SizeHeaderTitle, 0);
             var padding = (128 - titleExtent.Y) / 2;
             Raylib.DrawTextEx(
                 Style.FontTitle,
-                "Relics of Adofai",
+                headerString,
                 new(padding, padding),
                 Style.SizeHeaderTitle,
                 0,
