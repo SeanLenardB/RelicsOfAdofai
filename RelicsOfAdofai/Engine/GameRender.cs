@@ -202,8 +202,9 @@ namespace RelicsOfAdofai.Engine
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
+                var drawCenter = cellCenter + new Vector2(0, Style.NormalThickness);
                 Raylib.DrawPolyLinesEx(
-                    cellCenter,
+                    drawCenter,
                     6,
                     Style.HexCellDrawRadius,
                     30,
@@ -229,7 +230,7 @@ namespace RelicsOfAdofai.Engine
                         -cell.FilledNode.Rotation,
                         Style.HintUnselectedNode);
                 }
-                else Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
+                else Raylib.DrawPoly(drawCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
 
                 if (cell.IsHover) hoveredCell = cell;
 
