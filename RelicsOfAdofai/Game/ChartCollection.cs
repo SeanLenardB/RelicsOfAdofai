@@ -90,7 +90,7 @@ namespace RelicsOfAdofai.Game
         public static readonly HexCoords DirectionRightDown = new(0, 1);
         public static HexCoords RotationUnit(int rotation)
         {
-            Debug.Assert(rotation % 60 == 0, "Rotation should be multiples of 60 and positive!");
+            Debug.Assert(rotation % 60 == 0, "Rotation should be multiples of 60!");
             rotation %= 360; if (rotation < 0) rotation += 360;
 
             return rotation switch
