@@ -20,38 +20,41 @@ namespace RelicsOfAdofai.Engine
 
             /* ---------- GENERIC GUI ---------- */
             // Input char
-            int code = Raylib.GetCharPressed();
-            while (code != 0 && code >= 32 && code <= 125)  // @note: might change to wider/narrower ranges
+            if (guiContext.InputBoxes.Values.Any(i => i.IsActive))
             {
-                char ch = (char)code;
-                foreach (var inputBox in guiContext.InputBoxes.Values)
+                int code = Raylib.GetCharPressed();
+                while (code != 0 && code >= 32 && code <= 125)  // @note: might change to wider/narrower ranges
                 {
-                    if (inputBox.BelongingState != guiContext.GuiState) continue;
-                    var modifiedString = inputBox.Text + ch;
-                    if (inputBox.IsActive && inputBox.LegalText(modifiedString)) inputBox.Text = modifiedString;
-                }
-
-                if (Raylib.GetKeyPressed() == 0) break;
-                code = Raylib.GetKeyPressed();  // @hack: for unknown reasons, we will get double duplicate inputs.
-            }
-            // @cleanup: The current implementation of deleting is very shit. Make it better.
-            // Another problem is that the "time after previous delete" should be global instead of belonging to a specific input box.
-            if (Raylib.IsKeyDown(KeyboardKey.Backspace))
-            {
-                this.BackspaceCooldown -= Raylib.GetFrameTime();
-                foreach (var inputBox in guiContext.InputBoxes.Values)
-                {
-                    if (inputBox.BelongingState != guiContext.GuiState) continue;
-                    if (!inputBox.IsActive && this.BackspaceCooldown > 0) continue;
-
-                    if (inputBox.IsActive && this.BackspaceCooldown <= 0 && inputBox.Text.Length > 0)
+                    char ch = (char)code;
+                    foreach (var inputBox in guiContext.InputBoxes.Values)
                     {
-                        inputBox.Text = inputBox.Text[..^1];
-                        this.BackspaceCooldown = 0.1;
+                        if (inputBox.BelongingState != guiContext.GuiState) continue;
+                        var modifiedString = inputBox.Text + ch;
+                        if (inputBox.IsActive && inputBox.LegalText(modifiedString)) inputBox.Text = modifiedString;
+                    }
+
+                    if (Raylib.GetKeyPressed() == 0) break;
+                    code = Raylib.GetKeyPressed();  // @hack: for unknown reasons, we will get double duplicate inputs.
+                }
+                // @cleanup: The current implementation of deleting is very shit. Make it better.
+                // Another problem is that the "time after previous delete" should be global instead of belonging to a specific input box.
+                if (Raylib.IsKeyDown(KeyboardKey.Backspace))
+                {
+                    this.BackspaceCooldown -= Raylib.GetFrameTime();
+                    foreach (var inputBox in guiContext.InputBoxes.Values)
+                    {
+                        if (inputBox.BelongingState != guiContext.GuiState) continue;
+                        if (!inputBox.IsActive && this.BackspaceCooldown > 0) continue;
+
+                        if (inputBox.IsActive && this.BackspaceCooldown <= 0 && inputBox.Text.Length > 0)
+                        {
+                            inputBox.Text = inputBox.Text[..^1];
+                            this.BackspaceCooldown = 0.1;
+                        }
                     }
                 }
+                else this.BackspaceCooldown = 0;
             }
-            else this.BackspaceCooldown = 0;
 
 
 
