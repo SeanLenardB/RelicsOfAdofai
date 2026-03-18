@@ -50,8 +50,8 @@ namespace RelicsOfAdofai.Game
             switch (node.Type)
             {
                 case SkillNode.NodeType.Connector_Opposite:
-                    var outOffsetAngle = node.Rotation;
-                    if (node.IsFlipped) { outOffsetAngle = 180 - outOffsetAngle; }
+                    var outOffsetAngle = 0; if (node.IsFlipped) outOffsetAngle = 180 - outOffsetAngle;
+                    outOffsetAngle += node.Rotation;
                     var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                     if (outCell is null) break;
                     var outEnergy = packet.Energy * node.ConnectorEfficiency;
