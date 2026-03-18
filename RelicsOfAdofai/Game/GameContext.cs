@@ -46,6 +46,7 @@ namespace RelicsOfAdofai.Game
         }
         public void PropagateChartCell(Chart chart, ChartCell cell, CellPropagationPacket packet)
         {
+            if (this.DebugMode) Console.WriteLine($"{packet.SenderCoords} -[{packet.Energy}]-> {cell.Coords}");
             Debug.Assert(chart == this.CurrentChart, "You're trying to propagate a cell that is not in the current chart!");
             var node = cell.FilledNode;
             Debug.Assert(node is not null, "A packet is propagated to a cell that has no node inside it! Prune it in the first place!");
