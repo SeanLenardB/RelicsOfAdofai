@@ -28,6 +28,8 @@ public class Program
         Style.Textures["node-connector-opposite"] = Raylib.LoadTexture("Resources/connector-opposite.png");
         Style.Textures["node-connector-interval"] = Raylib.LoadTexture("Resources/connector-interval.png");
         Style.Textures["node-connector-adjacent"] = Raylib.LoadTexture("Resources/connector-adjacent.png");
+        Style.Textures["node-extractor-single"] = Raylib.LoadTexture("Resources/extractor-single.png");
+        Style.Textures["node-receiver-neighbor"] = Raylib.LoadTexture("Resources/receiver-neighbor.png");
 
 
 

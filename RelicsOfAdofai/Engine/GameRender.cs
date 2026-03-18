@@ -253,6 +253,22 @@ namespace RelicsOfAdofai.Engine
             }
 
 
+
+            var energyText = gameContext.CurrentChart.FinalEnergy.ToString("0.00%");
+            var energyTextExtent = Raylib.MeasureTextEx(Style.FontTitle, energyText, Style.SizeNormal, 0);
+            Raylib.DrawTextEx(
+                Style.FontTitle,
+                energyText,
+                Layout.RightBottom()
+                    .Hpx((int)energyTextExtent.Y).Ypx(Style.WindowHeight - Style.HandHeight - (int)(energyTextExtent.Y / 2))
+                    .Wpx((int)energyTextExtent.X).Xpx(Style.WindowWidth - (int)(energyTextExtent.Y / 2))
+                    .Vect(),
+                Style.SizeNormal,
+                0,
+                Style.ColorTextGeneral);
+
+
+
             if (hoveredCell is null) return;
             // @hack: the hover hint should render after everything has been drawn. Otherwise it might get overriden.
             var hoveredCellCenter = (hoveredCell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
@@ -286,6 +302,17 @@ namespace RelicsOfAdofai.Engine
             var hoveredCellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
             switch (node.Type)  // @copypasta: from GameContext.PropagateChartCell()
             {
+                case SkillNode.NodeType.Extractor_Single:
+                    {
+                        var outOffsetAngle = 0;
+                        if (node.IsFlipped) outOffsetAngle = 180 - outOffsetAngle;
+                        outOffsetAngle += node.Rotation;
+                        var outCenter = hoveredCellCenter + (HexCoords.RotationUnit(outOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
+                        Raylib.DrawPolyLinesEx(hoveredCellCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxIn);
+                        Raylib.DrawPolyLinesEx(outCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
+                        break;
+                    }
+
                 case SkillNode.NodeType.Connector_Opposite:
                     {
                         var inOffsetAngle = 180; var outOffsetAngle = 0;
@@ -319,6 +346,20 @@ namespace RelicsOfAdofai.Engine
                         var outCenter = hoveredCellCenter + (HexCoords.RotationUnit(outOffsetAngle).Cartesian() * Style.HexCellSpaceRadius);
                         Raylib.DrawPolyLinesEx(inCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxIn);
                         Raylib.DrawPolyLinesEx(outCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
+                        break;
+                    }
+
+                case SkillNode.NodeType.Receiver_Neighbor:
+                    {
+                        foreach (var direction in HexCoords.Directions)
+                            Raylib.DrawPolyLinesEx(
+                                hoveredCellCenter + (direction.Cartesian() * Style.HexCellSpaceRadius),
+                                6,
+                                Style.HexCellDrawRadius,
+                                30,
+                                Style.ThinThickness,
+                                Style.ColorBorderFluxIn);
+                        Raylib.DrawPolyLinesEx(hoveredCellCenter, 6, Style.HexCellDrawRadius, 30, Style.ThinThickness, Style.ColorBorderFluxOut);
                         break;
                     }
 

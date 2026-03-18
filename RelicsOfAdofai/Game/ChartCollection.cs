@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Raylib_cs;
 using RelicsOfAdofai.Engine;
@@ -32,6 +33,7 @@ namespace RelicsOfAdofai.Game
         public string Creator = "";
         public Color IconColor = Color.SkyBlue;  // @todo: Change this to an actual thumbnail or difficulty icon or something
 
+        public double FinalEnergy = 0.0;
         public List<ChartCell> Cells = [];
         public Vector2 HexOrigin = Layout.CenterCenter().Hpx(1).Wpx(1).YVh(50).Xvw(50).Vect();  // @todo: auto adjust the grid to the center.
     }
@@ -88,6 +90,8 @@ namespace RelicsOfAdofai.Game
         public static readonly HexCoords DirectionLeftUp = new(0, -1);
         public static readonly HexCoords DirectionLeftDown = new(-1, 1);
         public static readonly HexCoords DirectionRightDown = new(0, 1);
+        public static readonly HexCoords[] Directions = 
+            [DirectionRight, DirectionRightUp, DirectionLeftUp, DirectionLeft, DirectionLeftDown, DirectionRightDown];
         public static HexCoords RotationUnit(int rotation)
         {
             Debug.Assert(rotation % 60 == 0, "Rotation should be multiples of 60!");

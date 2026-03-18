@@ -46,6 +46,14 @@ namespace RelicsOfAdofai.Game
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
                     Type = SkillNode.NodeType.Connector_Adjacent },
+                new() {
+                    Name = "Normal Starter",
+                    Description = "Provide the circuit with the energy from the source.",
+                    Type = SkillNode.NodeType.Extractor_Single },
+                new() {
+                    Name = "Normal Finish",
+                    Description = "Accepts the energy from all sides and output to the circuit.",
+                    Type = SkillNode.NodeType.Receiver_Neighbor },
             ];
         }
     }
@@ -62,9 +70,13 @@ namespace RelicsOfAdofai.Game
         public NodeType Type = NodeType.Connector_Opposite;
         public enum NodeType
         {
+            Extractor_Single,
+
             Connector_Opposite,
             Connector_Interval,
             Connector_Adjacent,
+
+            Receiver_Neighbor,
         }
 
         public string ResourceKey()
@@ -74,6 +86,8 @@ namespace RelicsOfAdofai.Game
                 NodeType.Connector_Opposite => "node-connector-opposite",
                 NodeType.Connector_Interval => "node-connector-interval",
                 NodeType.Connector_Adjacent => "node-connector-adjacent",
+                NodeType.Extractor_Single => "node-extractor-single",
+                NodeType.Receiver_Neighbor => "node-receiver-neighbor",
                 _ => "bg",  // probably unnecessary
             };
         }

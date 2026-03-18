@@ -32,6 +32,7 @@ namespace RelicsOfAdofai.Game
         public void RecalculateCurrentChart()
         {
             Debug.Assert(this.CurrentChart is not null, "Cannot recalculate a null chart!");
+            this.CurrentChart.FinalEnergy = 0;
             ChartCell? startingCell = null;
             foreach (var cell in this.CurrentChart.Cells)
             {
@@ -42,30 +43,47 @@ namespace RelicsOfAdofai.Game
 
             // @todo: this 1 is hardcoded. It should depend on the chart.
             if (startingCell.FilledNode is not null)
-                this.PropagateChartCell(this.CurrentChart, startingCell, new(startingCell.Coords, 1));
+                this.PropagateChartCell(this.CurrentChart, startingCell, new(startingCell, 1));
         }
         public void PropagateChartCell(Chart chart, ChartCell cell, CellPropagationPacket packet)
         {
-            if (this.DebugMode) Console.WriteLine($"{packet.SenderCoords} -[{packet.Energy}]-> {cell.Coords}");
+            if (this.DebugMode) Console.WriteLine($"{packet.From} -[{packet.Energy}]-> {cell.Coords}");
             Debug.Assert(chart == this.CurrentChart, "You're trying to propagate a cell that is not in the current chart!");
             var node = cell.FilledNode;
             Debug.Assert(node is not null, "A packet is propagated to a cell that has no node inside it! Prune it in the first place!");
             switch (node.Type)
             {
+                case SkillNode.NodeType.Extractor_Single:
+                    {
+                        var outOffsetAngle = 0;
+                        if (node.IsFlipped) outOffsetAngle = 180 - outOffsetAngle;
+                        outOffsetAngle += node.Rotation;
+
+                        if (packet.From.Type != ChartCell.CellType.Start) break;
+                        
+                        var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
+                        if (outCell is null) break;
+
+                        var outEnergy = packet.Energy * node.ConnectorEfficiency;
+                        if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
+                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
+                        break;
+                    }
+
                 case SkillNode.NodeType.Connector_Opposite:
                     {
                         var inOffsetAngle = 180; var outOffsetAngle = 0;
                         if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
                         inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
 
-                        if (!packet.SenderCoords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) return;
+                        if (!packet.From.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
 
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null) break;
 
                         var outEnergy = packet.Energy * node.ConnectorEfficiency;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
-                        this.PropagateChartCell(chart, outCell, new(cell.Coords, outEnergy));
+                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
                     }
 
@@ -75,14 +93,14 @@ namespace RelicsOfAdofai.Game
                         if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
                         inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
 
-                        if (!packet.SenderCoords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) return;
+                        if (!packet.From.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
 
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null) break;
 
                         var outEnergy = packet.Energy * node.ConnectorEfficiency;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
-                        this.PropagateChartCell(chart, outCell, new(cell.Coords, outEnergy));
+                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
                     }
 
@@ -92,18 +110,25 @@ namespace RelicsOfAdofai.Game
                         if (node.IsFlipped) { inOffsetAngle = 180 - inOffsetAngle; outOffsetAngle = 180 - outOffsetAngle; }
                         inOffsetAngle += node.Rotation; outOffsetAngle += node.Rotation;
 
-                        if (!packet.SenderCoords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) return;
+                        if (!packet.From.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(inOffsetAngle))) break;
 
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.IsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null) break;
 
                         var outEnergy = packet.Energy * node.ConnectorEfficiency;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
-                        this.PropagateChartCell(chart, outCell, new(cell.Coords, outEnergy));
+                        this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
                     }
 
-                default: Debug.Assert(false, "Discrimitive union!"); return;
+                case SkillNode.NodeType.Receiver_Neighbor:
+                    {
+                        if (!HexCoords.Directions.Any(d => (cell.Coords + d).Equals(packet.From.Coords))) break;
+                        chart.FinalEnergy += packet.Energy;
+                        break;
+                    }
+
+                default: Debug.Assert(false, "Discrimitive union!"); break;
             }
         }
         
@@ -111,16 +136,16 @@ namespace RelicsOfAdofai.Game
         {
             public static readonly double MinEnergyThreshold = 0.001;
             public static readonly double MaxEnergyThreshold = 10;
-            public double Energy = 0;
-            public HexCoords SenderCoords = new();
 
-            public CellPropagationPacket(HexCoords senderCoods, double energy)
+            public CellPropagationPacket(ChartCell from, double energy)
             {
                 if (energy > MaxEnergyThreshold) energy = MaxEnergyThreshold;
                 Debug.Assert(energy >= MinEnergyThreshold, "There is a packet with too little energy! You should prune it in the first place!");
                 this.Energy = energy;
-                this.SenderCoords = senderCoods;
+                this.From = from;
             }
+            public double Energy;
+            public ChartCell From;
         }
     }
 }
