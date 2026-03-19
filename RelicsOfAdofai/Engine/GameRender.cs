@@ -75,7 +75,7 @@ namespace RelicsOfAdofai.Engine
 
         
         /* ----------- GAME ----------- */
-        public void Game(GameContext gameContext)
+        public void Game(GameContext gameContext, Interactivity interactivity)
         {
             /* ----- BACKGROUND ----- */
             // @cleanup: copypasta from SplashScreen()
@@ -107,7 +107,7 @@ namespace RelicsOfAdofai.Engine
 
 
             /* ----- GRID ----- */
-            this.DrawChartGrid(gameContext);
+            this.DrawChartGrid(gameContext, interactivity);
 
 
 
@@ -135,13 +135,13 @@ namespace RelicsOfAdofai.Engine
                 (int)(headerRect.Width / 2), Style.NormalThickness, Style.ColorBorderLight, Style.ColorBorderBlack);
 
             var headerString = gameContext.DebugMode ? "Debug Mode" : "Relics of Adofai";
-            var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, headerString, Style.SizeHeaderTitle, 0);
+            var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, headerString, Style.SizeNormal, 0);
             var padding = (128 - titleExtent.Y) / 2;
             Raylib.DrawTextEx(
                 Style.FontTitle,
                 headerString,
                 new(padding, padding),
-                Style.SizeHeaderTitle,
+                Style.SizeNormal,
                 0,
                 Style.ColorTextGeneral);
 
@@ -150,7 +150,7 @@ namespace RelicsOfAdofai.Engine
                     Style.FontTitle,
                     $"{1.0 / Raylib.GetFrameTime():0.00}",
                     Layout.RightTop().Hpx(1).Ypx(0).Wpx(160).Xvw(100).Vect(),
-                    Style.SizeHeaderTitle,
+                    Style.SizeNormal,
                     0,
                     Style.ColorTextGeneral);
             /*
@@ -195,7 +195,7 @@ namespace RelicsOfAdofai.Engine
             this.DrawHand(gameContext);
         }
 
-        public void DrawChartGrid(GameContext gameContext)
+        public void DrawChartGrid(GameContext gameContext, Interactivity interactivity)
         {
             Debug.Assert(gameContext.CurrentChart is not null, "Cannot render a null chart!");
             ChartCell? hoveredCell = null;
@@ -291,6 +291,29 @@ namespace RelicsOfAdofai.Engine
                     -gameContext.CurrentSelectedNode.Rotation,
                     Style.HintSelectedNode);
                 this.DrawFluxHint(gameContext, hoveredCell);
+            }
+            if (hoveredCell.FilledNode is not null && interactivity.MouseStayDuration > 0.5)
+            {
+                var mousePosition = Raylib.GetMousePosition();
+                var inText = hoveredCell.FluxIn.ToString("流入0.00%");
+                var outText = hoveredCell.FluxOut.ToString("流出0.00%");
+                var inTextExtent = Raylib.MeasureTextEx(Style.FontNormal, inText, Style.SizeSmall, 0);
+                var outTextExtent = Raylib.MeasureTextEx(Style.FontNormal, outText, Style.SizeSmall, 0);
+
+                var boxRect = Layout.CenterBottom()
+                    .Wpx((int)((3 * inTextExtent.Y) + (inTextExtent.X + outTextExtent.X))).Xpx((int)mousePosition.X)
+                    .Hpx((int)(inTextExtent.Y * 2)).Ypx((int)mousePosition.Y).Rect();
+                var inTextVect = Layout.RightCenter()
+                    .Wpx((int)inTextExtent.X).Xpx((int)(mousePosition.X - (inTextExtent.Y * 0.5)))
+                    .Hpx((int)inTextExtent.Y).Ypx((int)(mousePosition.Y - inTextExtent.Y)).Vect();
+                var outTextVect = Layout.LeftCenter()
+                    .Wpx((int)outTextExtent.X).Xpx((int)(mousePosition.X + (inTextExtent.Y * 0.5)))
+                    .Hpx((int)outTextExtent.Y).Ypx((int)(mousePosition.Y - outTextExtent.Y)).Vect();
+
+                Raylib.DrawRectangleRounded(boxRect, 0.1f, 8, Style.ColorBgDark);
+                Raylib.DrawRectangleRoundedLinesEx(boxRect, 0.1f, 8, Style.ThinThickness, Style.ColorBorderLight);
+                Raylib.DrawTextEx(Style.FontNormal, inText, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
+                Raylib.DrawTextEx(Style.FontNormal, outText, outTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxOut);
             }
         }
 

@@ -61,7 +61,7 @@ public class Program
                 switch (guiContext.GuiState)
                 {
                     case GuiState.Splashscreen: gameRender.SplashScreen(); break;
-                    case GuiState.Game: gameRender.Game(gameContext); break;
+                    case GuiState.Game: gameRender.Game(gameContext, interactivity); break;
                     default: goto case GuiState.Splashscreen;
                 }
 

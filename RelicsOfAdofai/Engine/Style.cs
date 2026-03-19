@@ -27,9 +27,9 @@ namespace RelicsOfAdofai.Engine
         public static Font FontTitle;
         public static Font FontNormal;
 
-        public static int SizeNormal = 32;
+        public static int SizeSmall = 32;
+        public static int SizeNormal = 48;
         public static int SizeTitle = 72;
-        public static int SizeHeaderTitle = 48;
 
         public static int WindowWidth = 1920;
         public static int WindowHeight = 1080;

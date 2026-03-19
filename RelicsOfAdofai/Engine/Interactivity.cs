@@ -11,6 +11,7 @@ namespace RelicsOfAdofai.Engine
     public class Interactivity
     {
         public double BackspaceCooldown = 0;
+        public double MouseStayDuration = 0;
         public void HandleInput(GuiContext guiContext, GameContext gameContext)
         {
             var isMouseLeftDown = Raylib.IsMouseButtonDown(MouseButton.Left);
@@ -57,6 +58,10 @@ namespace RelicsOfAdofai.Engine
                 }
                 else this.BackspaceCooldown = 0;
             }
+
+            var isMouseStay = Raylib.GetMouseDelta() == new Vector2(0, 0);
+            if (isMouseStay && this.MouseStayDuration < 10.0) this.MouseStayDuration += Raylib.GetFrameTime();
+            else if (!isMouseStay) this.MouseStayDuration = 0.0;
 
 
 
