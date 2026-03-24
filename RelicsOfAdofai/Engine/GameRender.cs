@@ -213,9 +213,7 @@ namespace RelicsOfAdofai.Engine
 
                 var drawRect = Layout.CenterCenter()
                         .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
-                        .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).Rect();
-                drawRect.X += drawRect.Width / 2;
-                drawRect.Y += drawRect.Height / 2;  // DrawTexturePro expects the center as xy
+                        .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).RectCenter();
 
                 if (cell.FilledNode is not null)
                 {
@@ -274,9 +272,7 @@ namespace RelicsOfAdofai.Engine
             var hoveredCellCenter = (hoveredCell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
             var hoveredCellDrawRect = Layout.CenterCenter()
                     .Hpx(Style.NodeTextureSize).Ypx((int)hoveredCellCenter.Y)
-                    .Wpx(Style.NodeTextureSize).Xpx((int)hoveredCellCenter.X).Rect();
-            hoveredCellDrawRect.X += hoveredCellDrawRect.Width / 2;
-            hoveredCellDrawRect.Y += hoveredCellDrawRect.Height / 2;  // DrawTexturePro expects the center as xy
+                    .Wpx(Style.NodeTextureSize).Xpx((int)hoveredCellCenter.X).RectCenter();
             Raylib.DrawPoly(hoveredCellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgMedium);
             if (gameContext.CurrentSelectedNode is not null)
             {
@@ -396,9 +392,7 @@ namespace RelicsOfAdofai.Engine
             // I'm concerned that the X of this currentDrawRect begins at x=0
             var currentDrawRect =
                 Layout.CenterCenter().Hpx(Style.NodeTextureSize).YVh(100).DYpx(-Style.HandHeight / 2)
-                    .Wpx(Style.NodeTextureSize).Xpx(Style.HandHeight / 2).Rect();
-            currentDrawRect.X += Style.NodeTextureSize / 2;  // DrawTexturePro expects the coords to be the center.
-            currentDrawRect.Y += Style.NodeTextureSize / 2;
+                    .Wpx(Style.NodeTextureSize).Xpx(Style.HandHeight / 2).RectCenter();
             foreach (var node in gameContext.HandNodes)
             {
                 if (node.IsUsed) continue;

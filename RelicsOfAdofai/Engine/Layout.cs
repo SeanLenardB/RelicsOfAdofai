@@ -27,9 +27,17 @@ namespace RelicsOfAdofai.Engine
             {
                 return new((int)this.LeftX, (int)this.TopY, (int)this.Width, (int)this.Height);
             }
+            public Rectangle RectCenter()
+            {
+                return new((int)(this.LeftX + (this.Width / 2)), (int)(this.TopY + (this.Height / 2)), (int)this.Width, (int)this.Height);
+            }
             public Vector2 Vect()
             {
                 return new((int)this.LeftX, (int)this.TopY);
+            }
+            public Vector2 VectCenter()
+            {
+                return new((int)(this.LeftX + (this.Width / 2)), (int)(this.TopY + (this.Height / 2)));
             }
 
             public LayoutData Wvw(int percentage)
