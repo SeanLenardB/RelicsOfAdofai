@@ -78,7 +78,7 @@ namespace RelicsOfAdofai.Engine
         public void Game(GameContext gameContext, Interactivity interactivity)
         {
             /* ----- BACKGROUND ----- */
-            // @cleanup: copypasta from SplashScreen()
+            // @copypasta: from SplashScreen()
             Debug.Assert(Style.Textures.ContainsKey("bg"), "Cannot find the background image bg!");
             var bg = Style.Textures["bg"];
 
