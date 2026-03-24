@@ -217,7 +217,7 @@ namespace RelicsOfAdofai.Engine
                 drawRect.X += drawRect.Width / 2;
                 drawRect.Y += drawRect.Height / 2;  // DrawTexturePro expects the center as xy
 
-                if (cell.FilledNode is not null)  // @copypasta
+                if (cell.FilledNode is not null)
                 {
                     var filledNodeTexture = Style.Textures[cell.FilledNode.ResourceKey()];
                     Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
