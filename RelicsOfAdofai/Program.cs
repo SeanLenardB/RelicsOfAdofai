@@ -65,7 +65,7 @@ public class Program
                     default: goto case GuiState.Splashscreen;
                 }
 
-                gameRender.RenderGui(guiContext);
+                gameRender.RenderGui(guiContext, interactivity);
             }
             Raylib.EndDrawing();
         }

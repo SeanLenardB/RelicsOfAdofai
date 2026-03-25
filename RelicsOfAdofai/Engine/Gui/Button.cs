@@ -11,12 +11,14 @@ namespace RelicsOfAdofai.Engine.Gui
         public string Text = "";
         public float TextSize = Style.SizeNormal;
         public TextAlign Align = TextAlign.Left;
-        public bool Enabled = true;
+
+        public string DisabledHint = "";
 
         public GuiState BelongingState = GuiState.Splashscreen;
         public Rectangle CollisionBox;
         public bool IsPressed = false;
         public bool IsHover = false;
+        public bool Enabled = true;
         public Action PressAction = () => { };
 
         public enum TextAlign

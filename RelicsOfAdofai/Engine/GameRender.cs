@@ -288,7 +288,7 @@ namespace RelicsOfAdofai.Engine
                     Style.HintSelectedNode);
                 this.DrawFluxHint(gameContext, hoveredCell);
             }
-            if (hoveredCell.FilledNode is not null && interactivity.MouseStayDuration > 0.5)
+            if (hoveredCell.FilledNode is not null && interactivity.MouseStayDuration > Style.MouseStayDurationThreshold)
             {
                 var mousePosition = Raylib.GetMousePosition();
                 var inText = hoveredCell.FluxIn.ToString("流入0.00%");
@@ -419,7 +419,7 @@ namespace RelicsOfAdofai.Engine
 
 
         /* ----------- GENERIC GUI ----------- */
-        public void RenderGui(GuiContext guiContext)
+        public void RenderGui(GuiContext guiContext, Interactivity interactivity)
         {
             foreach (var inputBox in guiContext.InputBoxes.Values)
             {
@@ -468,7 +468,8 @@ namespace RelicsOfAdofai.Engine
                 if (button.BelongingState != guiContext.GuiState) continue;
 
                 Color outlineColor;
-                if (button.IsPressed) outlineColor = Style.ColorBorderDark;
+                if (!button.Enabled) outlineColor = Style.ColorBorderBlack;
+                else if (button.IsPressed) outlineColor = Style.ColorBorderDark;
                 else if (button.IsHover) outlineColor = Style.ColorBorderLight;
                 else outlineColor = Style.ColorBorderMedium;
 
@@ -496,6 +497,25 @@ namespace RelicsOfAdofai.Engine
                     button.TextSize,
                     0,
                     Style.ColorTextGeneral);
+
+                var shouldDrawDisabledHint = 
+                    !button.Enabled && interactivity.MouseStayDuration > Style.MouseStayDurationThreshold && !string.IsNullOrEmpty(button.DisabledHint);
+                if (shouldDrawDisabledHint)
+                {
+                    var mousePosition = Raylib.GetMousePosition();
+                    var inTextExtent = Raylib.MeasureTextEx(Style.FontNormal, button.DisabledHint, Style.SizeSmall, 0);
+
+                    var boxRect = Layout.CenterBottom()
+                        .Wpx((int)((3 * inTextExtent.Y) + inTextExtent.X)).Xpx((int)mousePosition.X)
+                        .Hpx((int)(inTextExtent.Y * 2)).Ypx((int)mousePosition.Y).Rect();
+                    var inTextVect = Layout.CenterCenter()
+                        .Wpx((int)inTextExtent.X).Xpx((int)(mousePosition.X - (inTextExtent.Y * 0.5)))
+                        .Hpx((int)inTextExtent.Y).Ypx((int)(mousePosition.Y - inTextExtent.Y)).Vect();
+
+                    Raylib.DrawRectangleRounded(boxRect, 0.1f, 8, Style.ColorBgDark);
+                    Raylib.DrawRectangleRoundedLinesEx(boxRect, 0.1f, 8, Style.ThinThickness, Style.ColorBorderLight);
+                    Raylib.DrawTextEx(Style.FontNormal, button.DisabledHint, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
+                }
             }
         }
     }

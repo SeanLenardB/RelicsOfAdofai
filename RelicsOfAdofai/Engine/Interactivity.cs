@@ -94,7 +94,8 @@ namespace RelicsOfAdofai.Engine
                 else if (button.IsHover) button.IsHover = false;
 
                 // Active
-                if (isMouseLeftDown && collide) button.IsPressed = true;
+                if (button.Enabled) continue;
+                else if (isMouseLeftDown && collide) button.IsPressed = true;
                 else if (!isMouseLeftDown && !collide) button.IsPressed = false;
                 else if (!isMouseLeftDown && collide && button.IsPressed)
                 {

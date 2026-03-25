@@ -37,6 +37,7 @@ namespace RelicsOfAdofai.Engine
                     BelongingState = GuiState.Game,
                     Align = Button.TextAlign.Center,
                     Text = "尝试",
+                    DisabledHint = "需要至少一条通路才能尝试",
                     TextSize = Style.SizeSmall,
                     PressAction = () =>
                     {
@@ -44,7 +45,7 @@ namespace RelicsOfAdofai.Engine
                         Debug.Assert(gameContext.CurrentChart.FinalEnergy > 0, "Cannot spam hours! (is the predicate wrong?)");
                         gameContext.AttemptChart(gameContext.CurrentChart);
                     },
-                    Enabled = true
+                    Enabled = false
                 };
         }
         public void RecalculateUIPosition()

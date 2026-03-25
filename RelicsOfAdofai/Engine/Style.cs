@@ -52,5 +52,7 @@ namespace RelicsOfAdofai.Engine
         public static double ConstTwoOverSqrtThree = 2.0 / Math.Sqrt(3);
         public static double ConstSqrtThree = Math.Sqrt(3);
         public static double ConstOneOverSqrtThree = 1.0 / Math.Sqrt(3);
+
+        public static double MouseStayDurationThreshold = 0.4;
     }
 }
