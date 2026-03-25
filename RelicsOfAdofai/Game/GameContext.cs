@@ -129,7 +129,7 @@ namespace RelicsOfAdofai.Game
                         break;
                     }
 
-                default: Debug.Assert(false, "Discrimitive union!"); break;
+                default: Debug.Assert(false, "Discriminated union!"); break;
             }
         }
         

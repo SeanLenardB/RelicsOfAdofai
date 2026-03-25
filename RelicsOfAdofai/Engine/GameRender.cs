@@ -148,8 +148,8 @@ namespace RelicsOfAdofai.Engine
             if (gameContext.DebugMode)
                 Raylib.DrawTextEx(
                     Style.FontTitle,
-                    $"{1.0 / Raylib.GetFrameTime():0.00}",
-                    Layout.RightTop().Hpx(1).Ypx(0).Wpx(160).Xvw(100).Vect(),
+                    $"{Raylib.GetFrameTime() * 1000:0.000} mspt",
+                    Layout.RightTop().Hpx(1).Ypx(32).Wpx(240).Xvw(100).Vect(),
                     Style.SizeNormal,
                     0,
                     Style.ColorTextGeneral);
@@ -382,7 +382,7 @@ namespace RelicsOfAdofai.Engine
                         break;
                     }
 
-                default: Debug.Assert(false, "Discrimitive union!"); return;
+                default: Debug.Assert(false, "Discriminated union!"); return;
             }
         }
 

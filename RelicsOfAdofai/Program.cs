@@ -8,7 +8,7 @@ public class Program
     private static void Main()
     {
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
-        Raylib.SetTargetFPS(144);
+        //Raylib.SetTargetFPS(144);  // @nocheckin
         Raylib.InitWindow(Style.WindowWidth, Style.WindowHeight, "Relics of Adofai");
         Raylib.SetWindowMinSize(Style.WindowWidth, Style.WindowHeight);
 
