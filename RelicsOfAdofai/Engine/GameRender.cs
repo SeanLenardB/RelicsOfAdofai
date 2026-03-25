@@ -257,8 +257,8 @@ namespace RelicsOfAdofai.Engine
             Raylib.DrawTextEx(
                 Style.FontTitle,
                 energyText,
-                Layout.RightBottom()
-                    .Hpx((int)energyTextExtent.Y).Ypx(Style.WindowHeight - Style.HandHeight - (int)(energyTextExtent.Y / 2))
+                Layout.RightTop()
+                    .Hpx((int)energyTextExtent.Y).Ypx(Style.HeaderHeight + (int)(energyTextExtent.Y / 2))
                     .Wpx((int)energyTextExtent.X).Xpx(Style.WindowWidth - (int)(energyTextExtent.Y / 2))
                     .Vect(),
                 Style.SizeNormal,

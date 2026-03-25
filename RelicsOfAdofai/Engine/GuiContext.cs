@@ -16,15 +16,33 @@ namespace RelicsOfAdofai.Engine
 
         public void GuiInit(GameContext gameContext)
         {
-            this.InputBoxes["rngseed"] = 
+            this.InputBoxes["rngseed"] =
                 new() { LegalText = text => int.TryParse(text, out gameContext.Seed) };
-            this.Buttons["startgame"] = 
-                new() { Align = Button.TextAlign.Center, Text = "开始", PressAction = () =>
+            this.Buttons["startgame"] =
+                new()
                 {
-                    this.SwitchState(GuiState.Game);
-                    gameContext.RefreshSeed();
-                    gameContext.StartGame();
-                }};
+                    Align = Button.TextAlign.Center,
+                    Text = "开始",
+                    PressAction = () =>
+                    {
+                        this.SwitchState(GuiState.Game);
+                        gameContext.RefreshSeed();
+                        gameContext.StartGame();
+                    }
+                };
+
+            this.Buttons["attempt"] =
+                new()
+                {
+                    BelongingState = GuiState.Game,
+                    Align = Button.TextAlign.Center,
+                    Text = "尝试",
+                    TextSize = Style.SizeSmall,
+                    PressAction = () =>
+                    {
+                        // @todo: impl
+                    }
+                };
         }
         public void RecalculateUIPosition()
         {
@@ -32,6 +50,9 @@ namespace RelicsOfAdofai.Engine
                 Layout.LeftCenter().Hpx((int)(Style.SizeNormal * 1.5)).YVh(95).DYpx(-360).Wpx(480).Xvw(50).DXpx(24).Rect();
             this.Buttons["startgame"].CollisionBox =
                 Layout.CenterBottom().Hpx(72).YVh(95).DYpx(-80).Wpx(240).Xvw(50).Rect();
+            this.Buttons["attempt"].CollisionBox =
+                Layout.RightBottom().Hpx((int)(Style.SizeSmall * 1.5)).YVh(100).DYpx(-Style.HandHeight).DYpx(-Style.SizeNormal)
+                    .Wpx(Style.SizeSmall * 4).Xvw(100).DXpx(-Style.SizeNormal).Rect();
         }
         public void SwitchState(GuiState newState)
         {

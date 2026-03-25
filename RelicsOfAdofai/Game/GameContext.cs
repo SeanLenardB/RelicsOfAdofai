@@ -10,6 +10,7 @@ namespace RelicsOfAdofai.Game
     {
         public int Seed = 0;
         public Random Random = new();
+        public double TotalTime = 0;
 
         public bool DebugMode = true;
         public Chart? CurrentChart = null;
