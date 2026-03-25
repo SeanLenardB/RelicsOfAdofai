@@ -518,6 +518,10 @@ namespace RelicsOfAdofai.Engine
                     Raylib.DrawTextEx(Style.FontNormal, button.DisabledHint, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
                 }
             }
+            foreach (var message in guiContext.FloatingMessages)
+            {
+                // @todo: impl
+            }
         }
     }
 }

@@ -65,7 +65,7 @@ namespace RelicsOfAdofai.Game
             }
             else
             {
-                // @todo: impl fail
+                this.TotalTime += 0.5;
             }
         }
 

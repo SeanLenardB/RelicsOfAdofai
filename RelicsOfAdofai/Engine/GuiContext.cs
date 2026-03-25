@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using System.Text;
 using Raylib_cs;
 using RelicsOfAdofai.Engine.Gui;
@@ -13,6 +14,7 @@ namespace RelicsOfAdofai.Engine
         public GuiState GuiState = GuiState.Splashscreen;
         public Dictionary<string, InputBox> InputBoxes = [];
         public Dictionary<string, Button> Buttons = [];
+        public Queue<FloatingMessage> FloatingMessages = [];
 
         public void GuiInit(GameContext gameContext)
         {
@@ -70,5 +72,14 @@ namespace RelicsOfAdofai.Engine
     {
         Splashscreen,
         Game,
+    }
+
+    public class FloatingMessage
+    {
+        public string Message = "";
+        public Vector2 Position;
+        public double RemainingTime = 1;
+
+        public static Vector2 Velocity = new(0, -2);
     }
 }
