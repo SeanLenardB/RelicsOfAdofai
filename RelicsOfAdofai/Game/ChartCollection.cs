@@ -34,6 +34,7 @@ namespace RelicsOfAdofai.Game
         public Color IconColor = Color.SkyBlue;  // @todo: Change this to an actual thumbnail or difficulty icon or something
 
         public double FinalEnergy = 0.0;
+        public double OptimalEnergy = 1.0;  // @todo: determine a good way to generate this value to make game fun
         public List<ChartCell> Cells = [];
         public Vector2 HexOrigin = Layout.CenterCenter().Hpx(1).Wpx(1).YVh(50).Xvw(50).Vect();  // @todo: auto adjust the grid to the center.
     }

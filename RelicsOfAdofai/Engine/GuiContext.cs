@@ -40,8 +40,11 @@ namespace RelicsOfAdofai.Engine
                     TextSize = Style.SizeSmall,
                     PressAction = () =>
                     {
-                        // @todo: impl
-                    }
+                        Debug.Assert(gameContext.CurrentChart is not null, "Cannot attempt a null chart!");
+                        Debug.Assert(gameContext.CurrentChart.FinalEnergy > 0, "Cannot spam hours! (is the predicate wrong?)");
+                        gameContext.AttemptChart(gameContext.CurrentChart);
+                    },
+                    Enabled = () => gameContext.CurrentChart?.FinalEnergy > 0
                 };
         }
         public void RecalculateUIPosition()

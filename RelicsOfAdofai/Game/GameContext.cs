@@ -46,6 +46,24 @@ namespace RelicsOfAdofai.Game
             if (startingCell.FilledNode is not null)
                 this.PropagateChartCell(this.CurrentChart, startingCell, new(startingCell, 1));
         }
+
+        public void AttemptChart(Chart chart)
+        {
+            Debug.Assert(chart.FinalEnergy > 0, "Cannot spam hours! (is the predicate wrong?)");
+            double clearChance = Math.Pow(
+                                    Math.Exp(11.45 * Math.Pow(chart.FinalEnergy - chart.OptimalEnergy, 2)), 
+                                    -4);  // Formula is stolen from Moni Labs, Sculk Vat probability impl.
+            double roll = this.Random.NextDouble();
+            if (roll < clearChance)
+            {
+                // @todo: impl clear
+            }
+            else
+            {
+                // @todo: impl fail
+            }
+        }
+
         public void PropagateChartCell(Chart chart, ChartCell cell, CellPropagationPacket packet)
         {
             if (this.DebugMode) Console.WriteLine($"{packet.From.Coords} -[{packet.Energy}]-> {cell.Coords}");

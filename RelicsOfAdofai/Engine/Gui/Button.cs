@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Raylib_cs;
+using RelicsOfAdofai.Game;
 
 namespace RelicsOfAdofai.Engine.Gui
 {
@@ -10,6 +11,7 @@ namespace RelicsOfAdofai.Engine.Gui
         public string Text = "";
         public float TextSize = Style.SizeNormal;
         public TextAlign Align = TextAlign.Left;
+        public Predicate Enabled = () => true;
 
         public GuiState BelongingState = GuiState.Splashscreen;
         public Rectangle CollisionBox;
