@@ -11,7 +11,7 @@ namespace RelicsOfAdofai.Engine.Gui
         public string Text = "";
         public float TextSize = Style.SizeNormal;
         public TextAlign Align = TextAlign.Left;
-        public Predicate Enabled = () => true;
+        public bool Enabled = true;
 
         public GuiState BelongingState = GuiState.Splashscreen;
         public Rectangle CollisionBox;

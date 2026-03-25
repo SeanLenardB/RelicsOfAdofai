@@ -35,8 +35,14 @@ namespace RelicsOfAdofai.Game
 
         public double FinalEnergy = 0.0;
         public double OptimalEnergy = 1.0;  // @todo: determine a good way to generate this value to make game fun
+
         public List<ChartCell> Cells = [];
-        public Vector2 HexOrigin = Layout.CenterCenter().Hpx(1).Wpx(1).YVh(50).Xvw(50).Vect();  // @todo: auto adjust the grid to the center.
+        public Vector2 HexOrigin = Layout.CenterCenter().Hpx(1).Wpx(1).YVh(50).Xvw(50).Vect();
+        public void AdjustGridToCenter()
+        {
+            HexCoords centerOfMass = this.Cells.Aggregate(new HexCoords(), (coords, cell) => coords + cell.Coords) / this.Cells.Count;
+            this.HexOrigin -= centerOfMass.Cartesian() * Style.HexCellSpaceRadius;
+        }
     }
 
     public class ChartCell(double q, double r, ChartCell.CellType type = ChartCell.CellType.Normal)
@@ -116,6 +122,8 @@ namespace RelicsOfAdofai.Game
         }
         public static HexCoords operator +(HexCoords left, HexCoords right) { return new(left.Q + right.Q, left.R + right.R); }
         public static HexCoords operator -(HexCoords left, HexCoords right) { return new(left.Q - right.Q, left.R - right.R); }
+        public static HexCoords operator *(HexCoords left, double right) { return new(left.Q * right, left.R * right); }
+        public static HexCoords operator /(HexCoords left, double right) { return new(left.Q / right, left.R / right); }
 
         public bool CoordsEqual(HexCoords hex) { return this.Q == hex.Q && this.R == hex.R; }
         public override string ToString() => $"{{HexCoords <Q={this.Q}, R={this.R}>}}";

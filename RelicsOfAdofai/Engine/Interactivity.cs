@@ -144,7 +144,7 @@ namespace RelicsOfAdofai.Engine
                         Debug.Assert(!gameContext.CurrentSelectedNode.IsUsed, "Cannot use a used node!");
                         collidedCell.FilledNode = gameContext.CurrentSelectedNode;
                         collidedCell.FilledNode.IsUsed = true;
-                        gameContext.RecalculateCurrentChart();
+                        gameContext.RecalculateCurrentChart(guiContext);
                     }
 
                     if (isMouseRightDown && collidedCell.FilledNode is not null)
@@ -153,7 +153,7 @@ namespace RelicsOfAdofai.Engine
                         collidedCell.FilledNode.Rotation = 0;
                         collidedCell.FilledNode.IsFlipped = false;
                         collidedCell.FilledNode = null;
-                        gameContext.RecalculateCurrentChart();
+                        gameContext.RecalculateCurrentChart(guiContext);
                     }
                 }
 

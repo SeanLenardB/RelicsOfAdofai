@@ -389,7 +389,6 @@ namespace RelicsOfAdofai.Engine
         public void DrawHand(GameContext gameContext)
         {
             // @note: also see code in Interactivity.
-            // I'm concerned that the X of this currentDrawRect begins at x=0
             var currentDrawRect =
                 Layout.CenterCenter().Hpx(Style.NodeTextureSize).YVh(100).DYpx(-Style.HandHeight / 2)
                     .Wpx(Style.NodeTextureSize).Xpx(Style.HandHeight / 2).RectCenter();

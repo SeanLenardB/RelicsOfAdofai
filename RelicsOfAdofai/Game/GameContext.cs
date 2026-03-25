@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Raylib_cs;
+using RelicsOfAdofai.Engine;
 
 namespace RelicsOfAdofai.Game
 {
@@ -26,11 +27,12 @@ namespace RelicsOfAdofai.Game
             this.Random = new(this.Seed);
 
             this.Charts = ChartCollection.ChartPool();
+            this.Charts.ForEach(c => c.AdjustGridToCenter());
             this.HandNodes = NodeCollection.StartingCollection();
             this.CurrentChart = this.Charts[0];
         }
 
-        public void RecalculateCurrentChart()
+        public void RecalculateCurrentChart(GuiContext guiContext)  // @cleanup: can we not pass this in because we only need to update a button???
         {
             Debug.Assert(this.CurrentChart is not null, "Cannot recalculate a null chart!");
             this.CurrentChart.FinalEnergy = 0;
@@ -45,6 +47,9 @@ namespace RelicsOfAdofai.Game
             // @todo: this 1 is hardcoded. It should depend on the chart.
             if (startingCell.FilledNode is not null)
                 this.PropagateChartCell(this.CurrentChart, startingCell, new(startingCell, 1));
+
+            if (this.CurrentChart.FinalEnergy > 0 && !guiContext.Buttons["attempt"].Enabled)
+                guiContext.Buttons["attempt"].Enabled = true;
         }
 
         public void AttemptChart(Chart chart)
