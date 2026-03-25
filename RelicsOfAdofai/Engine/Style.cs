@@ -46,7 +46,11 @@ namespace RelicsOfAdofai.Engine
         // https://www.redblobgames.com/grids/hexagons/
         public static int HexCellSpaceRadius = (72 * 2) - 8;
         public static int HexCellDrawRadius = NodeInHandRadius;
+        public static double HexCellDrawHexCoord = (double)HexCellDrawRadius / HexCellSpaceRadius;
 
         public static double ConstSqrtThreeOverTwo = Math.Sqrt(3) / 2.0;
+        public static double ConstTwoOverSqrtThree = 2.0 / Math.Sqrt(3);
+        public static double ConstSqrtThree = Math.Sqrt(3);
+        public static double ConstOneOverSqrtThree = 1.0 / Math.Sqrt(3);
     }
 }

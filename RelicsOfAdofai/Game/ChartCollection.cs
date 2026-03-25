@@ -84,6 +84,11 @@ namespace RelicsOfAdofai.Game
             return new((float)(this.Q + (this.R * 0.5)), (float)(Style.ConstSqrtThreeOverTwo * this.R));
         }
 
+        public static HexCoords FromCartesian(Vector2 cart)
+        {
+            return new(cart.X - (cart.Y * Style.ConstOneOverSqrtThree), cart.Y * Style.ConstTwoOverSqrtThree);
+        }
+
         public static readonly HexCoords DirectionRight = new(1, 0);
         public static readonly HexCoords DirectionLeft = new(-1, 0);
         public static readonly HexCoords DirectionRightUp = new(1, -1);
@@ -109,6 +114,8 @@ namespace RelicsOfAdofai.Game
             };
         }
         public static HexCoords operator +(HexCoords left, HexCoords right) { return new(left.Q + right.Q, left.R + right.R); }
+        public static HexCoords operator -(HexCoords left, HexCoords right) { return new(left.Q - right.Q, left.R - right.R); }
+
         public bool CoordsEqual(HexCoords hex) { return this.Q == hex.Q && this.R == hex.R; }
         public override string ToString() => $"{{HexCoords <Q={this.Q}, R={this.R}>}}";
     }

@@ -122,34 +122,37 @@ namespace RelicsOfAdofai.Engine
                 else Raylib.SetMouseCursor(MouseCursor.Default);
 
                 // Hovering hex grid
-                foreach (var cell in gameContext.CurrentChart.Cells)
+                gameContext.CurrentChart.Cells.ForEach(c => c.IsHover = false);
+                HexCoords mouseHexCoords = HexCoords.FromCartesian((mousePosition - gameContext.CurrentChart.HexOrigin) / Style.HexCellSpaceRadius);
+                var collidedCell = gameContext.CurrentChart.Cells.FirstOrDefault(c =>
                 {
-                    var collide = false;
-                    if (mouseInGrid)
-                        collide = Raylib.CheckCollisionPointPoly(
-                            mousePosition - ((cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin),
-                            cell.Coords.BoundingBox);  // @hack: the list of points is static and precalculated. Therefore we "move" the mouse.
+                    var coordsDiff = c.Coords - mouseHexCoords;
+                    return Math.Abs(coordsDiff.Q) <= Style.HexCellDrawHexCoord
+                        && Math.Abs(coordsDiff.R) <= Style.HexCellDrawHexCoord
+                        && Math.Abs(coordsDiff.S) <= Style.HexCellDrawHexCoord;
+                });
 
-                    if (collide) cell.IsHover = true;
-                    else if (cell.IsHover) cell.IsHover = false;
+                if (collidedCell is not null)
+                {
+                    if (!collidedCell.IsHover) collidedCell.IsHover = true;
 
-                    if (collide && isMouseLeftDown && gameContext.CurrentSelectedNode is not null)
+                    if (isMouseLeftDown && gameContext.CurrentSelectedNode is not null)
                     {
-                        cell.FilledNode?.IsUsed = false;
-                        cell.FilledNode?.Rotation = 0;
-                        cell.FilledNode?.IsFlipped = false;
+                        collidedCell.FilledNode?.IsUsed = false;
+                        collidedCell.FilledNode?.Rotation = 0;
+                        collidedCell.FilledNode?.IsFlipped = false;
                         Debug.Assert(!gameContext.CurrentSelectedNode.IsUsed, "Cannot use a used node!");
-                        cell.FilledNode = gameContext.CurrentSelectedNode;
-                        cell.FilledNode.IsUsed = true;
+                        collidedCell.FilledNode = gameContext.CurrentSelectedNode;
+                        collidedCell.FilledNode.IsUsed = true;
                         gameContext.RecalculateCurrentChart();
                     }
 
-                    if (collide && isMouseRightDown && cell.FilledNode is not null)
+                    if (isMouseRightDown && collidedCell.FilledNode is not null)
                     {
-                        cell.FilledNode.IsUsed = false;
-                        cell.FilledNode.Rotation = 0;
-                        cell.FilledNode.IsFlipped = false;
-                        cell.FilledNode = null;
+                        collidedCell.FilledNode.IsUsed = false;
+                        collidedCell.FilledNode.Rotation = 0;
+                        collidedCell.FilledNode.IsFlipped = false;
+                        collidedCell.FilledNode = null;
                         gameContext.RecalculateCurrentChart();
                     }
                 }
