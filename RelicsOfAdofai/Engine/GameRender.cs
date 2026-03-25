@@ -499,7 +499,8 @@ namespace RelicsOfAdofai.Engine
                     Style.ColorTextGeneral);
 
                 var shouldDrawDisabledHint = 
-                    !button.Enabled && interactivity.MouseStayDuration > Style.MouseStayDurationThreshold && !string.IsNullOrEmpty(button.DisabledHint);
+                    !button.Enabled && button.IsHover 
+                    && interactivity.MouseStayDuration > Style.MouseStayDurationThreshold && !string.IsNullOrEmpty(button.DisabledHint);
                 if (shouldDrawDisabledHint)
                 {
                     var mousePosition = Raylib.GetMousePosition();
