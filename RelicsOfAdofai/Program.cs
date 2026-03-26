@@ -39,13 +39,22 @@ public class Program
         GuiContext guiContext = new();
         guiContext.GuiInit(gameContext);
 
+        Stopwatch stopwatch = new();
+
         // @note: remove this when publishing?
         if (gameContext.DebugMode && guiContext.GuiState == GuiState.Splashscreen) guiContext.Buttons["startgame"].PressAction();
 
         while (!Raylib.WindowShouldClose())
         {
+#if DEBUG
+                stopwatch.Start();
+#endif
             Debug.Assert(!Raylib.IsKeyPressed(KeyboardKey.B), "Debug Breakpoint");
             interactivity.HandleInput(guiContext, gameContext);
+#if DEBUG
+                var interactivityTime = stopwatch.Elapsed.TotalMilliseconds;
+                stopwatch.Reset(); stopwatch.Start();
+#endif
 
             if (Raylib.IsWindowResized())
             {
@@ -53,6 +62,10 @@ public class Program
                 Style.WindowHeight = Raylib.GetRenderHeight();
             }
             guiContext.RecalculateUIPosition();
+#if DEBUG
+                var layoutTime = stopwatch.Elapsed.TotalMilliseconds;
+                stopwatch.Reset(); stopwatch.Start();
+#endif
 
             Raylib.BeginDrawing();
             {
@@ -64,10 +77,23 @@ public class Program
                     case GuiState.Game: gameRender.Game(gameContext, interactivity); break;
                     default: goto case GuiState.Splashscreen;
                 }
+#if DEBUG
+                var stateTime = stopwatch.Elapsed.TotalMilliseconds;
+                stopwatch.Reset(); stopwatch.Start();
+#endif
+                gameRender.RenderGui(gameContext, guiContext, interactivity);
+#if DEBUG
+                var guiTime = stopwatch.Elapsed.TotalMilliseconds;
+                stopwatch.Reset();
 
-                gameRender.RenderGui(guiContext, interactivity);
+                Raylib.DrawTextEx(Style.FontTitle, 
+                    $"Interactivity {interactivityTime}mspt\tLayout {layoutTime}mspt\tState {stateTime}mspt\tGui {guiTime}mspt",
+                    new(4, 4), Style.SizeSmall, 0, Style.ColorTextGeneral);
+#endif
             }
             Raylib.EndDrawing();
+
+            gameContext.DeltaTime = Raylib.GetFrameTime();
         }
 
         Raylib.UnloadFont(Style.FontTitle);

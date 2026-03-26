@@ -14,6 +14,7 @@ namespace RelicsOfAdofai.Game
         public double TotalTime = 0;
 
         public bool DebugMode = true;
+        public double DeltaTime = 0.0;
         public Chart? CurrentChart = null;
         public List<Chart> Charts = [];
         public List<SkillNode> HandNodes = [];
@@ -52,20 +53,41 @@ namespace RelicsOfAdofai.Game
                 guiContext.Buttons["attempt"].Enabled = true;
         }
 
-        public void AttemptChart(Chart chart)
+        public void AttemptChart(GuiContext guiContext, Chart chart)
         {
             Debug.Assert(chart.FinalEnergy > 0, "Cannot spam hours! (is the predicate wrong?)");
             double clearChance = Math.Pow(
                                     Math.Exp(11.45 * Math.Pow(chart.FinalEnergy - chart.OptimalEnergy, 2)), 
                                     -4);  // Formula is stolen from Moni Labs, Sculk Vat probability impl.
             double roll = this.Random.NextDouble();
-            if (roll < clearChance)
+            if (roll <= clearChance)
             {
-                // @todo: impl clear
+                this.TotalTime += 0.5;
+
+                var success = $"Success with accuracy {96.0 + (4.0 * clearChance):0.00%}";
+                var successTextExtent = Raylib.MeasureTextEx(Style.FontNormal, success, Style.SizeSmall, 0);
+                guiContext.FloatingMessages.Enqueue(new()
+                {
+                    Text = success,
+                    Position =
+                        Layout.RightBottom().Hpx((int)successTextExtent.Y).YVh(100).DYpx(-Style.HandHeight * 2)
+                            .Wpx((int)successTextExtent.X).Xvw(100).DXpx(-(int)successTextExtent.Y).Vect()
+                });
             }
             else
             {
-                this.TotalTime += 0.5;
+                var failProgress = (1.0 - roll) / (1.0 - clearChance);
+                this.TotalTime += 0.5 * failProgress;
+
+                var failText = $"Failed at {Math.Floor(failProgress)}";
+                var failTextExtent = Raylib.MeasureTextEx(Style.FontNormal, failText, Style.SizeSmall, 0);
+                guiContext.FloatingMessages.Enqueue(new()
+                {
+                    Text = failText,
+                    Position =
+                        Layout.RightBottom().Hpx((int)failTextExtent.Y).YVh(100).DYpx(-Style.HandHeight * 2)
+                            .Wpx((int)failTextExtent.X).Xvw(100).DXpx(-(int)failTextExtent.Y).Vect()
+                });
             }
         }
 

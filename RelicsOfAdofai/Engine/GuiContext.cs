@@ -45,7 +45,7 @@ namespace RelicsOfAdofai.Engine
                     {
                         Debug.Assert(gameContext.CurrentChart is not null, "Cannot attempt a null chart!");
                         Debug.Assert(gameContext.CurrentChart.FinalEnergy > 0, "Cannot spam hours! (is the predicate wrong?)");
-                        gameContext.AttemptChart(gameContext.CurrentChart);
+                        gameContext.AttemptChart(this, gameContext.CurrentChart);
                     },
                     Enabled = false
                 };
@@ -76,10 +76,10 @@ namespace RelicsOfAdofai.Engine
 
     public class FloatingMessage
     {
-        public string Message = "";
+        public string Text = "";
         public Vector2 Position;
         public double RemainingTime = 1;
 
-        public static Vector2 Velocity = new(0, -2);
+        public Vector2 Velocity = new(0, -2);
     }
 }

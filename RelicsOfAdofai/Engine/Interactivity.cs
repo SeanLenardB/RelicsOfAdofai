@@ -43,7 +43,7 @@ namespace RelicsOfAdofai.Engine
                 // Another problem is that the "time after previous delete" should be global instead of belonging to a specific input box.
                 if (Raylib.IsKeyDown(KeyboardKey.Backspace))
                 {
-                    this.BackspaceCooldown -= Raylib.GetFrameTime();
+                    this.BackspaceCooldown -= gameContext.DeltaTime;
                     foreach (var inputBox in guiContext.InputBoxes.Values)
                     {
                         if (inputBox.BelongingState != guiContext.GuiState) continue;
@@ -60,7 +60,7 @@ namespace RelicsOfAdofai.Engine
             }
 
             var isMouseStay = Raylib.GetMouseDelta() == new Vector2(0, 0);
-            if (isMouseStay && this.MouseStayDuration < 10.0) this.MouseStayDuration += Raylib.GetFrameTime();
+            if (isMouseStay && this.MouseStayDuration < 10.0) this.MouseStayDuration += gameContext.DeltaTime;
             else if (!isMouseStay) this.MouseStayDuration = 0.0;
 
 
@@ -94,7 +94,7 @@ namespace RelicsOfAdofai.Engine
                 else if (button.IsHover) button.IsHover = false;
 
                 // Active
-                if (button.Enabled) continue;
+                if (!button.Enabled) continue;
                 else if (isMouseLeftDown && collide) button.IsPressed = true;
                 else if (!isMouseLeftDown && !collide) button.IsPressed = false;
                 else if (!isMouseLeftDown && collide && button.IsPressed)

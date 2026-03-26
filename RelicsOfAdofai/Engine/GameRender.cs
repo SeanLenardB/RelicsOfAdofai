@@ -148,7 +148,7 @@ namespace RelicsOfAdofai.Engine
             if (gameContext.DebugMode)
                 Raylib.DrawTextEx(
                     Style.FontTitle,
-                    $"{Raylib.GetFrameTime() * 1000:0.000} mspt",
+                    $"{gameContext.DeltaTime * 1000:0.000} mspt",
                     Layout.RightTop().Hpx(1).Ypx(32).Wpx(240).Xvw(100).Vect(),
                     Style.SizeNormal,
                     0,
@@ -252,7 +252,7 @@ namespace RelicsOfAdofai.Engine
 
 
 
-            var energyText = gameContext.CurrentChart.FinalEnergy.ToString("0.00%");
+            var energyText = gameContext.CurrentChart.FinalEnergy.ToString("0.000");
             var energyTextExtent = Raylib.MeasureTextEx(Style.FontTitle, energyText, Style.SizeNormal, 0);
             Raylib.DrawTextEx(
                 Style.FontTitle,
@@ -420,7 +420,7 @@ namespace RelicsOfAdofai.Engine
 
 
         /* ----------- GENERIC GUI ----------- */
-        public void RenderGui(GuiContext guiContext, Interactivity interactivity)
+        public void RenderGui(GameContext gameContext, GuiContext guiContext, Interactivity interactivity)
         {
             foreach (var inputBox in guiContext.InputBoxes.Values)
             {
@@ -521,8 +521,13 @@ namespace RelicsOfAdofai.Engine
             }
             foreach (var message in guiContext.FloatingMessages)
             {
-                // @todo: impl
+                message.RemainingTime -= gameContext.DeltaTime;
+                message.Position += message.Velocity;
+                Raylib.DrawTextEx(Style.FontNormal, message.Text, message.Position, Style.SizeSmall, 0, Style.ColorTextGeneral);
             }
+
+            while (guiContext.FloatingMessages.Count != 0 && guiContext.FloatingMessages.Peek().RemainingTime <= 0)
+                guiContext.FloatingMessages.Dequeue();
         }
     }
 }
