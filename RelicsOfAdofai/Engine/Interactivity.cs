@@ -87,7 +87,6 @@ namespace RelicsOfAdofai.Engine
             foreach (var button in guiContext.Buttons.Values)
             {
                 if (button.BelongingState != guiContext.GuiState) continue;
-                if (!button.Enabled) continue;
 
                 var collide = Raylib.CheckCollisionPointRec(mousePosition, button.CollisionBox);
                 // Hover
@@ -95,7 +94,8 @@ namespace RelicsOfAdofai.Engine
                 else if (button.IsHover) button.IsHover = false;
 
                 // Active
-                if (isMouseLeftDown && collide) button.IsPressed = true;
+                if (!button.Enabled) continue;
+                else if (isMouseLeftDown && collide) button.IsPressed = true;
                 else if (!isMouseLeftDown && !collide) button.IsPressed = false;
                 else if (!isMouseLeftDown && collide && button.IsPressed)
                 {
@@ -110,86 +110,87 @@ namespace RelicsOfAdofai.Engine
             if (guiContext.GuiState == GuiState.Game)
             {
                 Debug.Assert(gameContext.CurrentChart is not null, "Cannot interact with a null chart!");
+                // @cleanup: This is fairly inefficient because the algo needs to go through all hexagons to find which one is highlighted.
+                // But since the transformation to hex -> cart is a matrix multiplication,
+                // it's possible to invert the matrix and directly get the hex coords from the cart pixel location.
+                //
+                // But that will include some crazy offseting and other things. We will do this for now.
+                // If the performance is bad, we will change it.
 
                 var mouseInGrid = mousePosition.Y > Style.HeaderHeight && mousePosition.Y + Style.HandHeight < Style.WindowHeight;
+                // Panning hex grid
+                if (mouseInGrid && isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); Raylib.SetMouseCursor(MouseCursor.PointingHand); }
+                else Raylib.SetMouseCursor(MouseCursor.Default);
+
+                // Hovering hex grid
+                gameContext.CurrentChart.Cells.ForEach(c => c.IsHover = false);
+                HexCoords mouseHexCoords = HexCoords.FromCartesian((mousePosition - gameContext.CurrentChart.HexOrigin) / Style.HexCellSpaceRadius);
+                var collidedCell = gameContext.CurrentChart.Cells.FirstOrDefault(c =>
+                {
+                    var coordsDiff = c.Coords - mouseHexCoords;
+                    return Math.Abs(coordsDiff.Q) <= Style.HexCellDrawHexCoord
+                        && Math.Abs(coordsDiff.R) <= Style.HexCellDrawHexCoord
+                        && Math.Abs(coordsDiff.S) <= Style.HexCellDrawHexCoord;
+                });
+
+                if (collidedCell is not null)
+                {
+                    if (!collidedCell.IsHover) collidedCell.IsHover = true;
+
+                    if (isMouseLeftDown && gameContext.CurrentSelectedNode is not null)
+                    {
+                        collidedCell.FilledNode?.IsUsed = false;
+                        collidedCell.FilledNode?.Rotation = 0;
+                        collidedCell.FilledNode?.IsFlipped = false;
+                        Debug.Assert(!gameContext.CurrentSelectedNode.IsUsed, "Cannot use a used node!");
+                        collidedCell.FilledNode = gameContext.CurrentSelectedNode;
+                        collidedCell.FilledNode.IsUsed = true;
+                        gameContext.RecalculateCurrentChart(guiContext);
+                    }
+
+                    if (isMouseRightDown && collidedCell.FilledNode is not null)
+                    {
+                        collidedCell.FilledNode.IsUsed = false;
+                        collidedCell.FilledNode.Rotation = 0;
+                        collidedCell.FilledNode.IsFlipped = false;
+                        collidedCell.FilledNode = null;
+                        gameContext.RecalculateCurrentChart(guiContext);
+                    }
+                }
+
+                // Hand hovering & selection
+                var currentHandNodeCenter =
+                    Layout.CenterCenter().Hpx(Style.NodeInHandRadius).YVh(100).DYpx(-Style.HandHeight / 2)
+                        .Wpx(Style.NodeInHandRadius).Xpx(Style.HandHeight / 2).Vect();
+                currentHandNodeCenter += new Vector2(Style.NodeInHandRadius / 2, Style.NodeInHandRadius / 2);
+                gameContext.HandNodes.ForEach(n => n.IsHover = false);
+                // Currently a selection will only get changed when the left click is down. Therefore it's safe to do this.
+                // When we allow keyboard controls we need to refactor this.
+                if (isMouseLeftDown) gameContext.CurrentSelectedNode = null;
+
+                foreach (var node in gameContext.HandNodes)
+                {
+                    if (node.IsUsed) continue;
+
+                    if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, node.BoundingBox))
+                    {
+                        node.IsHover = true;
+                        if (isMouseLeftDown)
+                        {
+                            gameContext.CurrentSelectedNode?.Rotation = 0;
+                            gameContext.CurrentSelectedNode?.IsFlipped = false;
+                            if (node != gameContext.CurrentSelectedNode) gameContext.CurrentSelectedNode = node;
+                            break;
+                        }
+                    }
+
+                    currentHandNodeCenter.X += Style.NodeInHandSpacing;
+                }
 
                 // Candidate node rotation
-                if (mouseInGrid)
-                {
-                    if (isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); Raylib.SetMouseCursor(MouseCursor.PointingHand); }
-                    else Raylib.SetMouseCursor(MouseCursor.Default);
-
-                    // Hovering hex grid
-                    gameContext.CurrentChart.Cells.ForEach(c => c.IsHover = false);
-                    HexCoords mouseHexCoords = HexCoords.FromCartesian((mousePosition - gameContext.CurrentChart.HexOrigin) / Style.HexCellSpaceRadius);
-                    var collidedCell = gameContext.CurrentChart.Cells.FirstOrDefault(c =>
-                    {
-                        var coordsDiff = c.Coords - mouseHexCoords;
-                        return Math.Abs(coordsDiff.Q) <= Style.HexCellDrawHexCoord
-                            && Math.Abs(coordsDiff.R) <= Style.HexCellDrawHexCoord
-                            && Math.Abs(coordsDiff.S) <= Style.HexCellDrawHexCoord;
-                    });
-
-                    if (collidedCell is not null)
-                    {
-                        if (!collidedCell.IsHover) collidedCell.IsHover = true;
-
-                        if (isMouseLeftDown && gameContext.CurrentSelectedNode is not null)
-                        {
-                            collidedCell.FilledNode?.IsUsed = false;
-                            collidedCell.FilledNode?.Rotation = 0;
-                            collidedCell.FilledNode?.IsFlipped = false;
-                            Debug.Assert(!gameContext.CurrentSelectedNode.IsUsed, "Cannot use a used node!");
-                            collidedCell.FilledNode = gameContext.CurrentSelectedNode;
-                            collidedCell.FilledNode.IsUsed = true;
-                            gameContext.RecalculateCurrentChart(guiContext);
-                        }
-
-                        if (isMouseRightDown && collidedCell.FilledNode is not null)
-                        {
-                            collidedCell.FilledNode.IsUsed = false;
-                            collidedCell.FilledNode.Rotation = 0;
-                            collidedCell.FilledNode.IsFlipped = false;
-                            collidedCell.FilledNode = null;
-                            gameContext.RecalculateCurrentChart(guiContext);
-                        }
-                    }
-
-                    if (Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation -= 60;
-                    if (Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation += 60;
-                    if (Raylib.IsKeyPressed(KeyboardKey.F)) gameContext.CurrentSelectedNode?.IsFlipped = !gameContext.CurrentSelectedNode.IsFlipped;
-                }
-                else
-                {
-                    // Hand hovering & selection
-                    var currentHandNodeCenter =
-                        Layout.CenterCenter().Hpx(Style.NodeInHandRadius).YVh(100).DYpx(-Style.HandHeight / 2)
-                            .Wpx(Style.NodeInHandRadius).Xpx(Style.HandHeight / 2).Vect();
-                    currentHandNodeCenter += new Vector2(Style.NodeInHandRadius / 2, Style.NodeInHandRadius / 2);
-                    gameContext.HandNodes.ForEach(n => n.IsHover = false);
-                    // Currently a selection will only get changed when the left click is down. Therefore it's safe to do this.
-                    // When we allow keyboard controls we need to refactor this.
-                    if (isMouseLeftDown) gameContext.CurrentSelectedNode = null;
-
-                    foreach (var node in gameContext.HandNodes)
-                    {
-                        if (node.IsUsed) continue;
-
-                        if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, node.BoundingBox))
-                        {
-                            node.IsHover = true;
-                            if (isMouseLeftDown)
-                            {
-                                gameContext.CurrentSelectedNode?.Rotation = 0;
-                                gameContext.CurrentSelectedNode?.IsFlipped = false;
-                                if (node != gameContext.CurrentSelectedNode) gameContext.CurrentSelectedNode = node;
-                                break;
-                            }
-                        }
-
-                        currentHandNodeCenter.X += Style.NodeInHandSpacing;
-                    }
-                }
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation -= 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation += 60;
+                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.F)) gameContext.CurrentSelectedNode?.IsFlipped = !gameContext.CurrentSelectedNode.IsFlipped;
             }
         }
     }
