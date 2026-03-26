@@ -8,7 +8,7 @@ public class Program
     private static void Main()
     {
         Raylib.SetConfigFlags(ConfigFlags.ResizableWindow);
-        //Raylib.SetTargetFPS(144);  // @nocheckin
+        // Raylib.SetTargetFPS(144);  // @nocheckin: remove this when shipping.
         Raylib.InitWindow(Style.WindowWidth, Style.WindowHeight, "Relics of Adofai");
         Raylib.SetWindowMinSize(Style.WindowWidth, Style.WindowHeight);
 
@@ -39,22 +39,14 @@ public class Program
         GuiContext guiContext = new();
         guiContext.GuiInit(gameContext);
 
-        Stopwatch stopwatch = new();
-
         // @note: remove this when publishing?
         if (gameContext.DebugMode && guiContext.GuiState == GuiState.Splashscreen) guiContext.Buttons["startgame"].PressAction();
 
         while (!Raylib.WindowShouldClose())
         {
-#if DEBUG
-                stopwatch.Start();
-#endif
+            gameContext.DeltaTime = Raylib.GetFrameTime();
             Debug.Assert(!Raylib.IsKeyPressed(KeyboardKey.B), "Debug Breakpoint");
             interactivity.HandleInput(guiContext, gameContext);
-#if DEBUG
-                var interactivityTime = stopwatch.Elapsed.TotalMilliseconds;
-                stopwatch.Reset(); stopwatch.Start();
-#endif
 
             if (Raylib.IsWindowResized())
             {
@@ -62,38 +54,28 @@ public class Program
                 Style.WindowHeight = Raylib.GetRenderHeight();
             }
             guiContext.RecalculateUIPosition();
-#if DEBUG
-                var layoutTime = stopwatch.Elapsed.TotalMilliseconds;
-                stopwatch.Reset(); stopwatch.Start();
-#endif
 
             Raylib.BeginDrawing();
             {
-                Raylib.ClearBackground(Color.RayWhite);
-
+                Raylib.ClearBackground(Color.Black);
                 switch (guiContext.GuiState)
                 {
                     case GuiState.Splashscreen: gameRender.SplashScreen(); break;
                     case GuiState.Game: gameRender.Game(gameContext, interactivity); break;
                     default: goto case GuiState.Splashscreen;
                 }
-#if DEBUG
-                var stateTime = stopwatch.Elapsed.TotalMilliseconds;
-                stopwatch.Reset(); stopwatch.Start();
-#endif
                 gameRender.RenderGui(gameContext, guiContext, interactivity);
-#if DEBUG
-                var guiTime = stopwatch.Elapsed.TotalMilliseconds;
-                stopwatch.Reset();
 
-                Raylib.DrawTextEx(Style.FontTitle, 
-                    $"Interactivity {interactivityTime}mspt\tLayout {layoutTime}mspt\tState {stateTime}mspt\tGui {guiTime}mspt",
-                    new(4, 4), Style.SizeSmall, 0, Style.ColorTextGeneral);
-#endif
+                if (gameContext.DebugMode)
+                    Raylib.DrawTextEx(
+                        Style.FontTitle,
+                        $"{gameContext.DeltaTime * 1000:0.000} mspt",
+                        Layout.RightTop().Hpx(1).Ypx(32).Wpx(240).Xvw(100).Vect(),
+                        Style.SizeNormal,
+                        0,
+                        Style.ColorTextGeneral);
             }
             Raylib.EndDrawing();
-
-            gameContext.DeltaTime = Raylib.GetFrameTime();
         }
 
         Raylib.UnloadFont(Style.FontTitle);
