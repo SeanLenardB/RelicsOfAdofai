@@ -76,7 +76,8 @@ namespace RelicsOfAdofai.Game
             var node = cell.FilledNode;
             Debug.Assert(node is not null, "A packet is propagated to a cell that has no node inside it! Prune it in the first place!");
             cell.FluxIn += packet.Energy;
-            switch (node.Type)
+            /// <see cref="GameRender.DrawFluxHint(GameContext, ChartCell)"/>
+            switch (node.Type)  // @copypasta
             {
                 case SkillNode.NodeType.Extractor_Single:
                     {

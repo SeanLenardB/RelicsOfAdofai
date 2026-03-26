@@ -319,7 +319,8 @@ namespace RelicsOfAdofai.Engine
             Debug.Assert(node is not null, "Trying to draw flux hint of a null cell!");
             Debug.Assert(gameContext.CurrentChart is not null, "Trying to draw on a null chart!");
             var hoveredCellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
-            switch (node.Type)  // @copypasta: from GameContext.PropagateChartCell()
+            /// <see cref="GameContext.PropagateChartCell(Chart, ChartCell, GameContext.CellPropagationPacket)"/>
+            switch (node.Type)  // @copypasta
             {
                 case SkillNode.NodeType.Extractor_Single:
                     {
