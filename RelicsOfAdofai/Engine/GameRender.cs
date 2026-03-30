@@ -191,6 +191,9 @@ namespace RelicsOfAdofai.Engine
         {
             Debug.Assert(gameContext.CurrentChart is not null, "Cannot render a null chart!");
             ChartCell? hoveredCell = null;
+
+
+            /*----- Cells -----*/
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
@@ -258,6 +261,7 @@ namespace RelicsOfAdofai.Engine
             }
 
 
+            /*----- Right-top energy text -----*/
             var targetEnergyText = gameContext.CurrentChart.OptimalEnergy.ToString("0.0");
             var targetEnergyTextExtent = Raylib.MeasureTextEx(Style.FontStylistic, targetEnergyText, Style.SizeNormal, 0);
             Raylib.DrawTextEx(
@@ -289,8 +293,9 @@ namespace RelicsOfAdofai.Engine
 
 
 
-            if (hoveredCell is null) return;
+            /*----- Hover-snap cell drawing -----*/
             // @hack: the hover hint should render after everything has been drawn. Otherwise it might get overriden.
+            if (hoveredCell is null) return;
             var hoveredCellCenter = (hoveredCell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
             var hoveredCellDrawRect = Layout.CenterCenter()
                     .Hpx(Style.NodeTextureSize).Ypx(hoveredCellCenter.Y)
@@ -308,8 +313,10 @@ namespace RelicsOfAdofai.Engine
                     new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
                     -gameContext.CurrentSelectedNode.Rotation,
                     Style.HintSelectedNode);
-                this.DrawFluxHint(gameContext, hoveredCell);
+                this.DrawFluxHint(gameContext, hoveredCell, gameContext.CurrentSelectedNode);
             }
+            
+
             if (hoveredCell.FilledNode is not null && interactivity.MouseStayDuration > Style.MouseStayDurationThreshold)
             {
                 var mousePosition = Raylib.GetMousePosition();
@@ -332,13 +339,13 @@ namespace RelicsOfAdofai.Engine
                 Raylib.DrawRectangleRoundedLinesEx(boxRect, 0.1f, 8, Style.ThinThickness, Style.ColorBorderLight);
                 Raylib.DrawTextEx(Style.FontGeneral, inText, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
                 Raylib.DrawTextEx(Style.FontGeneral, outText, outTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxOut);
+
+                this.DrawFluxHint(gameContext, hoveredCell, hoveredCell.FilledNode);
             }
         }
 
-        public void DrawFluxHint(GameContext gameContext, ChartCell cell)
+        public void DrawFluxHint(GameContext gameContext, ChartCell cell, SkillNode node)
         {
-            var node = gameContext.CurrentSelectedNode;
-            Debug.Assert(node is not null, "Trying to draw flux hint of a null cell!");
             Debug.Assert(gameContext.CurrentChart is not null, "Trying to draw on a null chart!");
             var hoveredCellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
             /// <see cref="GameContext.PropagateChartCell(Chart, ChartCell, GameContext.CellPropagationPacket)"/>
