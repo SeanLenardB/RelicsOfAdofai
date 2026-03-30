@@ -184,8 +184,8 @@ namespace RelicsOfAdofai.Game
         
         public class CellPropagationPacket
         {
-            public static readonly double MinEnergyThreshold = 0.001;
-            public static readonly double MaxEnergyThreshold = 10;
+            public static readonly double MinEnergyThreshold = 0.01;
+            public static readonly double MaxEnergyThreshold = 1000;
 
             public CellPropagationPacket(ChartCell from, double energy)
             {
