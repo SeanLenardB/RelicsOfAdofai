@@ -60,6 +60,8 @@ namespace RelicsOfAdofai.Game
         public double FluxIn = 0;
         public double FluxOut = 0;
 
+        public double SourceEnergy = 1;
+
         public bool IsHover = false;
     }
     public struct HexCoords(double q, double r)

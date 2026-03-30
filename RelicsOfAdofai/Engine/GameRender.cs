@@ -227,23 +227,40 @@ namespace RelicsOfAdofai.Engine
                 var imageLocation = cellCenter;
                 imageLocation.X -= 64; imageLocation.Y -= 64;  // The image is 256x256. We draw 0.5x.
                 if (cell.Type == ChartCell.CellType.Start)
+                {
+                    var startEnergyText = cell.SourceEnergy.ToString("0.0");
+                    var startEnergyTextExtent = Raylib.MeasureTextEx(Style.FontTitle, startEnergyText, Style.SizeSmall, 0);
                     Raylib.DrawTextureEx(
                         Style.Textures["nodeStart"],
                         imageLocation,
                         0,
                         0.5f,
                         new(255, 255, 255, 128));
+                    Raylib.DrawTextEx(
+                        Style.FontTitle,
+                        startEnergyText,
+                        Layout.CenterTop()
+                            .Wpx((int)startEnergyTextExtent.X).Xpx((int)cellCenter.X)
+                            .Hpx((int)startEnergyTextExtent.Y).Ypx((int)cellCenter.Y).DYpx(Style.HexCellDrawRadius / 3).Vect(),
+                        Style.SizeSmall,
+                        0,
+                        Style.ColorTextGeneral);
+                }
                 else if (cell.Type == ChartCell.CellType.End)
+                {
                     Raylib.DrawTextureEx(
                         Style.Textures["nodeEnd"],
                         imageLocation,
                         0,
                         0.5f,
                         new(255, 255, 255, 128));
+                }
             }
 
 
 
+            // @todo: We might want this to be displayed only if the connection has been made.
+            // This also need some ui improvement (add more to the text string) because a number is strange by itself.
             var energyText = gameContext.CurrentChart.FinalEnergy.ToString("0.000");
             var energyTextExtent = Raylib.MeasureTextEx(Style.FontTitle, energyText, Style.SizeNormal, 0);
             Raylib.DrawTextEx(
@@ -503,7 +520,7 @@ namespace RelicsOfAdofai.Engine
                         .Wpx((int)((3 * inTextExtent.Y) + inTextExtent.X)).Xpx((int)mousePosition.X)
                         .Hpx((int)(inTextExtent.Y * 2)).Ypx((int)mousePosition.Y).Rect();
                     var inTextVect = Layout.CenterCenter()
-                        .Wpx((int)inTextExtent.X).Xpx((int)(mousePosition.X - (inTextExtent.Y * 0.5)))
+                        .Wpx((int)inTextExtent.X).Xpx((int)mousePosition.X)
                         .Hpx((int)inTextExtent.Y).Ypx((int)(mousePosition.Y - inTextExtent.Y)).Vect();
 
                     Raylib.DrawRectangleRounded(boxRect, 0.1f, 8, Style.ColorBgDark);
@@ -514,7 +531,7 @@ namespace RelicsOfAdofai.Engine
             foreach (var message in guiContext.FloatingMessages)
             {
                 message.RemainingTime -= gameContext.DeltaTime;
-                message.Position += message.Velocity;
+                message.Position += message.Velocity * (float)gameContext.DeltaTime;
                 Raylib.DrawTextEx(Style.FontNormal, message.Text, message.Position, Style.SizeSmall, 0, Style.ColorTextGeneral);
             }
 
