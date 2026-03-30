@@ -128,9 +128,10 @@ namespace RelicsOfAdofai.Engine
                 var collidedCell = gameContext.CurrentChart.Cells.FirstOrDefault(c =>
                 {
                     var coordsDiff = c.Coords - mouseHexCoords;
-                    return Math.Abs(coordsDiff.Q) <= Style.HexCellDrawHexCoord
-                        && Math.Abs(coordsDiff.R) <= Style.HexCellDrawHexCoord
-                        && Math.Abs(coordsDiff.S) <= Style.HexCellDrawHexCoord;
+                    return
+                        -Style.HexCellDrawHexCoord <= coordsDiff.Q && coordsDiff.Q <= Style.HexCellDrawHexCoord &&
+                        -Style.HexCellDrawHexCoord <= coordsDiff.R && coordsDiff.R <= Style.HexCellDrawHexCoord &&
+                        -Style.HexCellDrawHexCoord <= coordsDiff.S && coordsDiff.S <= Style.HexCellDrawHexCoord;
                 });
 
                 if (collidedCell is not null)
