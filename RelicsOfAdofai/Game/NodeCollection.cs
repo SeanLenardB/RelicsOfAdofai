@@ -62,11 +62,13 @@ namespace RelicsOfAdofai.Game
     {
         public string Name = "";
         public string Description = "";
-
-        // @cleanup: this is a fat struct. Might need some polymorphism?
         public int Rotation { get; set { field = value % 360; if (field < 0) field += 360; } } = 0;
         public bool IsFlipped = false;
-        public double ConnectorEfficiency = 0.9;
+
+        // @cleanup: The following parameters are part of the fat struct. We might want polymorphism later.
+        public double ConnectorMultiplier = 0.9;
+        public double ExtractorMultiplier = 1.0;
+
         public NodeType Type = NodeType.Connector_Opposite;
         public enum NodeType
         {
@@ -83,16 +85,19 @@ namespace RelicsOfAdofai.Game
         {
             return this.Type switch
             {
+                NodeType.Extractor_Single => "node-extractor-single",
+
                 NodeType.Connector_Opposite => "node-connector-opposite",
                 NodeType.Connector_Interval => "node-connector-interval",
                 NodeType.Connector_Adjacent => "node-connector-adjacent",
-                NodeType.Extractor_Single => "node-extractor-single",
+
                 NodeType.Receiver_Neighbor => "node-receiver-neighbor",
+
                 _ => "bg",  // probably unnecessary
             };
         }
 
-        public readonly Vector2[] BoundingBox =
+        public static readonly Vector2[] BoundingBox =
         [
             new((float)(Style.NodeInHandRadius * Style.ConstSqrtThreeOverTwo), -(float)(0.5 * Style.NodeInHandRadius)),
             new((float)(Style.NodeInHandRadius * Style.ConstSqrtThreeOverTwo), (float)(0.5 * Style.NodeInHandRadius)),
