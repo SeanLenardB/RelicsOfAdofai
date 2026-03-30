@@ -16,31 +16,7 @@ namespace RelicsOfAdofai.Engine
         /* ----------- SPLASH ----------- */
         public void SplashScreen()
         {
-            var bg = Style.Textures["bg"];
-
-            var widthMultiplier = 1.0 * Style.WindowWidth / bg.Width;
-            var heightMultiplier = 1.0 * Style.WindowHeight / bg.Height;
-            var finalMultiplier = widthMultiplier > heightMultiplier ? widthMultiplier : heightMultiplier;
-
-            finalMultiplier *= 1.15;  // Leaving room for the cursor effect
-            var cursorPosition = Raylib.GetMousePosition();
-            var xOffsetProportion = -(cursorPosition.X - (Style.WindowWidth / 2.0)) / Style.WindowWidth / 2.0;
-            var yOffsetProportion = (cursorPosition.Y - (Style.WindowHeight / 2.0)) / Style.WindowHeight / 2.0;
-
-            var scaledWidth = (int)(bg.Width * finalMultiplier);
-            var scaledHeight = (int)(bg.Height * finalMultiplier);
-
-            Raylib.DrawTexturePro(
-                bg,
-                new(0, 0, bg.Width, bg.Height),
-                new(
-                    (Style.WindowWidth / 2) + (int)(xOffsetProportion * bg.Width * 0.1),
-                    (Style.WindowHeight / 2) + (int)(yOffsetProportion * bg.Height * 0.1),
-                    scaledWidth, scaledHeight),
-                new(scaledWidth / 2, scaledHeight / 2), 0,
-                Color.Gray);
-
-
+            this.DrawBackground();
 
             var titleExtent = Raylib.MeasureTextEx(Style.FontStylistic, "Relics of Adofai", Style.SizeTitle, 0);
             Raylib.DrawRectangleRounded(
@@ -73,38 +49,12 @@ namespace RelicsOfAdofai.Engine
         }
 
 
-        
+
         /* ----------- GAME ----------- */
         public void Game(GameContext gameContext, Interactivity interactivity)
         {
             /* ----- BACKGROUND ----- */
-            // @copypasta: from SplashScreen()
-            Debug.Assert(Style.Textures.ContainsKey("bg"), "Cannot find the background image bg!");
-            var bg = Style.Textures["bg"];
-
-            var widthMultiplier = 1.0 * Style.WindowWidth / bg.Width;
-            var heightMultiplier = 1.0 * Style.WindowHeight / bg.Height;
-            var finalMultiplier = widthMultiplier > heightMultiplier ? widthMultiplier : heightMultiplier;
-
-            finalMultiplier *= 1.15;  // Leaving room for the cursor effect
-            var cursorPosition = Raylib.GetMousePosition();
-            var xOffsetProportion = -(cursorPosition.X - (Style.WindowWidth / 2.0)) / Style.WindowWidth / 2.0;
-            var yOffsetProportion = (cursorPosition.Y - (Style.WindowHeight / 2.0)) / Style.WindowHeight / 2.0;
-
-            var scaledWidth = (int)(bg.Width * finalMultiplier);
-            var scaledHeight = (int)(bg.Height * finalMultiplier);
-
-            Raylib.DrawTexturePro(
-                bg,
-                new(0, 0, bg.Width, bg.Height),
-                new(
-                    (Style.WindowWidth / 2) + (int)(xOffsetProportion * bg.Width * 0.1),
-                    (Style.WindowHeight / 2) + (int)(yOffsetProportion * bg.Height * 0.1),
-                    scaledWidth, scaledHeight),
-                new(scaledWidth / 2, scaledHeight / 2), 0,
-                Color.Gray);
-
-
+            this.DrawBackground();
 
             /* ----- GRID ----- */
             this.DrawChartGrid(gameContext, interactivity);
@@ -557,6 +507,33 @@ namespace RelicsOfAdofai.Engine
 
             while (guiContext.FloatingMessages.Count != 0 && guiContext.FloatingMessages.Peek().RemainingTime <= 0)
                 guiContext.FloatingMessages.Dequeue();
+        }
+
+        public void DrawBackground()
+        {
+            var bg = Style.Textures["bg"];
+
+            var widthMultiplier = 1.0 * Style.WindowWidth / bg.Width;
+            var heightMultiplier = 1.0 * Style.WindowHeight / bg.Height;
+            var finalMultiplier = widthMultiplier > heightMultiplier ? widthMultiplier : heightMultiplier;
+
+            finalMultiplier *= 1.15;  // Leaving room for the cursor effect
+            var cursorPosition = Raylib.GetMousePosition();
+            var xOffsetProportion = -(cursorPosition.X - (Style.WindowWidth / 2.0)) / Style.WindowWidth / 2.0;
+            var yOffsetProportion = (cursorPosition.Y - (Style.WindowHeight / 2.0)) / Style.WindowHeight / 2.0;
+
+            var scaledWidth = (int)(bg.Width * finalMultiplier);
+            var scaledHeight = (int)(bg.Height * finalMultiplier);
+
+            Raylib.DrawTexturePro(
+                bg,
+                new(0, 0, bg.Width, bg.Height),
+                new(
+                    (Style.WindowWidth / 2) + (int)(xOffsetProportion * bg.Width * 0.1),
+                    (Style.WindowHeight / 2) + (int)(yOffsetProportion * bg.Height * 0.1),
+                    scaledWidth, scaledHeight),
+                new(scaledWidth / 2, scaledHeight / 2), 0,
+                Color.Gray);
         }
     }
 }
