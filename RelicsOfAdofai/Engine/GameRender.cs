@@ -226,7 +226,7 @@ namespace RelicsOfAdofai.Engine
 
                 var imageLocation = cellCenter;
                 imageLocation.X -= 64; imageLocation.Y -= 64;  // The image is 256x256. We draw 0.5x.
-                if (cell.Type == ChartCell.CellType.Start)
+                if (cell.Type == ChartCell.CellType.Source)
                 {
                     var startEnergyText = cell.SourceEnergy.ToString("0.0");
                     var startEnergyTextExtent = Raylib.MeasureTextEx(Style.FontTitle, startEnergyText, Style.SizeSmall, 0);

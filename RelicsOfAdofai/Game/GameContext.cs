@@ -37,17 +37,19 @@ namespace RelicsOfAdofai.Game
         {
             Debug.Assert(this.CurrentChart is not null, "Cannot recalculate a null chart!");
             this.CurrentChart.FinalEnergy = 0;
-            ChartCell? startingCell = null;
+            List<ChartCell> sourceCells = [];
             foreach (var cell in this.CurrentChart.Cells)
             {
                 cell.FluxIn = 0; cell.FluxOut = 0;
-                if (cell.Type == ChartCell.CellType.Start) startingCell = cell;
+                if (cell.Type == ChartCell.CellType.Source) sourceCells.Add(cell);
             }
-            Debug.Assert(startingCell is not null, "Every chart should have (at least, not impl yet) 1 starting cell!");
+            Debug.Assert(sourceCells is not null, "Every chart should have at least 1 source cell!");
 
-            // @todo: this 1 is hardcoded. It should depend on the chart.
-            if (startingCell.FilledNode is not null)
-                this.PropagateChartCell(this.CurrentChart, startingCell, new(startingCell, 1));
+            foreach (var sourceCell in sourceCells)
+            {
+                if (sourceCell.FilledNode is not null)
+                    this.PropagateChartCell(this.CurrentChart, sourceCell, new(sourceCell, sourceCell.SourceEnergy));
+            }
 
             if (this.CurrentChart.FinalEnergy > 0 && !guiContext.Buttons["attempt"].Enabled)
                 guiContext.Buttons["attempt"].Enabled = true;
@@ -107,7 +109,7 @@ namespace RelicsOfAdofai.Game
                         if (node.IsFlipped) outOffsetAngle = 180 - outOffsetAngle;
                         outOffsetAngle += node.Rotation;
 
-                        if (packet.From.Type != ChartCell.CellType.Start) break;
+                        if (packet.From.Type != ChartCell.CellType.Source) break;
 
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null || outCell.FilledNode is null) break;

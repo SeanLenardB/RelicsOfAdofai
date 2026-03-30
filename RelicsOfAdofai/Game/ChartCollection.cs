@@ -20,7 +20,7 @@ namespace RelicsOfAdofai.Game
                     Creator = "SeanLB",
                     IconColor = Color.DarkGray,
                     Cells = [
-                        new(0, 0, ChartCell.CellType.Start),
+                        new(0, 0, ChartCell.CellType.Source),
                         new(1, 0), new(2, -1), new(1, -1), new(3, -2),
                         new(3, -1, ChartCell.CellType.End)]},
             ];
@@ -53,7 +53,7 @@ namespace RelicsOfAdofai.Game
         public enum CellType
         {
             Normal,
-            Start,
+            Source,
             End,
         }
 
