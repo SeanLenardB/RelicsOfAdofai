@@ -63,7 +63,7 @@ namespace RelicsOfAdofai.Game
         public string Name = "";
         public string Description = "";
 
-        // @clanup: this is a fat struct. Might need some polymorphism?
+        // @cleanup: this is a fat struct. Might need some polymorphism?
         public int Rotation { get; set { field = value % 360; if (field < 0) field += 360; } } = 0;
         public bool IsFlipped = false;
         public double ConnectorEfficiency = 0.9;
