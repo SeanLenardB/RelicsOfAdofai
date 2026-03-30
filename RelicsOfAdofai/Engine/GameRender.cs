@@ -326,14 +326,14 @@ namespace RelicsOfAdofai.Engine
                 var outTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, outText, Style.SizeSmall, 0);
 
                 var boxRect = Layout.CenterBottom()
-                    .Wpx((3 * inTextExtent.Y) + (inTextExtent.X + outTextExtent.X)).Xpx(mousePosition.X)
-                    .Hpx(inTextExtent.Y * 2).Ypx(mousePosition.Y).Rect();
+                    .Wpx((3 * inTextExtent.Y) + (inTextExtent.X + outTextExtent.X)).Xpx(hoveredCellCenter.X)
+                    .Hpx(inTextExtent.Y * 2).Ypx(hoveredCellCenter.Y - Style.HexCellDrawRadius).Rect();
                 var inTextVect = Layout.RightCenter()
-                    .Wpx(inTextExtent.X).Xpx(mousePosition.X - (inTextExtent.Y * 0.5))
-                    .Hpx(inTextExtent.Y).Ypx(mousePosition.Y - inTextExtent.Y).Vect();
+                    .Wpx(inTextExtent.X).Xpx(hoveredCellCenter.X - (inTextExtent.Y * 0.5))
+                    .Hpx(inTextExtent.Y).Ypx(hoveredCellCenter.Y - Style.HexCellDrawRadius - inTextExtent.Y).Vect();
                 var outTextVect = Layout.LeftCenter()
-                    .Wpx(outTextExtent.X).Xpx(mousePosition.X + (inTextExtent.Y * 0.5))
-                    .Hpx(outTextExtent.Y).Ypx(mousePosition.Y - outTextExtent.Y).Vect();
+                    .Wpx(outTextExtent.X).Xpx(hoveredCellCenter.X + (inTextExtent.Y * 0.5))
+                    .Hpx(outTextExtent.Y).Ypx(hoveredCellCenter.Y - Style.HexCellDrawRadius - outTextExtent.Y).Vect();
 
                 Raylib.DrawRectangleRounded(boxRect, 0.1f, 8, Style.ColorBgDark);
                 Raylib.DrawRectangleRoundedLinesEx(boxRect, 0.1f, 8, Style.ThinThickness, Style.ColorBorderLight);
