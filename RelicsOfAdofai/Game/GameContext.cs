@@ -67,13 +67,13 @@ namespace RelicsOfAdofai.Game
                 this.TotalTime += 0.5;
 
                 var success = $"Success with accuracy {96.0 + (4.0 * clearChance):0.00%}";
-                var successTextExtent = Raylib.MeasureTextEx(Style.FontNormal, success, Style.SizeSmall, 0);
+                var successTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, success, Style.SizeSmall, 0);
                 guiContext.FloatingMessages.Enqueue(new()
                 {
                     Text = success,
                     Position =
-                        Layout.RightBottom().Hpx((int)successTextExtent.Y).YVh(100).DYpx(-Style.HandHeight * 2)
-                            .Wpx((int)successTextExtent.X).Xvw(100).DXpx(-(int)successTextExtent.Y).Vect()
+                        Layout.RightBottom().Hpx(successTextExtent.Y).YVh(100).DYpx(-Style.HandHeight * 2)
+                            .Wpx(successTextExtent.X).Xvw(100).DXpx(-successTextExtent.Y).Vect()
                 });
             }
             else
@@ -82,13 +82,13 @@ namespace RelicsOfAdofai.Game
                 this.TotalTime += 0.5 * failProgress;
 
                 var failText = $"Failed at {Math.Floor(failProgress)}";
-                var failTextExtent = Raylib.MeasureTextEx(Style.FontNormal, failText, Style.SizeSmall, 0);
+                var failTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, failText, Style.SizeSmall, 0);
                 guiContext.FloatingMessages.Enqueue(new()
                 {
                     Text = failText,
                     Position =
-                        Layout.RightBottom().Hpx((int)failTextExtent.Y).YVh(100).DYpx(-Style.HandHeight * 2)
-                            .Wpx((int)failTextExtent.X).Xvw(100).DXpx(-(int)failTextExtent.Y).Vect()
+                        Layout.RightBottom().Hpx(failTextExtent.Y).YVh(100).DYpx(-Style.HandHeight * 2)
+                            .Wpx(failTextExtent.X).Xvw(100).DXpx(-failTextExtent.Y).Vect()
                 });
             }
         }

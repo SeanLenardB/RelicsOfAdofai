@@ -53,11 +53,11 @@ namespace RelicsOfAdofai.Engine
         public void RecalculateUIPosition()
         {
             this.InputBoxes["rngseed"].CollisionBox = 
-                Layout.LeftCenter().Hpx((int)(Style.SizeNormal * 1.5)).YVh(95).DYpx(-360).Wpx(480).Xvw(50).DXpx(24).Rect();
+                Layout.LeftCenter().Hpx(Style.SizeNormal * 1.5).YVh(95).DYpx(-360).Wpx(480).Xvw(50).DXpx(24).Rect();
             this.Buttons["startgame"].CollisionBox =
                 Layout.CenterBottom().Hpx(72).YVh(95).DYpx(-80).Wpx(240).Xvw(50).Rect();
             this.Buttons["attempt"].CollisionBox =
-                Layout.RightBottom().Hpx((int)(Style.SizeSmall * 1.5)).YVh(100).DYpx(-Style.HandHeight).DYpx(-Style.SizeNormal)
+                Layout.RightBottom().Hpx(Style.SizeSmall * 1.5).YVh(100).DYpx(-Style.HandHeight).DYpx(-Style.SizeNormal)
                     .Wpx(Style.SizeSmall * 4).Xvw(100).DXpx(-Style.SizeNormal).Rect();
         }
         public void SwitchState(GuiState newState)

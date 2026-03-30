@@ -24,8 +24,8 @@ namespace RelicsOfAdofai.Engine
         public static Color HintUnselectedNode = Color.White;
 
         public static Dictionary<string, Texture2D> Textures = [];
-        public static Font FontTitle;
-        public static Font FontNormal;
+        public static Font FontStylistic;
+        public static Font FontGeneral;
 
         public static int SizeSmall = 32;
         public static int SizeNormal = 48;

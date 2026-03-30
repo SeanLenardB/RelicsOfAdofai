@@ -42,16 +42,16 @@ namespace RelicsOfAdofai.Engine
 
 
 
-            var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, "Relics of Adofai", Style.SizeTitle, 0);
+            var titleExtent = Raylib.MeasureTextEx(Style.FontStylistic, "Relics of Adofai", Style.SizeTitle, 0);
             Raylib.DrawRectangleRounded(
-                Layout.CenterTop().Hpx((int)titleExtent.Y * 3).YVh(15).Wvw(60).Wmax(1600).Wmin((int)titleExtent.X).Xvw(50).Rect(),
+                Layout.CenterTop().Hpx(titleExtent.Y * 3).YVh(15).Wvw(60).Wmax(1600).Wmin(titleExtent.X).Xvw(50).Rect(),
                 0.1f,
                 8,
                 Style.ColorBgDark);
             Raylib.DrawTextEx(
-                Style.FontTitle,
+                Style.FontStylistic,
                 "Relics of Adofai",
-                Layout.CenterTop().Hpx((int)titleExtent.Y).YVh(15).Wpx((int)titleExtent.X).Xvw(50).DYpx((int)titleExtent.Y).Vect(),
+                Layout.CenterTop().Hpx(titleExtent.Y).YVh(15).Wpx(titleExtent.X).Xvw(50).DYpx(titleExtent.Y).Vect(),
                 Style.SizeTitle,
                 0,
                 Style.ColorTextGeneral);
@@ -62,11 +62,11 @@ namespace RelicsOfAdofai.Engine
                 8,
                 Style.ColorBgMedium);
 
-            var rngExtent = Raylib.MeasureTextEx(Style.FontNormal, "随机数种子", Style.SizeNormal, 0);
+            var rngExtent = Raylib.MeasureTextEx(Style.FontGeneral, "随机数种子", Style.SizeNormal, 0);
             Raylib.DrawTextEx(
-                Style.FontNormal,
+                Style.FontGeneral,
                 "随机数种子",
-                Layout.RightCenter().Hpx((int)rngExtent.Y).YVh(95).DYpx(-360).Wpx((int)rngExtent.X).Xvw(50).DXpx(-24).Vect(),
+                Layout.RightCenter().Hpx(rngExtent.Y).YVh(95).DYpx(-360).Wpx(rngExtent.X).Xvw(50).DXpx(-24).Vect(),
                 Style.SizeNormal,
                 0,
                 Style.ColorTextGeneral);
@@ -135,10 +135,10 @@ namespace RelicsOfAdofai.Engine
                 (int)(headerRect.Width / 2), Style.NormalThickness, Style.ColorBorderLight, Style.ColorBorderBlack);
 
             var headerString = gameContext.DebugMode ? "Debug Mode" : "Relics of Adofai";
-            var titleExtent = Raylib.MeasureTextEx(Style.FontTitle, headerString, Style.SizeNormal, 0);
+            var titleExtent = Raylib.MeasureTextEx(Style.FontStylistic, headerString, Style.SizeNormal, 0);
             var padding = (128 - titleExtent.Y) / 2;
             Raylib.DrawTextEx(
-                Style.FontTitle,
+                Style.FontStylistic,
                 headerString,
                 new(padding, padding),
                 Style.SizeNormal,
@@ -204,8 +204,8 @@ namespace RelicsOfAdofai.Engine
                     Style.ColorBorderMedium);
 
                 var drawRect = Layout.CenterCenter()
-                        .Hpx(Style.NodeTextureSize).Ypx((int)cellCenter.Y)
-                        .Wpx(Style.NodeTextureSize).Xpx((int)cellCenter.X).RectCenter();
+                        .Hpx(Style.NodeTextureSize).Ypx(cellCenter.Y)
+                        .Wpx(Style.NodeTextureSize).Xpx(cellCenter.X).RectCenter();
 
                 if (cell.FilledNode is not null)
                 {
@@ -229,7 +229,7 @@ namespace RelicsOfAdofai.Engine
                 if (cell.Type == ChartCell.CellType.Source)
                 {
                     var startEnergyText = cell.SourceEnergy.ToString("0.0");
-                    var startEnergyTextExtent = Raylib.MeasureTextEx(Style.FontTitle, startEnergyText, Style.SizeSmall, 0);
+                    var startEnergyTextExtent = Raylib.MeasureTextEx(Style.FontStylistic, startEnergyText, Style.SizeSmall, 0);
                     Raylib.DrawTextureEx(
                         Style.Textures["nodeStart"],
                         imageLocation,
@@ -237,11 +237,11 @@ namespace RelicsOfAdofai.Engine
                         0.5f,
                         new(255, 255, 255, 128));
                     Raylib.DrawTextEx(
-                        Style.FontTitle,
+                        Style.FontStylistic,
                         startEnergyText,
                         Layout.CenterTop()
-                            .Wpx((int)startEnergyTextExtent.X).Xpx((int)cellCenter.X)
-                            .Hpx((int)startEnergyTextExtent.Y).Ypx((int)cellCenter.Y).DYpx(Style.HexCellDrawRadius / 3).Vect(),
+                            .Wpx(startEnergyTextExtent.X).Xpx(cellCenter.X)
+                            .Hpx(startEnergyTextExtent.Y).Ypx(cellCenter.Y).DYpx(Style.HexCellDrawRadius / 3).Vect(),
                         Style.SizeSmall,
                         0,
                         Style.ColorTextGeneral);
@@ -258,19 +258,32 @@ namespace RelicsOfAdofai.Engine
             }
 
 
-
-            // @todo: We might want this to be displayed only if the connection has been made.
-            // This also need some ui improvement (add more to the text string) because a number is strange by itself.
-            var energyText = gameContext.CurrentChart.FinalEnergy.ToString("0.000");
-            var energyTextExtent = Raylib.MeasureTextEx(Style.FontTitle, energyText, Style.SizeNormal, 0);
+            var targetEnergyText = gameContext.CurrentChart.OptimalEnergy.ToString("0.0");
+            var targetEnergyTextExtent = Raylib.MeasureTextEx(Style.FontStylistic, targetEnergyText, Style.SizeNormal, 0);
             Raylib.DrawTextEx(
-                Style.FontTitle,
-                energyText,
+                Style.FontStylistic,
+                targetEnergyText,
                 Layout.RightTop()
-                    .Hpx((int)energyTextExtent.Y).Ypx(Style.HeaderHeight + (int)(energyTextExtent.Y / 2))
-                    .Wpx((int)energyTextExtent.X).Xpx(Style.WindowWidth - (int)(energyTextExtent.Y / 2))
+                    .Hpx(targetEnergyTextExtent.Y).Ypx(Style.HeaderHeight + (targetEnergyTextExtent.Y / 2))
+                    .Wpx(targetEnergyTextExtent.X).Xpx(Style.WindowWidth - (targetEnergyTextExtent.Y / 2))
                     .Vect(),
                 Style.SizeNormal,
+                0,
+                Style.ColorTextGeneral);
+
+            string receivedEnergyText;
+            if (gameContext.CurrentChart.FinalEnergy <= 0.0) receivedEnergyText = "未连通";
+            else receivedEnergyText = gameContext.CurrentChart.FinalEnergy.ToString("接收总量0.0");
+
+            var receivedEnergyTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, receivedEnergyText, Style.SizeSmall, 0);
+            Raylib.DrawTextEx(
+                Style.FontGeneral,
+                receivedEnergyText,
+                Layout.RightTop()
+                    .Hpx(receivedEnergyTextExtent.Y).Ypx(Style.HeaderHeight + (receivedEnergyTextExtent.Y / 2)).DYpx(targetEnergyTextExtent.Y)
+                    .Wpx(receivedEnergyTextExtent.X).Xpx(Style.WindowWidth - (receivedEnergyTextExtent.Y / 2))
+                    .Vect(),
+                Style.SizeSmall,
                 0,
                 Style.ColorTextGeneral);
 
@@ -280,8 +293,8 @@ namespace RelicsOfAdofai.Engine
             // @hack: the hover hint should render after everything has been drawn. Otherwise it might get overriden.
             var hoveredCellCenter = (hoveredCell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
             var hoveredCellDrawRect = Layout.CenterCenter()
-                    .Hpx(Style.NodeTextureSize).Ypx((int)hoveredCellCenter.Y)
-                    .Wpx(Style.NodeTextureSize).Xpx((int)hoveredCellCenter.X).RectCenter();
+                    .Hpx(Style.NodeTextureSize).Ypx(hoveredCellCenter.Y)
+                    .Wpx(Style.NodeTextureSize).Xpx(hoveredCellCenter.X).RectCenter();
             Raylib.DrawPoly(hoveredCellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgMedium);
             if (gameContext.CurrentSelectedNode is not null)
             {
@@ -300,25 +313,25 @@ namespace RelicsOfAdofai.Engine
             if (hoveredCell.FilledNode is not null && interactivity.MouseStayDuration > Style.MouseStayDurationThreshold)
             {
                 var mousePosition = Raylib.GetMousePosition();
-                var inText = hoveredCell.FluxIn.ToString("流入0.00%");
-                var outText = hoveredCell.FluxOut.ToString("流出0.00%");
-                var inTextExtent = Raylib.MeasureTextEx(Style.FontNormal, inText, Style.SizeSmall, 0);
-                var outTextExtent = Raylib.MeasureTextEx(Style.FontNormal, outText, Style.SizeSmall, 0);
+                var inText = hoveredCell.FluxIn.ToString("流入0.00");
+                var outText = hoveredCell.FluxOut.ToString("流出0.00");
+                var inTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, inText, Style.SizeSmall, 0);
+                var outTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, outText, Style.SizeSmall, 0);
 
                 var boxRect = Layout.CenterBottom()
-                    .Wpx((int)((3 * inTextExtent.Y) + (inTextExtent.X + outTextExtent.X))).Xpx((int)mousePosition.X)
-                    .Hpx((int)(inTextExtent.Y * 2)).Ypx((int)mousePosition.Y).Rect();
+                    .Wpx((3 * inTextExtent.Y) + (inTextExtent.X + outTextExtent.X)).Xpx(mousePosition.X)
+                    .Hpx(inTextExtent.Y * 2).Ypx(mousePosition.Y).Rect();
                 var inTextVect = Layout.RightCenter()
-                    .Wpx((int)inTextExtent.X).Xpx((int)(mousePosition.X - (inTextExtent.Y * 0.5)))
-                    .Hpx((int)inTextExtent.Y).Ypx((int)(mousePosition.Y - inTextExtent.Y)).Vect();
+                    .Wpx(inTextExtent.X).Xpx(mousePosition.X - (inTextExtent.Y * 0.5))
+                    .Hpx(inTextExtent.Y).Ypx(mousePosition.Y - inTextExtent.Y).Vect();
                 var outTextVect = Layout.LeftCenter()
-                    .Wpx((int)outTextExtent.X).Xpx((int)(mousePosition.X + (inTextExtent.Y * 0.5)))
-                    .Hpx((int)outTextExtent.Y).Ypx((int)(mousePosition.Y - outTextExtent.Y)).Vect();
+                    .Wpx(outTextExtent.X).Xpx(mousePosition.X + (inTextExtent.Y * 0.5))
+                    .Hpx(outTextExtent.Y).Ypx(mousePosition.Y - outTextExtent.Y).Vect();
 
                 Raylib.DrawRectangleRounded(boxRect, 0.1f, 8, Style.ColorBgDark);
                 Raylib.DrawRectangleRoundedLinesEx(boxRect, 0.1f, 8, Style.ThinThickness, Style.ColorBorderLight);
-                Raylib.DrawTextEx(Style.FontNormal, inText, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
-                Raylib.DrawTextEx(Style.FontNormal, outText, outTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxOut);
+                Raylib.DrawTextEx(Style.FontGeneral, inText, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
+                Raylib.DrawTextEx(Style.FontGeneral, outText, outTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxOut);
             }
         }
 
@@ -455,7 +468,7 @@ namespace RelicsOfAdofai.Engine
                     4.0f,
                     underbarColor);
 
-                var textExtent = Raylib.MeasureTextEx(Style.FontNormal, inputBox.Text, inputBox.TextSize, 0);
+                var textExtent = Raylib.MeasureTextEx(Style.FontGeneral, inputBox.Text, inputBox.TextSize, 0);
 
                 var yPadding = (inputBox.CollisionBox.Height - textExtent.Y) / 2.0f;
                 if (yPadding < 0) yPadding = 0;
@@ -466,7 +479,7 @@ namespace RelicsOfAdofai.Engine
                 if (xPadding < 0) xPadding = 0;
 
                 Raylib.DrawTextEx(
-                    Style.FontNormal,
+                    Style.FontGeneral,
                     inputBox.Text,
                     new(inputBox.CollisionBox.X + xPadding, inputBox.CollisionBox.Y + yPadding),
                     inputBox.TextSize,
@@ -490,7 +503,7 @@ namespace RelicsOfAdofai.Engine
                     4.0f,
                     outlineColor);
 
-                var textExtent = Raylib.MeasureTextEx(Style.FontNormal, button.Text, button.TextSize, 0);
+                var textExtent = Raylib.MeasureTextEx(Style.FontGeneral, button.Text, button.TextSize, 0);
 
                 var yPadding = (button.CollisionBox.Height - textExtent.Y) / 2.0f;
                 if (yPadding < 0) yPadding = 0;
@@ -501,7 +514,7 @@ namespace RelicsOfAdofai.Engine
                 if (xPadding < 0) xPadding = 0;
 
                 Raylib.DrawTextEx(
-                    Style.FontNormal,
+                    Style.FontGeneral,
                     button.Text,
                     new(button.CollisionBox.X + xPadding, button.CollisionBox.Y + yPadding),
                     button.TextSize,
@@ -514,25 +527,25 @@ namespace RelicsOfAdofai.Engine
                 if (shouldDrawDisabledHint)
                 {
                     var mousePosition = Raylib.GetMousePosition();
-                    var inTextExtent = Raylib.MeasureTextEx(Style.FontNormal, button.DisabledHint, Style.SizeSmall, 0);
+                    var inTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, button.DisabledHint, Style.SizeSmall, 0);
 
                     var boxRect = Layout.CenterBottom()
-                        .Wpx((int)((3 * inTextExtent.Y) + inTextExtent.X)).Xpx((int)mousePosition.X)
-                        .Hpx((int)(inTextExtent.Y * 2)).Ypx((int)mousePosition.Y).Rect();
+                        .Wpx((3 * inTextExtent.Y) + inTextExtent.X).Xpx(mousePosition.X)
+                        .Hpx(inTextExtent.Y * 2).Ypx(mousePosition.Y).Rect();
                     var inTextVect = Layout.CenterCenter()
-                        .Wpx((int)inTextExtent.X).Xpx((int)mousePosition.X)
-                        .Hpx((int)inTextExtent.Y).Ypx((int)(mousePosition.Y - inTextExtent.Y)).Vect();
+                        .Wpx(inTextExtent.X).Xpx(mousePosition.X)
+                        .Hpx(inTextExtent.Y).Ypx(mousePosition.Y - inTextExtent.Y).Vect();
 
                     Raylib.DrawRectangleRounded(boxRect, 0.1f, 8, Style.ColorBgDark);
                     Raylib.DrawRectangleRoundedLinesEx(boxRect, 0.1f, 8, Style.ThinThickness, Style.ColorBorderLight);
-                    Raylib.DrawTextEx(Style.FontNormal, button.DisabledHint, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
+                    Raylib.DrawTextEx(Style.FontGeneral, button.DisabledHint, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
                 }
             }
             foreach (var message in guiContext.FloatingMessages)
             {
                 message.RemainingTime -= gameContext.DeltaTime;
                 message.Position += message.Velocity * (float)gameContext.DeltaTime;
-                Raylib.DrawTextEx(Style.FontNormal, message.Text, message.Position, Style.SizeSmall, 0, Style.ColorTextGeneral);
+                Raylib.DrawTextEx(Style.FontGeneral, message.Text, message.Position, Style.SizeSmall, 0, Style.ColorTextGeneral);
             }
 
             while (guiContext.FloatingMessages.Count != 0 && guiContext.FloatingMessages.Peek().RemainingTime <= 0)

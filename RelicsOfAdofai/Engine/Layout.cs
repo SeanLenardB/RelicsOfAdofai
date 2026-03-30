@@ -40,52 +40,52 @@ namespace RelicsOfAdofai.Engine
                 return new((int)(this.LeftX + (this.Width / 2)), (int)(this.TopY + (this.Height / 2)));
             }
 
-            public LayoutData Wvw(int percentage)
+            public LayoutData Wvw(double percentage)
             {
                 this.Width = percentage / 100.0 * Style.WindowWidth;
                 return this;
             }
-            public LayoutData Hvh(int percentage)
+            public LayoutData Hvh(double percentage)
             {
                 this.Height = percentage / 100.0 * Style.WindowHeight;
                 return this;
             }
-            public LayoutData Wpx(int px)
+            public LayoutData Wpx(double px)
             {
                 this.Width = px;
                 return this;
             }
-            public LayoutData Hpx(int px)
+            public LayoutData Hpx(double px)
             {
                 this.Height = px;
                 return this;
             }
-            public LayoutData Wmin(int px)
+            public LayoutData Wmin(double px)
             {
                 Debug.Assert(this.Width > 0, "You need to first set vw or px, and then call min-max methods!");
                 if (this.Width < px) this.Width = px;
                 return this;
             }
-            public LayoutData Wmax(int px)
+            public LayoutData Wmax(double px)
             {
                 Debug.Assert(this.Width > 0, "You need to first set vw or px, and then call min-max methods!");
                 if (this.Width > px) this.Width = px;
                 return this;
             }
-            public LayoutData Hmin(int px)
+            public LayoutData Hmin(double px)
             {
                 Debug.Assert(this.Height > 0, "You need to first set vh or px, and then call min-max methods!");
                 if (this.Height < px) this.Height = px;
                 return this;
             }
-            public LayoutData Hmax(int px)
+            public LayoutData Hmax(double px)
             {
                 Debug.Assert(this.Height > 0, "You need to first set vh or px, and then call min-max methods!");
                 if (this.Height > px) this.Height = px;
                 return this;
             }
 
-            public LayoutData Xpx(int px)
+            public LayoutData Xpx(double px)
             {
                 Debug.Assert(this.Width > 0, "You need to first set w, and then set x!");
 
@@ -95,7 +95,7 @@ namespace RelicsOfAdofai.Engine
 
                 return this;
             }
-            public LayoutData Ypx(int px)
+            public LayoutData Ypx(double px)
             {
                 Debug.Assert(this.Height > 0, "You need to first set h, and then set y!");
 
@@ -105,17 +105,17 @@ namespace RelicsOfAdofai.Engine
 
                 return this;
             }
-            public LayoutData Xvw(int percentage) => this.Xpx((int)(percentage / 100.0 * Style.WindowWidth));
-            public LayoutData YVh(int percentage) => this.Ypx((int)(percentage / 100.0 * Style.WindowHeight));
+            public LayoutData Xvw(double percentage) => this.Xpx((double)(percentage / 100.0 * Style.WindowWidth));
+            public LayoutData YVh(double percentage) => this.Ypx((double)(percentage / 100.0 * Style.WindowHeight));
 
-            public LayoutData DXpx(int px)
+            public LayoutData DXpx(double px)
             {
                 Debug.Assert(this.LeftX > 0, "This is an offset function, you need to first set x!");
 
                 this.LeftX += px;
                 return this;
             }
-            public LayoutData DYpx(int px)
+            public LayoutData DYpx(double px)
             {
                 Debug.Assert(this.TopY > 0, "This is an offset function, you need to first set y!");
 
