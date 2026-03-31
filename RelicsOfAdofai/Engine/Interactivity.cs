@@ -42,7 +42,7 @@ namespace RelicsOfAdofai.Engine
                     code = Raylib.GetKeyPressed();  // @hack: for unknown reasons, we will get double duplicate inputs.
                 }
                 // @cleanup: The current implementation of deleting is very shit. Make it better.
-                // Another problem is that the "time after previous delete" should be global instead of belonging to a specific input box.
+                // (Deletion rate should get fatster and faster)
                 if (Raylib.IsKeyDown(KeyboardKey.Backspace))
                 {
                     this.BackspaceCooldown -= gameContext.DeltaTime;
@@ -162,7 +162,8 @@ namespace RelicsOfAdofai.Engine
                         .Wpx(Style.NodeInHandRadius).Xpx(Style.HandHeight / 2).Vect();
                 currentHandNodeCenter += new Vector2(Style.NodeInHandRadius / 2, Style.NodeInHandRadius / 2);
                 gameContext.HandNodes.ForEach(n => n.IsHover = false);
-                // Currently a selection will only get changed when the left click is down. Therefore it's safe to do this.
+
+                // @note: Currently a selection will only get changed when the left click is down. Therefore it's safe to do this.
                 // When we allow keyboard controls we need to refactor this.
                 if (isMouseLeftDown) gameContext.CurrentSelectedNode = null;
 

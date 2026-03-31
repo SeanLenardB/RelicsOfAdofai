@@ -58,6 +58,7 @@ namespace RelicsOfAdofai.Game
         public void AttemptChart(GuiContext guiContext, Chart chart)
         {
             Debug.Assert(chart.FinalEnergy > 0, "Cannot spam hours! (is the predicate wrong?)");
+            // @todo: This formula might need some tweaks because the range is different from Monifactory Sculk Vat.
             double clearChance = Math.Pow(
                                     Math.Exp(11.45 * Math.Pow(chart.FinalEnergy - chart.OptimalEnergy, 2)), 
                                     -4);  // Formula is stolen from Moni Labs, Sculk Vat probability impl.

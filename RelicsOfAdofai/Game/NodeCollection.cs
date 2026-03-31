@@ -65,7 +65,7 @@ namespace RelicsOfAdofai.Game
                     Name = "Normal Starter",
                     Description = "Provide the circuit with the energy from the source.",
                     Type = SkillNode.NodeType.Extractor_Single,
-                    PassOnMultiplier = 1.0, PassOnMultiplierMinimum = 1.0, PassOnMultiplierMaximum = 1.0
+                    PassOnMultiplier = 1.0, PassOnMultiplierMinimum = 1.0, PassOnMultiplierMaximum = 1.0, PassOnMultiplierTweakAmount = 0.0
                 },
                 new() {
                     Name = "Normal Finish",

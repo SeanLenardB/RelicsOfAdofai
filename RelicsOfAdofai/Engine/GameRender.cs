@@ -216,7 +216,7 @@ namespace RelicsOfAdofai.Engine
                         default: break;
                     }
                 }
-                else Raylib.DrawPoly(polyDrawCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
+                else Raylib.DrawPoly(cellCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
 
                 if (cell.IsHover) hoveredCell = cell;
 
