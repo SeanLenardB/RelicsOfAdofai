@@ -192,9 +192,11 @@ namespace RelicsOfAdofai.Engine
                     var targetedNode = gameContext.CurrentSelectedNode ?? collidedCell?.FilledNode;
                     if (targetedNode is not null)
                     {
-                        if (Raylib.IsKeyPressed(KeyboardKey.E)) targetedNode.Rotation -= 60;
-                        if (Raylib.IsKeyPressed(KeyboardKey.Q)) targetedNode.Rotation += 60;
-                        if (Raylib.IsKeyPressed(KeyboardKey.F)) targetedNode.IsFlipped = !targetedNode.IsFlipped;
+                        var isNodeChanged = false;
+
+                        if (Raylib.IsKeyPressed(KeyboardKey.E)) { targetedNode.Rotation -= 60; isNodeChanged = true; }
+                        if (Raylib.IsKeyPressed(KeyboardKey.Q)) { targetedNode.Rotation += 60; isNodeChanged = true; }
+                        if (Raylib.IsKeyPressed(KeyboardKey.F)) { targetedNode.IsFlipped = !targetedNode.IsFlipped; isNodeChanged = true; }
 
                         switch (targetedNode.Type)
                         {
@@ -203,19 +205,20 @@ namespace RelicsOfAdofai.Engine
                             case SkillNode.NodeType.Connector_Interval:
                             case SkillNode.NodeType.Connector_Adjacent:
                                 {
-                                    double tweakDirection;
-                                    if (Raylib.IsKeyPressed(KeyboardKey.A)) tweakDirection = -targetedNode.PassOnMultiplierTweakAmount;
-                                    else if (Raylib.IsKeyPressed(KeyboardKey.D)) tweakDirection = targetedNode.PassOnMultiplierTweakAmount;
+                                    double tweakAmount;
+                                    if (Raylib.IsKeyPressed(KeyboardKey.A)) tweakAmount = -targetedNode.PassOnMultiplierTweakAmount;
+                                    else if (Raylib.IsKeyPressed(KeyboardKey.D)) tweakAmount = targetedNode.PassOnMultiplierTweakAmount;
                                     else break;
 
-                                    targetedNode.PassOnMultiplier += tweakDirection;
+                                    targetedNode.PassOnMultiplier += tweakAmount;
+                                    isNodeChanged = true;
                                     break;
                                 }
 
                             default: break;
                         }
 
-                        gameContext.RecalculateCurrentChart(guiContext);
+                        if (isNodeChanged) gameContext.RecalculateCurrentChart(guiContext);
                     }
                 }
             }
