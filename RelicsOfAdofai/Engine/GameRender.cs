@@ -148,9 +148,8 @@ namespace RelicsOfAdofai.Engine
             foreach (var cell in gameContext.CurrentChart.Cells)
             {
                 var cellCenter = (cell.Coords.Cartesian() * Style.HexCellSpaceRadius) + gameContext.CurrentChart.HexOrigin;
-                var polyDrawCenter = cellCenter + new Vector2(0, Style.NormalThickness / 2);
                 Raylib.DrawPolyLinesEx(
-                    polyDrawCenter,
+                    cellCenter,
                     6,
                     Style.HexCellDrawRadius,
                     30,
@@ -198,8 +197,7 @@ namespace RelicsOfAdofai.Engine
                                     Style.ColorBorderMedium);
                                 if (parameterBarCenterPoint == parameterPositionPoint)  // @note: Should this condition be looser, or be calculated in other ways?
                                     Raylib.DrawLineEx(
-                                        parameterBarCenterPoint - new Vector2(Style.NormalThickness / 2, 0), 
-                                        parameterBarCenterPoint + new Vector2(Style.NormalThickness / 2, 0), Style.NormalThickness, Style.ColorBorderLight);
+                                        parameterBarCenterPoint - new Vector2(Style.NormalThickness / 2, 0), parameterBarCenterPoint + new Vector2(Style.NormalThickness / 2, 0), Style.NormalThickness, Style.ColorBorderLight);
                                 else Raylib.DrawLineEx(parameterBarCenterPoint, parameterPositionPoint, Style.NormalThickness, Style.ColorBorderLight);
 
                                 var parameterText = cell.FilledNode.PassOnMultiplier.ToString("[0.00x]");
