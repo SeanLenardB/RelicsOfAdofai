@@ -114,7 +114,7 @@ namespace RelicsOfAdofai.Game
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null || outCell.FilledNode is null) break;
 
-                        var outEnergy = packet.Energy * node.ExtractorMultiplier;
+                        var outEnergy = packet.Energy * node.PassOnMultiplier;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
                         cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
@@ -131,7 +131,7 @@ namespace RelicsOfAdofai.Game
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null || outCell.FilledNode is null) break;
 
-                        var outEnergy = packet.Energy * node.ConnectorMultiplier;
+                        var outEnergy = packet.Energy * node.PassOnMultiplier;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
                         cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
@@ -148,7 +148,7 @@ namespace RelicsOfAdofai.Game
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null || outCell.FilledNode is null) break;
 
-                        var outEnergy = packet.Energy * node.ConnectorMultiplier;
+                        var outEnergy = packet.Energy * node.PassOnMultiplier;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
                         cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;
@@ -165,7 +165,7 @@ namespace RelicsOfAdofai.Game
                         var outCell = chart.Cells.FirstOrDefault(c => c.Coords.CoordsEqual(cell.Coords + HexCoords.RotationUnit(outOffsetAngle)));
                         if (outCell is null || outCell.FilledNode is null) break;
 
-                        var outEnergy = packet.Energy * node.ConnectorMultiplier;
+                        var outEnergy = packet.Energy * node.PassOnMultiplier;
                         if (outEnergy < CellPropagationPacket.MinEnergyThreshold) break;
                         cell.FluxOut += outEnergy; this.PropagateChartCell(chart, outCell, new(cell, outEnergy));
                         break;

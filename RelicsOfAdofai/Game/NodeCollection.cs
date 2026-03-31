@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Text;
 using Raylib_cs;
 using RelicsOfAdofai.Engine;
+using static RelicsOfAdofai.Game.GameContext;
 
 namespace RelicsOfAdofai.Game
 {
@@ -21,35 +22,51 @@ namespace RelicsOfAdofai.Game
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = SkillNode.NodeType.Connector_Opposite },
+                    Type = SkillNode.NodeType.Connector_Opposite,
+                    PassOnMultiplier = 0.8, PassOnMultiplierMinimum = 0.85, PassOnMultiplierMaximum = 0.75, PassOnMultiplierTweakAmount = 0.05
+                },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = SkillNode.NodeType.Connector_Opposite },
+                    Type = SkillNode.NodeType.Connector_Opposite,
+                    PassOnMultiplier = 0.8, PassOnMultiplierMinimum = 0.75, PassOnMultiplierMaximum = 0.85, PassOnMultiplierTweakAmount = 0.05
+                },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = SkillNode.NodeType.Connector_Opposite },
+                    Type = SkillNode.NodeType.Connector_Opposite,
+                    PassOnMultiplier = 0.8, PassOnMultiplierMinimum = 0.75, PassOnMultiplierMaximum = 0.85, PassOnMultiplierTweakAmount = 0.05
+                },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = SkillNode.NodeType.Connector_Interval },
+                    Type = SkillNode.NodeType.Connector_Interval,
+                    PassOnMultiplier = 0.8, PassOnMultiplierMinimum = 0.75, PassOnMultiplierMaximum = 0.85, PassOnMultiplierTweakAmount = 0.05
+                },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = SkillNode.NodeType.Connector_Interval },
+                    Type = SkillNode.NodeType.Connector_Interval,
+                    PassOnMultiplier = 0.8, PassOnMultiplierMinimum = 0.75, PassOnMultiplierMaximum = 0.85, PassOnMultiplierTweakAmount = 0.05
+                },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = SkillNode.NodeType.Connector_Adjacent },
+                    Type = SkillNode.NodeType.Connector_Adjacent,
+                    PassOnMultiplier = 0.8, PassOnMultiplierMinimum = 0.75, PassOnMultiplierMaximum = 0.85, PassOnMultiplierTweakAmount = 0.05
+                },
                 new() {
                     Name = "Normal Play",
                     Description = "Connects the track in the specified direction.",
-                    Type = SkillNode.NodeType.Connector_Adjacent },
+                    Type = SkillNode.NodeType.Connector_Adjacent,
+                    PassOnMultiplier = 0.8, PassOnMultiplierMinimum = 0.75, PassOnMultiplierMaximum = 0.85, PassOnMultiplierTweakAmount = 0.05
+                },
                 new() {
                     Name = "Normal Starter",
                     Description = "Provide the circuit with the energy from the source.",
-                    Type = SkillNode.NodeType.Extractor_Single },
+                    Type = SkillNode.NodeType.Extractor_Single,
+                    PassOnMultiplier = 1.0, PassOnMultiplierMinimum = 1.0, PassOnMultiplierMaximum = 1.0
+                },
                 new() {
                     Name = "Normal Finish",
                     Description = "Accepts the energy from all sides and output to the circuit.",
@@ -65,9 +82,15 @@ namespace RelicsOfAdofai.Game
         public int Rotation { get; set { field = value % 360; if (field < 0) field += 360; } } = 0;
         public bool IsFlipped = false;
 
+
+
         // @cleanup: The following parameters are part of the fat struct. We might want polymorphism later.
-        public double ConnectorMultiplier = 0.9;
-        public double ExtractorMultiplier = 1.0;
+        public double PassOnMultiplier { get; set { field = Math.Clamp(value, this.PassOnMultiplierMinimum, this.PassOnMultiplierMaximum); } } = 0;
+        public double PassOnMultiplierMinimum = CellPropagationPacket.MinEnergyThreshold;
+        public double PassOnMultiplierMaximum = CellPropagationPacket.MaxEnergyThreshold;
+        public double PassOnMultiplierTweakAmount = 0;
+
+
 
         public NodeType Type = NodeType.Connector_Opposite;
         public enum NodeType

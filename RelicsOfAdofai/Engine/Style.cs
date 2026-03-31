@@ -27,6 +27,7 @@ namespace RelicsOfAdofai.Engine
         public static Font FontStylistic;
         public static Font FontGeneral;
 
+        public static int SizeTiny = 24;
         public static int SizeSmall = 32;
         public static int SizeNormal = 48;
         public static int SizeTitle = 72;

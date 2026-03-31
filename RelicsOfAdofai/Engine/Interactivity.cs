@@ -14,6 +14,8 @@ namespace RelicsOfAdofai.Engine
         public double MouseStayDuration = 0;
         public void HandleInput(GuiContext guiContext, GameContext gameContext)
         {
+            var mouseCursor = MouseCursor.Default;
+
             var isMouseLeftDown = Raylib.IsMouseButtonDown(MouseButton.Left);
             var isMouseMiddleDown = Raylib.IsMouseButtonDown(MouseButton.Middle);
             var isMouseRightDown = Raylib.IsMouseButtonDown(MouseButton.Right);
@@ -80,8 +82,7 @@ namespace RelicsOfAdofai.Engine
                 if (isMouseLeftDown && collide) inputBox.IsActive = true;
                 else if (isMouseLeftDown && !collide) inputBox.IsActive = false;
             }
-            if (anyInputBoxHovered) Raylib.SetMouseCursor(MouseCursor.IBeam);
-            else Raylib.SetMouseCursor(MouseCursor.Default);
+            if (anyInputBoxHovered) mouseCursor = MouseCursor.IBeam;
 
             // Button focus by mouse interaction
             foreach (var button in guiContext.Buttons.Values)
@@ -110,17 +111,13 @@ namespace RelicsOfAdofai.Engine
             if (guiContext.GuiState == GuiState.Game)
             {
                 Debug.Assert(gameContext.CurrentChart is not null, "Cannot interact with a null chart!");
-                // @cleanup: This is fairly inefficient because the algo needs to go through all hexagons to find which one is highlighted.
-                // But since the transformation to hex -> cart is a matrix multiplication,
-                // it's possible to invert the matrix and directly get the hex coords from the cart pixel location.
-                //
-                // But that will include some crazy offseting and other things. We will do this for now.
-                // If the performance is bad, we will change it.
+                // @cleanup: although there is no loop as we calculate the hex coords from mouse coords, we still have a linq method
+                // that fetches the desired cell. We cannot do better because we don't want a Dict<T,Q> as it will fuck up other parts.
+                // If this turns out to be the slowest procedure, we will refactor the cell structure.
 
                 var mouseInGrid = mousePosition.Y > Style.HeaderHeight && mousePosition.Y + Style.HandHeight < Style.WindowHeight;
                 // Panning hex grid
-                if (mouseInGrid && isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); Raylib.SetMouseCursor(MouseCursor.PointingHand); }
-                else Raylib.SetMouseCursor(MouseCursor.Default);
+                if (mouseInGrid && isMouseMiddleDown) { gameContext.CurrentChart.HexOrigin += Raylib.GetMouseDelta(); mouseCursor = MouseCursor.PointingHand; }
 
                 // Hovering hex grid
                 gameContext.CurrentChart.Cells.ForEach(c => c.IsHover = false);
@@ -173,7 +170,7 @@ namespace RelicsOfAdofai.Engine
                 {
                     if (node.IsUsed) continue;
 
-                    if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, node.BoundingBox))
+                    if (Raylib.CheckCollisionPointPoly(mousePosition - currentHandNodeCenter, SkillNode.BoundingBox))
                     {
                         node.IsHover = true;
                         if (isMouseLeftDown)
@@ -188,11 +185,41 @@ namespace RelicsOfAdofai.Engine
                     currentHandNodeCenter.X += Style.NodeInHandSpacing;
                 }
 
-                // Candidate node rotation
-                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.E)) gameContext.CurrentSelectedNode?.Rotation -= 60;
-                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.Q)) gameContext.CurrentSelectedNode?.Rotation += 60;
-                if (mouseInGrid && Raylib.IsKeyPressed(KeyboardKey.F)) gameContext.CurrentSelectedNode?.IsFlipped = !gameContext.CurrentSelectedNode.IsFlipped;
+                // Candidate node OR filled node: rotation & parameter tweaking
+                if (mouseInGrid)
+                {
+                    var targetedNode = gameContext.CurrentSelectedNode ?? collidedCell?.FilledNode;
+                    if (targetedNode is not null)
+                    {
+                        if (Raylib.IsKeyPressed(KeyboardKey.E)) targetedNode.Rotation -= 60;
+                        if (Raylib.IsKeyPressed(KeyboardKey.Q)) targetedNode.Rotation += 60;
+                        if (Raylib.IsKeyPressed(KeyboardKey.F)) targetedNode.IsFlipped = !targetedNode.IsFlipped;
+
+                        switch (targetedNode.Type)
+                        {
+                            case SkillNode.NodeType.Extractor_Single:
+                            case SkillNode.NodeType.Connector_Opposite:
+                            case SkillNode.NodeType.Connector_Interval:
+                            case SkillNode.NodeType.Connector_Adjacent:
+                                {
+                                    double tweakDirection;
+                                    if (Raylib.IsKeyPressed(KeyboardKey.A)) tweakDirection = -targetedNode.PassOnMultiplierTweakAmount;
+                                    else if (Raylib.IsKeyPressed(KeyboardKey.D)) tweakDirection = targetedNode.PassOnMultiplierTweakAmount;
+                                    else break;
+
+                                    targetedNode.PassOnMultiplier += tweakDirection;
+                                    break;
+                                }
+
+                            default: break;
+                        }
+
+                        gameContext.RecalculateCurrentChart(guiContext);
+                    }
+                }
             }
+
+            Raylib.SetMouseCursor(mouseCursor);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Data.SqlTypes;
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using Raylib_cs;
 using RelicsOfAdofai.Engine.Gui;
@@ -172,6 +173,46 @@ namespace RelicsOfAdofai.Engine
                         new(Style.NodeTextureSize / 2, Style.NodeTextureSize / 2),
                         -cell.FilledNode.Rotation,
                         Style.HintUnselectedNode);
+
+                    // Parameter tweak indicator
+                    switch (cell.FilledNode.Type)
+                    {
+                        case SkillNode.NodeType.Extractor_Single:
+                        case SkillNode.NodeType.Connector_Opposite:
+                        case SkillNode.NodeType.Connector_Interval:
+                        case SkillNode.NodeType.Connector_Adjacent:
+                            {
+                                if (cell.FilledNode.PassOnMultiplierMinimum == cell.FilledNode.PassOnMultiplierMaximum) break;
+                                var parameterBarRect = Layout.CenterCenter()
+                                    .Hpx(Style.NormalThickness).Ypx(drawRect.Y).DYpx(Style.HexCellDrawRadius / 3)
+                                    .Wpx(Style.HexCellDrawRadius).Xpx(drawRect.X).Rect();
+                                var parameterBarCenterPoint = new Vector2(
+                                    parameterBarRect.X + (parameterBarRect.Width / 2), parameterBarRect.Y + (parameterBarRect.Height / 2));
+                                var parameterPositionPoint = parameterBarCenterPoint;
+                                parameterPositionPoint.X = (float)(parameterBarRect.X + (parameterBarRect.Width *
+                                    (cell.FilledNode.PassOnMultiplier - cell.FilledNode.PassOnMultiplierMinimum)
+                                    / (cell.FilledNode.PassOnMultiplierMaximum - cell.FilledNode.PassOnMultiplierMinimum)));
+
+                                Raylib.DrawRectangle(
+                                    (int)parameterBarRect.X, (int)parameterBarRect.Y, (int)parameterBarRect.Width, (int)parameterBarRect.Height, 
+                                    Style.ColorBorderMedium);
+                                Raylib.DrawLineEx(parameterBarCenterPoint, parameterPositionPoint, Style.NormalThickness, Style.ColorBorderLight);
+
+                                var parameterText = cell.FilledNode.PassOnMultiplier.ToString("[0.00x]");
+                                var parameterTextExtent = Raylib.MeasureTextEx(Style.FontStylistic, parameterText, Style.SizeTiny, 0);
+                                Raylib.DrawTextEx(
+                                    Style.FontStylistic,
+                                    parameterText,
+                                    Layout.CenterTop().Wpx(parameterTextExtent.X).Xpx(parameterBarCenterPoint.X)
+                                        .Hpx(parameterTextExtent.Y).Ypx(parameterBarCenterPoint.Y).Vect(),
+                                    Style.SizeTiny,
+                                    0,
+                                    Style.ColorTextGeneral);
+                                break;
+                            }
+
+                        default: break;
+                    }
                 }
                 else Raylib.DrawPoly(polyDrawCenter, 6, Style.HexCellDrawRadius, 30, Style.ColorBgDark);
 
@@ -269,7 +310,8 @@ namespace RelicsOfAdofai.Engine
 
             if (hoveredCell.FilledNode is not null && interactivity.MouseStayDuration > Style.MouseStayDurationThreshold)
             {
-                var mousePosition = Raylib.GetMousePosition();
+                this.DrawFluxHint(gameContext, hoveredCell, hoveredCell.FilledNode);
+
                 var inText = hoveredCell.FluxIn.ToString("流入0.00");
                 var outText = hoveredCell.FluxOut.ToString("流出0.00");
                 var inTextExtent = Raylib.MeasureTextEx(Style.FontGeneral, inText, Style.SizeSmall, 0);
@@ -289,8 +331,6 @@ namespace RelicsOfAdofai.Engine
                 Raylib.DrawRectangleRoundedLinesEx(boxRect, 0.1f, 8, Style.ThinThickness, Style.ColorBorderLight);
                 Raylib.DrawTextEx(Style.FontGeneral, inText, inTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxIn);
                 Raylib.DrawTextEx(Style.FontGeneral, outText, outTextVect, Style.SizeSmall, 0, Style.ColorBorderFluxOut);
-
-                this.DrawFluxHint(gameContext, hoveredCell, hoveredCell.FilledNode);
             }
         }
 
