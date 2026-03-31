@@ -163,7 +163,7 @@ namespace RelicsOfAdofai.Engine
                 if (cell.FilledNode is not null)
                 {
                     var filledNodeTexture = Style.Textures[cell.FilledNode.ResourceKey()];
-                    Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
+                    Raylib.DrawTexturePro(
                         filledNodeTexture,
                         cell.FilledNode.IsFlipped ? 
                             new(Style.NodeTextureSize, 0, -Style.NodeTextureSize, Style.NodeTextureSize) :
@@ -221,7 +221,7 @@ namespace RelicsOfAdofai.Engine
                 if (cell.IsHover) hoveredCell = cell;
 
                 var imageLocation = cellCenter;
-                imageLocation.X -= 64; imageLocation.Y -= 64;  // The image is 256x256. We draw 0.5x.
+                imageLocation.X -= 64; imageLocation.Y -= 64;  // @cleanup: This is ugly because the image is 256x256. We draw 0.5x.
                 if (cell.Type == ChartCell.CellType.Source)
                 {
                     var startEnergyText = cell.SourceEnergy.ToString("0.0");
@@ -297,7 +297,7 @@ namespace RelicsOfAdofai.Engine
             if (gameContext.CurrentSelectedNode is not null)
             {
                 var selectedNodeTexture = Style.Textures[gameContext.CurrentSelectedNode.ResourceKey()];
-                Raylib.DrawTexturePro(  // Technically Ex works here but we want versatile drawing if animation is needed.
+                Raylib.DrawTexturePro(
                     selectedNodeTexture,
                     gameContext.CurrentSelectedNode.IsFlipped ?
                         new(Style.NodeTextureSize, 0, -Style.NodeTextureSize, Style.NodeTextureSize) :
@@ -559,7 +559,7 @@ namespace RelicsOfAdofai.Engine
             var heightMultiplier = 1.0 * Style.WindowHeight / bg.Height;
             var finalMultiplier = widthMultiplier > heightMultiplier ? widthMultiplier : heightMultiplier;
 
-            finalMultiplier *= 1.15;  // Leaving room for the cursor effect
+            finalMultiplier *= 1.15;  // @note: We multiply by some value, so there is room for movement for the cursor effect
             var cursorPosition = Raylib.GetMousePosition();
             var xOffsetProportion = -(cursorPosition.X - (Style.WindowWidth / 2.0)) / Style.WindowWidth / 2.0;
             var yOffsetProportion = (cursorPosition.Y - (Style.WindowHeight / 2.0)) / Style.WindowHeight / 2.0;
