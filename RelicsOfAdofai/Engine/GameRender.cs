@@ -196,7 +196,11 @@ namespace RelicsOfAdofai.Engine
                                 Raylib.DrawRectangle(
                                     (int)parameterBarRect.X, (int)parameterBarRect.Y, (int)parameterBarRect.Width, (int)parameterBarRect.Height, 
                                     Style.ColorBorderMedium);
-                                Raylib.DrawLineEx(parameterBarCenterPoint, parameterPositionPoint, Style.NormalThickness, Style.ColorBorderLight);
+                                if (parameterBarCenterPoint == parameterPositionPoint)  // @note: Should this condition be looser, or be calculated in other ways?
+                                    Raylib.DrawLineEx(
+                                        parameterBarCenterPoint - new Vector2(Style.NormalThickness / 2, 0), 
+                                        parameterBarCenterPoint + new Vector2(Style.NormalThickness / 2, 0), Style.NormalThickness, Style.ColorBorderLight);
+                                else Raylib.DrawLineEx(parameterBarCenterPoint, parameterPositionPoint, Style.NormalThickness, Style.ColorBorderLight);
 
                                 var parameterText = cell.FilledNode.PassOnMultiplier.ToString("[0.00x]");
                                 var parameterTextExtent = Raylib.MeasureTextEx(Style.FontStylistic, parameterText, Style.SizeTiny, 0);
